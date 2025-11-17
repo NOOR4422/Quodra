@@ -1,0 +1,15 @@
+
+
+input:focus,
+select:focus {
+    border-color: #dd2912;
+    outline: none;
+    background: #fffdfd;
+}
+
+input[type="checkbox"],
+input[type="radio"] {
+    width: auto;
+    transform: scale(1.1);
+    accent-color: #dd2912;
+}

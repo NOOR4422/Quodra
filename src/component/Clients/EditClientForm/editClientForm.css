@@ -1,0 +1,14 @@
+
+
+.addCarBtn {
+    background: none;
+    color: #dd2912;
+    font-size: 15px;
+    border: none;
+    margin-top: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+

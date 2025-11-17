@@ -1,0 +1,156 @@
+.detailsPage {
+    direction: rtl;
+    background: #ffffff;
+    font-family: "Cairo", sans-serif;
+}
+.blurBackground {
+    filter: blur(6px);
+    pointer-events: none;
+    user-select: none;
+}
+
+.topButtons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-bottom: 10px;
+}
+.detailsHeader{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.btnNotify {
+    background: white;
+    border: 1.3px solid #eacccc;
+    padding: 8px 25px;
+    border-radius: 10px;
+    color: #DD2912;
+}
+
+.btnVisit {
+    background: #DD2912;
+    border: none;
+    padding: 8px 25px;
+    border-radius: 10px;
+    color: white;
+}
+
+.editDeleteRowPage {
+    display: flex;
+    gap: 25px;
+    font-size: 14px;
+    margin-bottom: 18px;
+}
+
+.deleteClient {
+    color: #DD2912;
+    cursor: pointer;
+}
+
+.editClient {
+    color: #222;
+    cursor: pointer;
+}
+
+.iconSm {
+    font-size: 15px;
+    margin-top: -3px;
+}
+
+.infoCard {
+    background: #fff8f7;
+    border: 1.7px solid #f0d7d7;
+    border-radius: 12px;
+    padding: 18px;
+    margin-bottom: 18px;
+}
+
+.personalInfo {
+    padding: 5px 0;
+}
+
+.infoGrid {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.infoRow {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 8px;
+    font-size: 15px;
+    padding: 4px 0;
+}
+
+.iconLg {
+    font-size: 18px;
+    color: #444;
+}
+
+.arrow {
+    font-size: 20px;
+    color: #777;
+    padding: 0 6px;
+    cursor: pointer;
+}
+
+.carsCard {
+    background: #fff8f7;
+    border: 1.7px solid #f0d7d7;
+    border-radius: 12px;
+    padding: 20px;
+}
+
+.carHeader {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    cursor: pointer;
+    font-size: 16px;
+    color: #333;
+    align-items: center;
+}
+
+.carContent {
+    margin-top: 10px;
+    padding: 10px 0 15px 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+}
+
+.fieldGroup {
+    display: flex;
+    flex-direction: column;
+}
+
+.fieldGroup label {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 5px;
+}
+
+input,
+select {
+    background: white;
+    border: 1.4px solid #eacccc;
+    padding: 8px 12px;
+    border-radius: 10px;
+    font-size: 15px;
+    color: #444;
+}
+
+select {
+    cursor: pointer;
+}
+
+@media (max-width: 680px) {
+    .carContent {
+        grid-template-columns: 1fr;
+    }
+}

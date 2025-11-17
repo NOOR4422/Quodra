@@ -1,0 +1,179 @@
+.settingsContainer {
+    max-width: 1100px;
+    margin: 30px auto;
+    font-family: "Cairo", sans-serif;
+    color: #333;
+}
+
+.sectionBox {
+    background: #fff8f7;
+    border: 1.6px dashed #f0bebe;
+    border-radius: 14px;
+    padding: 30px 25px;
+}
+
+
+.innerContainer{
+    border: 0.5px solid #eacccc;
+        border-radius: 15px;
+        padding: 20px;
+    
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+}
+
+input:focus {
+    border-color: #dd2912;
+    outline: none;
+}
+
+.twoColGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.servicesHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+.addServiceBtn {
+    background: none;
+    border: none;
+    color: #DD2912;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.addServiceBtn:hover {
+    color: #b9210f;
+}
+
+.servicesList {
+    width: 100%;
+    list-style: none;
+    gap: 16px;
+    padding: 0;
+    margin: 0;
+}
+
+.servicesList li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 8px;
+}
+
+.actions {
+    display: flex;
+    gap: 10px;
+}
+
+.editBtn,
+.deleteBtn {
+    background: none;
+    border: none;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    margin-right: 5px;
+}
+
+.editBtn {
+    color: #333;
+}
+
+.deleteBtn {
+    color: #dd2912;
+}
+
+
+.languageSection {
+    background: #fffaf9;
+    border-radius: 12px;
+    padding: 22px 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+
+.languageRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.languageLabel {
+    font-size: 17px;
+    font-weight: 600;
+    color: #222;
+}
+
+.languageToggle {
+    display: flex;
+    background: #fff;
+    border: 1.4px solid #eacccc;
+    border-radius: 10px;
+    overflow: hidden;
+    direction: rtl;
+}
+
+.langBtn {
+    flex: 1;
+    padding: 8px 18px;
+    background: transparent;
+    border: none;
+    font-family: "Cairo", sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    color: #444;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.langBtn.active {
+    background: #fff8f7;
+    border: 1.6px solid #eacccc;
+    color: #dd2912;
+    font-weight: 600;
+    box-shadow: inset 0 0 3px rgba(221, 41, 18, 0.15);
+}
+
+.langBtn:hover {
+    background: #fff8f7;
+    color: #dd2912;
+}
+
+.changePasswordBtn {
+    background: none;
+    border: none;
+    color: #222;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.changePasswordBtn:hover {
+    color: #dd2912;
+}
+
+.passwordRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
