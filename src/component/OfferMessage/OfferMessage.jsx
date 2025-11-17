@@ -1,6 +1,6 @@
 import { FaStar } from "react-icons/fa";
 import { useForm } from "react-hook-form";
-import "./offerMessage.css";
+import "./OfferMessage.css";
 const OfferMessage = ({
   show,
   cancelText = " إلغاء ",
