@@ -60,12 +60,9 @@ const Settings = () => {
 
   return (
     <div className="mainContainer" dir="rtl">
-
-      <div
-        className="mainContainer innerContainer"
-      >
+      <div className="mainContainer innerContainer">
         {" "}
-        <h2 className="sectionTitle">معلومات الورشة</h2>
+        <p className="languageRow sectionTitle">معلومات الورشة</p>
         <form className="mainForm" dir="rtl">
           <div className="formCol">
             <div className="inputGroup">
@@ -74,7 +71,6 @@ const Settings = () => {
               </label>
               <input type="text" value={workshopInfo.name} readOnly />
             </div>
-
 
             <div className="inputGroup">
               <label>
@@ -100,21 +96,24 @@ const Settings = () => {
           </div>
         </form>
       </div>
-      <div
-        className="innerContainer mainContainer"
-      >
-        <div className="servicesHeader">
-          <h3 className="sectionTitle">خدمات الورشة</h3>
-          <button
-            className="addServiceBtn"
-            onClick={() => {
-              setModalMode("add");
-              setShowAddModal(true);
-              reset();
-            }}
-          >
-            <FaPlus /> إضافة خدمة
-          </button>
+      <div className="innerContainer mainContainer">
+        <div className="languageRow">
+          <div>
+            <p className="sectionTitle">خدمات الورشة</p>
+          </div>
+
+          <div>
+            <button
+              className="addServiceBtn"
+              onClick={() => {
+                setModalMode("add");
+                setShowAddModal(true);
+                reset();
+              }}
+            >
+              <FaPlus /> إضافة خدمة
+            </button>
+          </div>
         </div>
 
         <ul className="servicesList">
@@ -221,7 +220,6 @@ const Settings = () => {
               ? "تم إضافة الخدمة  بنجاح ✅"
               : "تم تعديل الخدمة  بنجاح ✅"
           }
-
           confirmText="تم"
           showCancel={false}
           onConfirm={() => setShowSuccessModal(false)}

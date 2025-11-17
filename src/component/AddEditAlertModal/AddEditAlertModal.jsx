@@ -21,11 +21,11 @@ const AddEditAlertModal = ({
     <div className="alertOverlay">
       <div className="alertCard addServiceModal" dir="rtl">
         <div className="alertBody">
-          <label className="modalLabel">
-            الخدمة{" "}
-            <span className="reqStar">
-              <FaStar color="red"/>
-            </span>
+          <label className="sectionTitle ">
+            <div style={{ display: "flex", alignItems: "center" ,gap:"4px"}}>
+             الخدمة{" "}
+              <FaStar className="req"/>
+            </div>   
           </label>
 
           <input
