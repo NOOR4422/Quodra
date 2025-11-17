@@ -68,14 +68,14 @@ label {
     margin-right: 3px;
 }
 
-input,
+/* input,
 select {
     padding: 16px 10px;
     border: 1.4px solid #eacccc;
     border-radius: 12px;
     background: white;
     font-size: 15px;
-}
+} */
 
 input:focus,
 select:focus {

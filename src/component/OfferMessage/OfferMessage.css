@@ -10,8 +10,13 @@
     font-size: 14px;
     font-weight: 500;}
 
-    .fieldGroupAlertMessage textarea{
-    
+    .fieldGroupAlertMessage input{
+    padding: 16px 10px;
+        border: 1.4px solid #eacccc;
+        border-radius: 12px;
+        background: white;
+        font-size: 15px;
+        width: 100%;
     }
 
 .mainForm2   {
