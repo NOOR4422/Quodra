@@ -1,5 +1,5 @@
 import React from "react";
-import "./temp.css.css";
+import "./temp.css";
 
 const AlertModal = ({
   show,
