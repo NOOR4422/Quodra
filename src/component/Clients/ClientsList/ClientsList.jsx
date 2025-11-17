@@ -67,13 +67,7 @@ const ClientsList = () => {
         <>
           {clients.map((client) => (
             <>
-         
-
-              <div
-                className="mainCard"
-                key={client.id}
-                onClick={() => navigate(`/clientDetails/${client.id}`)}
-              >
+              <div className="mainCard" key={client.id}>
                 <span>
                   <img src={user} className="cardImg" />
                 </span>
@@ -84,8 +78,20 @@ const ClientsList = () => {
                     </div>{" "}
                     <div>
                       <div className="btnRow">
-                        <button className="btnNotify">إرسال إشعار</button>
-                        <button className="btnVisit">زيارة جديدة</button>
+                        <button
+                          className="btnNotify"
+                          onClick={() => navigate("/addNotificationForm")}
+                        >
+                          إرسال إشعار
+                        </button>
+                        <button
+                          className="btnVisit"
+                          onClick={() =>
+                            navigate("/addVisitForm")
+                          }
+                        >
+                          زيارة جديدة
+                        </button>
                       </div>
                     </div>
                   </div>
@@ -104,7 +110,12 @@ const ClientsList = () => {
                         {client.visits} زيارات
                       </div>
                       <div className="cardBlock subText">رتبته...</div>
-                      <div className="cardBlock moreDetails ">تفاصيل أكثر</div>
+                      <div
+                        className="cardBlock moreDetails "
+                        onClick={() => navigate(`/clientDetails/${client.id}`)}
+                      >
+                        تفاصيل أكثر
+                      </div>
                     </div>
                     <div className="btnRow">
                       <span

@@ -13,21 +13,20 @@
     display: flex;
     justify-content: flex-end;
     gap: 15px;
-    margin-bottom: 10px;
 }
 .detailsHeader{
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 25px;
 }
 
 .btnNotify {
     background: white;
-    border: 1.3px solid #eacccc;
+    border: 0.5px solid #eacccc;
     padding: 8px 25px;
     border-radius: 10px;
     color: #DD2912;
+    cursor: pointer;
 }
 
 .btnVisit {
@@ -36,6 +35,7 @@
     padding: 8px 25px;
     border-radius: 10px;
     color: white;
+    cursor: pointer;
 }
 
 .editDeleteRowPage {
@@ -112,8 +112,10 @@
     padding: 10px 0;
     cursor: pointer;
     font-size: 16px;
+    font-weight: 600;
     color: #333;
     align-items: center;
+    margin-top: 20px;
 }
 
 .carContent {

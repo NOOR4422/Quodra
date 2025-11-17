@@ -143,7 +143,7 @@ const ClientDetails = () => {
               </div>
 
               {car.open && (
-                <div className="addVisitForm">
+                <div className="mainForm">
                   <div className="formCol">
                     <div className="inputGroup">
                       <label>نوع السيارة</label>
@@ -160,11 +160,11 @@ const ClientDetails = () => {
                       <label>قراءة العداد الحالية</label>
                       <input type="text" defaultValue={car.mileage} readOnly />
                     </div>
-
                     <div className="inputGroup">
                       <label>نوع الزيت الحالي</label>
                       <input type="text" defaultValue={car.oil} readOnly />
                     </div>
+
                   </div>
                 </div>
               )}

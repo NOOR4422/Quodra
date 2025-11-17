@@ -8,7 +8,7 @@ import gold from "../../assets/gold.png";
 import winner from "../../assets/winner.png";
 import box from "../../assets/box.png";
 import { useNavigate } from "react-router-dom";
-
+import OfferMessage from "../OfferMessage/OfferMessage";
 const RanksList = () => {
   const navigate = useNavigate();
 
@@ -70,9 +70,20 @@ const RanksList = () => {
   ]);
 
   const isEmpty = ranks.length === 0 && offers.length === 0;
+const [showOfferAlert, setShowOfferAlert] = useState(false);
+const [selectedRank, setSelectedRank] = useState(null);
 
   return (
     <div className="mainContainer">
+      <OfferMessage
+        show={showOfferAlert}
+        onCancel={() => setShowOfferAlert(false)}
+        onConfirm={() => {
+          console.log("✔ Offer Sent To:", selectedRank?.title);
+          setShowOfferAlert(false);
+        }}
+      />
+
       {isEmpty ? (
         <div className="emptyState">
           <img src={box} alt="no data" className="emptyIcon" />
@@ -118,7 +129,15 @@ const RanksList = () => {
 
                 <div className="rankHeader">
                   <span>{rank.clients} عميل</span>
-                  <button className="sendOfferBtn">إرسال عرض</button>
+                  <button
+                    className="sendOfferBtn"
+                    onClick={() => {
+                      setSelectedRank(rank);
+                      setShowOfferAlert(true);
+                    }}
+                  >
+                    إرسال عرض
+                  </button>
                 </div>
               </div>
             ))}
@@ -128,8 +147,6 @@ const RanksList = () => {
             <p className="sectionTitle ">العروض المرسلة</p>
             {offers.map((offer, index) => (
               <>
-          
-
                 <div className="mainCard" key={index}>
                   <span>
                     <img src={offer.img} className="cardImg" />

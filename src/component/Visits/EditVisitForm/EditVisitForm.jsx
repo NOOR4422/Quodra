@@ -54,7 +54,7 @@ const EditVisitForm = ({ visitData }) => {
 
       <form
         id="editVisitForm"
-        className="editForm"
+        className="mainForm"
         onSubmit={handleSubmit(onSubmit)}
         dir="rtl"
       >
