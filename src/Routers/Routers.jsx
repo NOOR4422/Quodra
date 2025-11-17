@@ -24,25 +24,37 @@ import Settings from "../component/Settings/Settings";
 const Routers = () => {
   return (
     <Routes>
-      <Route path="/login" element={<Login />} />
-      <Route path="/resetPassword" element={<ResetPassword />} />
-      <Route path="/resetPasswordCode" element={<ResetPasswordCode />} />
-      <Route path="/changePassword" element={<ChangePassword />} />
+      <Route path="auth">
+        <Route path="login" element={<Login />} />
+        <Route path="reset" element={<ResetPassword />} />
+        <Route path="reset/code" element={<ResetPasswordCode />} />
+        <Route path="reset/change" element={<ChangePassword />} />
+      </Route>
 
       <Route element={<Layout />}>
         <Route path="/" element={<Dashboard />} />
-        <Route path="/clientsList" element={<ClientsList />} />
-        <Route path="/visitsList" element={<VisitsList />} />
-        <Route path="/notificationsList" element={<NotificationsList />} />
-        <Route path="/ranksList" element={<RanksList />} />
-        <Route path="/clientDetails/:id" element={<ClientDetails />} />
-        <Route path="/addClientForm" element={<AddClientForm />} />
-        <Route path="/editClientForm" element={<EditClientForm />} />
-        <Route path="/addCarModal" element={<AddCarModal />} />
-        <Route path="/addVisitForm" element={<AddVisitForm />} />
-        <Route path="/editVisitForm" element={<EditVisitForm />} />
-        <Route path="/addNotificationForm" element={<AddNotificationForm />} />
-        <Route path="/settings" element={<Settings />} />
+
+        <Route path="clients">
+          <Route index element={<ClientsList />} />
+          <Route path="add" element={<AddClientForm />} />
+          <Route path=":id" element={<ClientDetails />} />
+          <Route path=":id/edit" element={<EditClientForm />} />
+          <Route path="car/add" element={<AddCarModal />} />
+        </Route>
+
+        <Route path="visits">
+          <Route index element={<VisitsList />} />
+          <Route path="add" element={<AddVisitForm />} />
+          <Route path=":id/edit" element={<EditVisitForm />} />
+        </Route>
+
+        <Route path="notifications">
+          <Route index element={<NotificationsList />} />
+          <Route path="add" element={<AddNotificationForm />} />
+        </Route>
+
+        <Route path="ranks" element={<RanksList />} />
+        <Route path="settings" element={<Settings />} />
       </Route>
     </Routes>
   );

@@ -65,7 +65,7 @@ const navigate=useNavigate()
     }
 
       alert("تم إرسال الرمز: " + code);
-      navigate("/changePassword");
+      navigate("/auth/reset/change");
   };
 
   const resendCode = () => {

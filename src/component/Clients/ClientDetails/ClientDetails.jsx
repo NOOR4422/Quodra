@@ -8,12 +8,14 @@ import {
 } from "react-icons/pi";
 import { LuTrash2, LuPencil } from "react-icons/lu";
 import { IoChevronDownOutline, IoChevronUpOutline } from "react-icons/io5";
-
 import AlertModal from "../../AlertModal/AlertModal";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { IoIosArrowForward } from "react-icons/io";
 
 const ClientDetails = () => {
+  const navigate = useNavigate();
+  const { id } = useParams(); 
+
   const [client, setClient] = useState({
     name: "محمد احمد",
     phone: "012132324435",
@@ -45,7 +47,7 @@ const ClientDetails = () => {
       prev.map((c, i) => (i === index ? { ...c, open: !c.open } : c))
     );
   };
-  const navigate = useNavigate();
+
   return (
     <>
       <div className="mainContainer">
@@ -54,8 +56,8 @@ const ClientDetails = () => {
           title="تحذير"
           alertIcon="⚠️"
           message="هل انت متأكد من حذف هذا العميل ؟"
-          cancelText={"إلغاء"}
-          confirmText={"حذف"}
+          cancelText="إلغاء"
+          confirmText="حذف"
           onCancel={() => setShowAlert(false)}
           onConfirm={() => {
             setShowAlert(false);
@@ -67,13 +69,14 @@ const ClientDetails = () => {
           <div className="topButtons">
             <button
               className="btnNotify"
-              onClick={() => navigate("/addNotificationForm")}
+              onClick={() => navigate("/notifications/add")}
             >
               إرسال إشعار
             </button>
+
             <button
               className="btnVisit"
-              onClick={() => navigate("/addVisitForm")}
+              onClick={() => navigate("/visits/add")}
             >
               زيارة جديدة
             </button>
@@ -82,10 +85,11 @@ const ClientDetails = () => {
           <div className="editDeleteRowPage">
             <span
               className="editClient"
-              onClick={() => navigate("/editClientForm")}
+              onClick={() => navigate(`/clients/${id}/edit`)}
             >
               تعديل البيانات <LuPencil className="iconSm" />
-            </span>{" "}
+            </span>
+
             <span className="deleteClient" onClick={() => setShowAlert(true)}>
               حذف العميل <LuTrash2 className="iconSm" />
             </span>
@@ -155,16 +159,17 @@ const ClientDetails = () => {
                       <input type="text" defaultValue={car.plate} readOnly />
                     </div>
                   </div>
+
                   <div className="formCol">
                     <div className="inputGroup">
                       <label>قراءة العداد الحالية</label>
                       <input type="text" defaultValue={car.mileage} readOnly />
                     </div>
+
                     <div className="inputGroup">
                       <label>نوع الزيت الحالي</label>
                       <input type="text" defaultValue={car.oil} readOnly />
                     </div>
-
                   </div>
                 </div>
               )}

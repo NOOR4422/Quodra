@@ -24,27 +24,27 @@ const Sidebar = () => {
         <span className="btnText">الرئيسية</span>
       </NavLink>
 
-      <NavLink to="/clientsList" className="sideBtn">
+      <NavLink to="/clients" className="sideBtn">
         <FaUsers className="btnIcon" />
         <span className="btnText">العملاء</span>
       </NavLink>
 
-      <NavLink to="/visitsList" className="sideBtn">
+      <NavLink to="/visits" className="sideBtn">
         <TbActivity className="btnIcon" />
         <span className="btnText">الزيارات</span>
       </NavLink>
 
-      <NavLink to="/notificationsList" className="sideBtn">
+      <NavLink to="/notifications" className="sideBtn">
         <LuBell className="btnIcon" />
         <span className="btnText">الإشعارات</span>
       </NavLink>
 
-      <NavLink to="/ranksList" className="sideBtn">
+      <NavLink to="/ranks" className="sideBtn">
         <PiLightningBold className="btnIcon" />
         <span className="btnText">المستويات</span>
       </NavLink>
 
-      <NavLink to="/login" className="sideBtn ">
+      <NavLink to="/auth/login" className="sideBtn">
         <IoLogOutOutline className="btnIcon" />
         <span className="btnText">تسجيل الخروج</span>
       </NavLink>

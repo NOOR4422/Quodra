@@ -95,7 +95,7 @@ const [selectedRank, setSelectedRank] = useState(null);
             <button
               className="addBtn"
               style={{ backgroundColor: "#DD2912", color: "white" }}
-              onClick={() => navigate("/addClientForm")}
+              onClick={() => navigate("/clients/add")}
             >
               إضافة عميل
             </button>

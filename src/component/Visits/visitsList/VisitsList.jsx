@@ -7,9 +7,6 @@ import { IoPersonOutline } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 import AlertModal from "../../AlertModal/AlertModal";
 import box from "../../../assets/box.png";
-import user from "../../../assets/user.png";
-import sportCar from "../../../assets/sportCar.png";
-import { MdOutlinePhoneAndroid } from "react-icons/md";
 
 const VisitsList = () => {
   const navigate = useNavigate();
@@ -65,12 +62,12 @@ const VisitsList = () => {
           console.log("Visit Deleted");
         }}
         cancelText="إلغاء"
-        confirmText={"حذف"}
+        confirmText="حذف"
       />
 
       {!isEmpty && (
         <div className="addTopRow">
-          <button className="addBtn" onClick={() => navigate("/addVisitForm")}>
+          <button className="addBtn" onClick={() => navigate("/visits/add")}>
             إضافة زيارة جديدة <span className="plusIcon">+</span>
           </button>
         </div>
@@ -86,7 +83,7 @@ const VisitsList = () => {
           <button
             className="addBtn"
             style={{ backgroundColor: "#DD2912", color: "white" }}
-            onClick={() => navigate("/addVisitForm")}
+            onClick={() => navigate("/visits/add")}
           >
             إضافة زيارة
           </button>
@@ -94,54 +91,52 @@ const VisitsList = () => {
       ) : (
         <>
           {visits.map((visit) => (
-            <>
-              <div className="mainCard">
-                <span>
-                  <img src={serviceIcon} className="cardImg" />
-                </span>
-                <div className="cardCol">
-                  <div className="cardRow">
-                    <div>
-                      <p className="cardTitle"> {visit.service}</p>
-                    </div>{" "}
-                    <div>
-                      <div className="">
-                        <p className="cardTitle"> {visit.price} ج.م</p>
-                      </div>
+            <div className="mainCard" key={visit.id}>
+              <span>
+                <img src={serviceIcon} className="cardImg" />
+              </span>
+
+              <div className="cardCol">
+                <div className="cardRow">
+                  <p className="cardTitle">{visit.service}</p>
+                  <p className="cardTitle">{visit.price} ج.م</p>
+                </div>
+
+                <div className="cardRow">
+                  <div className="cardDetails">
+                    <div className="cardBlock">
+                      <IoPersonOutline />
+                      <span className="subText">{visit.customer}</span>
                     </div>
+
+                    <div className="cardBlock subText">
+                      <img src={carIcon} className="carImg" />
+                      <span>{visit.car}</span>
+                    </div>
+
+                    <div className="cardBlick subText">{visit.date}</div>
+
+                    <div className="cardBlock moreDetails">تفاصيل أكثر</div>
                   </div>
 
-                  <div className="cardRow">
-                    <div className="cardDetails">
-                      <div className="cardBlock">
-                        <IoPersonOutline />
-                        <span className="subText">{visit.customer}</span>
-                      </div>
-                      <div className="cardBlock subText">
-                        <img src={carIcon} className="carImg" />
-                        <span>{visit.car}</span>
-                      </div>{" "}
-                      <div className="cardBlick subText"> {visit.date}</div>
-                      <div className="cardBlock moreDetails ">تفاصيل أكثر</div>
-                    </div>
-                    <div className="btnRow">
-                      <span
-                        className="editRow"
-                        onClick={() => navigate(`/editVisitForm`)}
-                      >
-                        تعديل البيانات <LuPencil className="actionIcon" />
-                      </span>{" "}
-                      <span
-                        className="deleteRow"
-                        onClick={() => setShowAlert(true)}
-                      >
-                        حذف العميل <LuTrash2 className="actionIcon" />
-                      </span>
-                    </div>
+                  <div className="btnRow">
+                    <span
+                      className="editRow"
+                      onClick={() => navigate(`/visits/${visit.id}/edit`)}
+                    >
+                      تعديل البيانات <LuPencil className="actionIcon" />
+                    </span>
+
+                    <span
+                      className="deleteRow"
+                      onClick={() => setShowAlert(true)}
+                    >
+                      حذف الزيارة <LuTrash2 className="actionIcon" />
+                    </span>
                   </div>
                 </div>
               </div>
-            </>
+            </div>
           ))}
         </>
       )}

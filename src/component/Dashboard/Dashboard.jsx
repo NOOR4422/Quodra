@@ -7,8 +7,8 @@ import box from "../../assets/box.png";
 import { useNavigate } from "react-router-dom";
 import user from "../../assets/user.png";
 import { MdOutlinePhoneAndroid } from "react-icons/md";
-
 import sportCar from "../../assets/sportCar.png";
+
 const Dashboard = () => {
   const navigate = useNavigate();
 
@@ -16,19 +16,14 @@ const Dashboard = () => {
 
   const isEmpty = clients.length === 2;
 
-  const handleAddClient = () => {
-    navigate("/addClientForm");
-  };
+  const handleAddClient = () => navigate("/clients/add");
 
-  const handleAddVisit = () => {
-    navigate("/addVisitForm");
-  };
+  const handleAddVisit = () => navigate("/visits/add");
 
-  const handleViewClients = () => {
-    navigate("/clientsList");
-  };
-  const handleViewClientDetails = () => {
-    navigate("/clientDetails/:id");
+  const handleViewClients = () => navigate("/clients");
+
+  const handleViewClientDetails = (id = 1) => {
+    navigate(`/clients/${id}`);
   };
 
   return (
@@ -103,7 +98,7 @@ const Dashboard = () => {
             </div>
           </div>
 
-          <div className=" mainContainer roundedSection">
+          <div className="mainContainer roundedSection">
             <div className="sectionTitle">
               <p className="recentTitle">العملاء الأحدث</p>
               <p className="viewAll" onClick={handleViewClients}>
@@ -111,7 +106,10 @@ const Dashboard = () => {
               </p>
             </div>
 
-            <div className="mainCard" onClick={handleViewClientDetails}>
+            <div
+              className="mainCard"
+              onClick={() => handleViewClientDetails(1)}
+            >
               <span>
                 <img src={user} className="cardImg" />
               </span>
@@ -119,7 +117,7 @@ const Dashboard = () => {
                 <div className="cardRow">
                   <div>
                     <p className="cardTitle">أحمد محمد</p>
-                  </div>{" "}
+                  </div>
                   <div>
                     <p className="cardTitle">آخر زيارة</p>
                   </div>
@@ -137,9 +135,9 @@ const Dashboard = () => {
                     <div className="cardBlock">
                       <img className="carImg" src={sportCar} />
                     </div>
+
                     <div className="cardBlock">
-                      {" "}
-                      <p className="moreDetails ">تفاصيل أكثر ......</p>
+                      <p className="moreDetails">تفاصيل أكثر ......</p>
                     </div>
                   </div>
                   <div>
@@ -148,7 +146,11 @@ const Dashboard = () => {
                 </div>
               </div>
             </div>
-            <div className="mainCard " onClick={handleViewClientDetails}>
+
+            <div
+              className="mainCard"
+              onClick={() => handleViewClientDetails(2)}
+            >
               <span>
                 <img src={user} className="cardImg" />
               </span>
@@ -156,7 +158,7 @@ const Dashboard = () => {
                 <div className="cardRow">
                   <div>
                     <p className="cardTitle">أحمد محمد</p>
-                  </div>{" "}
+                  </div>
                   <div>
                     <p className="cardTitle">آخر زيارة</p>
                   </div>
@@ -174,9 +176,9 @@ const Dashboard = () => {
                     <div className="cardBlock">
                       <img className="carImg" src={sportCar} />
                     </div>
+
                     <div className="cardBlock">
-                      {" "}
-                      <p className="moreDetails ">تفاصيل أكثر ......</p>
+                      <p className="moreDetails">تفاصيل أكثر ......</p>
                     </div>
                   </div>
                   <div>

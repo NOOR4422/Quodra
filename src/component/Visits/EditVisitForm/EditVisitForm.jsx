@@ -36,7 +36,7 @@ const EditVisitForm = ({ visitData }) => {
   };
 
   return (
-    <div className="editClientContainer">
+    <div className="formContainer">
       <AlertModal
         show={showAlert}
         title="تم بنجاح"

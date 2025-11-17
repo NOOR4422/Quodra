@@ -23,7 +23,7 @@ const navigate=useNavigate()
         console.log("Form Data:", data);
 
         alert("تم إرسال رمز التحقق بنجاح!");
-navigate("/resetPasswordCode");
+navigate("/auth/reset/code");
     };
 
     return (
