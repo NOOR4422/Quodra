@@ -45,7 +45,7 @@ width: 100%;
 }
 
 
-.mainForm input {
+.mainForm input select{
   font-family: "Cairo", sans-serif;
   padding:  16px 8px;      
   border-radius: 12px;
