@@ -3,21 +3,26 @@
     background: #ffffff;
     font-family: "Cairo", sans-serif;
 }
+
 .blurBackground {
     filter: blur(6px);
     pointer-events: none;
     user-select: none;
 }
 
+
+.detailsHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 18px;
+}
+
 .topButtons {
     display: flex;
     justify-content: flex-end;
     gap: 15px;
-}
-.detailsHeader{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
 }
 
 .btnNotify {
@@ -42,7 +47,6 @@
     display: flex;
     gap: 25px;
     font-size: 14px;
-    margin-bottom: 18px;
 }
 
 .deleteClient {
@@ -59,6 +63,7 @@
     font-size: 15px;
     margin-top: -3px;
 }
+
 
 .infoCard {
     background: #fff8f7;
@@ -117,42 +122,53 @@
     align-items: center;
     margin-top: 20px;
 }
+@media (max-width: 768px) {
+    .detailsHeader {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+    }
 
-.carContent {
-    margin-top: 10px;
-    padding: 10px 0 15px 0;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 18px;
+    .topButtons {
+        width: 100%;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .btnNotify,
+    .btnVisit {
+        padding: 8px 18px;
+    }
 }
 
-.fieldGroup {
-    display: flex;
-    flex-direction: column;
-}
+@media (max-width: 576px) {
 
-.fieldGroup label {
-    font-size: 14px;
-    color: #555;
-    margin-bottom: 5px;
-}
+    .topButtons {
+        flex-direction: column;
+        align-items: stretch;
+    }
 
-input,
-select {
-    background: white;
-    border: 1.4px solid #eacccc;
-    padding: 8px 12px;
-    border-radius: 10px;
-    font-size: 15px;
-    color: #444;
-}
+    .btnNotify,
+    .btnVisit {
+        width: 100%;
+        text-align: center;
+    }
 
-select {
-    cursor: pointer;
-}
+    .editDeleteRowPage {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 8px;
+        gap: 12px;
+    }
 
-@media (max-width: 680px) {
-    .carContent {
-        grid-template-columns: 1fr;
+    .editClient,
+    .deleteClient {
+        display: flex;
+        align-items: center;
+        gap: 4px;
     }
 }

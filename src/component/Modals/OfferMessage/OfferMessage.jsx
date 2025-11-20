@@ -28,7 +28,7 @@ const OfferMessage = ({
 
   return (
     <div className="alertOverlay">
-      <div className="alertCard">
+      <div className="alertCard offerMessageCard">
         <form className="mainForm2" onSubmit={handleSubmit(onSubmit)}>
           <div className="fieldGroupAlertMessage">
             <label>
@@ -36,7 +36,6 @@ const OfferMessage = ({
             </label>
 
             <input
-              
               type="text"
               placeholder=" رسالة العرض "
               {...register("offer", {

@@ -242,3 +242,65 @@
         align-items: flex-start;
     }
 }
+
+
+@media (max-width: 768px) {
+    .mainCard {
+        flex-direction: row;
+        align-items: flex-start;
+        padding: 14px 14px;
+    }
+
+    .cardRow {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .btnRow {
+        width: 100%;
+        justify-content: flex-start;
+    }
+}
+
+@media (max-width: 576px) {
+    .mainCard {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .cardCol {
+        width: 100%;
+    }
+
+    .mainCard .cardRow {
+        flex-direction: row;
+        align-items: center;
+    }
+
+    .cardTitle {
+        font-size: 15px;
+    }
+
+    .btnRow {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 6px;
+    }
+
+    .btnNotify,
+    .btnVisit {
+        width: 100%;
+        text-align: center;
+    }
+
+    .cardRow:last-child .btnRow {
+        flex-direction: row;
+        justify-content: space-between;
+    }
+
+    .editRow,
+    .deleteRow {
+        flex: 1;
+        justify-content: center;
+    }
+}

@@ -1,31 +1,85 @@
 .fieldGroupAlertMessage {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: flex-start;
-    gap: 10px;
-
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 10px;
 }
+
 .fieldGroupAlertMessage label {
-    font-size: 14px;
-    font-weight: 500;}
-
-    .fieldGroupAlertMessage input{
-    padding: 16px 10px;
-        border: 1.4px solid #eacccc;
-        border-radius: 12px;
-        background: white;
-        font-size: 15px;
-        width: 100%;
-    }
-
-.mainForm2   {
-    display: flex;
-    flex-direction: column;
-    border-radius: 8px;
-    padding: 10px;
-    font-size: 14px;
-    font-family: 'Cairo', sans-serif;
-    resize: none;
-    gap: 20px;
+  font-size: 14px;
+  font-weight: 500;
 }
+
+.fieldGroupAlertMessage input {
+  padding: 16px 10px;
+  border: 1.4px solid #eacccc;
+  border-radius: 12px;
+  background: white;
+  font-size: 15px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.mainForm2 {
+  display: flex;
+  flex-direction: column;
+  border-radius: 8px;
+  padding: 10px;
+  font-size: 14px;
+  font-family: "Cairo", sans-serif;
+  gap: 20px;
+}
+
+
+
+
+@media (max-width: 768px) {
+  .alertCard {
+    width: 100%;
+    max-width: 100%;
+    padding: 24px 18px;
+    box-sizing: border-box;
+  }
+
+  .mainForm2 {
+    padding: 8px;
+    gap: 16px;
+  }
+
+  .fieldGroupAlertMessage label {
+    font-size: 13px;
+  }
+
+  .fieldGroupAlertMessage input {
+    font-size: 14px;
+    padding: 12px 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .alertCard {
+    padding: 20px 14px;
+  }
+
+  .alertButtons {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .alertBtn {
+    width: 100%;
+  }
+
+
+  .offerMessageCard .alertButtons {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      width: 100%;
+  }
+
+  .offerMessageCard .alertBtn {
+      width: 100%;
+  }}
