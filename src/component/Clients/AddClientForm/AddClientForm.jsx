@@ -17,16 +17,16 @@ const AddClientForm = () => {
   };
 
   return (
-    <div className="formContainer">
+    <div className="formContainer container-fluid">
       <h2 className="formTitle">إضافة عميل جديد</h2>
 
       <form
         id="mainForm"
-        className="mainForm"
+        className="mainForm row"
         onSubmit={handleSubmit(onSubmit)}
         dir="rtl"
       >
-        <div className="formCol">
+        <div className="formCol col-12 col-md-6">
           <div className="inputGroup">
             <label>
               الاسم{" "}
@@ -44,6 +44,7 @@ const AddClientForm = () => {
             />
             <p className="errorMsg">{errors.name?.message}</p>
           </div>
+
           <div className="inputGroup">
             <label>
               واتساب{" "}
@@ -73,6 +74,7 @@ const AddClientForm = () => {
             />
             <p className="errorMsg">{errors.whatsapp?.message}</p>
           </div>
+
           <div className="inputGroup">
             <label>
               نوع السيارة{" "}
@@ -90,6 +92,7 @@ const AddClientForm = () => {
             />
             <p className="errorMsg">{errors.carType?.message}</p>
           </div>
+
           <div className="inputGroup">
             <label>
               تاريخ أول زيارة{" "}
@@ -107,7 +110,8 @@ const AddClientForm = () => {
             <p className="errorMsg">{errors.firstVisit?.message}</p>
           </div>
         </div>
-        <div className="formCol">
+
+        <div className="formCol col-12 col-md-6">
           <div className="inputGroup">
             <label>
               رقم الهاتف{" "}
@@ -137,6 +141,7 @@ const AddClientForm = () => {
             />
             <p className="errorMsg">{errors.phone?.message}</p>
           </div>
+
           <div className="inputGroup">
             <label>البريد الإلكتروني</label>
             <input
@@ -152,6 +157,7 @@ const AddClientForm = () => {
             />
             <p className="errorMsg">{errors.email?.message}</p>
           </div>
+
           <div className="inputGroup">
             <label>
               رقم اللوحة{" "}
@@ -173,10 +179,11 @@ const AddClientForm = () => {
             />
             <p className="errorMsg">{errors.plateNumber?.message}</p>
           </div>
+
           <div className="inputGroup">
             <label>ملاحظات</label>
             <input type="text" placeholder="ملاحظات" {...register("notes")} />
-          </div>{" "}
+          </div>
         </div>
       </form>
 

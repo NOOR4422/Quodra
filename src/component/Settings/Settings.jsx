@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { FaPlus, FaTrashAlt, FaEdit } from "react-icons/fa";
-import AddEditAlertModal from "../AddEditAlertModal/AddEditAlertModal";
-import AlertModal from "../AlertModal/AlertModal";
+import AddEditAlertModal from "../Modals/AddEditAlertModal/AddEditAlertModal";
+import AlertModal from "../Modals/AlertModal/AlertModal";
 import "./settings.css";
 import { useNavigate } from "react-router-dom";
 import { IoIosArrowBack } from "react-icons/io";
@@ -29,7 +29,7 @@ const Settings = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [selectedService, setSelectedService] = useState("");
-  const [modalMode, setModalMode] = useState(""); 
+  const [modalMode, setModalMode] = useState("");
 
   const [currentLang, setCurrentLang] = useState("العربية");
 

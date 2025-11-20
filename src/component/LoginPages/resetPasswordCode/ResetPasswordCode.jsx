@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useRef } from "react";
-import resetPassword from "../../assets/reset-password.png";
+import resetPassword from "../../../assets/reset-password.png";
 import "./resetPasswordCode.css";
+
 import { useNavigate } from "react-router-dom";
-import "../styles/loginStyles.css";
 
 const ResetPasswordCode = () => {
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
@@ -38,23 +38,25 @@ const ResetPasswordCode = () => {
     setOtp(updated);
 
     if (value && index < 5) {
-      inputsRef.current[index + 1].focus();
+      inputsRef.current[index + 1]?.focus();
     }
   };
 
   const handleKeyDown = (e, index) => {
     if (e.key === "Backspace" && !otp[index] && index > 0) {
-      inputsRef.current[index - 1].focus();
+      inputsRef.current[index - 1]?.focus();
     }
 
     if (e.key === "ArrowLeft" && index > 0) {
-      inputsRef.current[index - 1].focus();
+      inputsRef.current[index - 1]?.focus();
     }
     if (e.key === "ArrowRight" && index < 5) {
-      inputsRef.current[index + 1].focus();
+      inputsRef.current[index + 1]?.focus();
     }
   };
-const navigate=useNavigate()
+
+  const navigate = useNavigate();
+
   const submitCode = (e) => {
     e.preventDefault();
     const code = otp.join("");
@@ -64,29 +66,30 @@ const navigate=useNavigate()
       return;
     }
 
-      alert("تم إرسال الرمز: " + code);
-      navigate("/auth/reset/change");
+    alert("تم إرسال الرمز: " + code);
+    navigate("/auth/reset/change");
   };
 
   const resendCode = () => {
     setOtp(["", "", "", "", "", ""]);
-    inputsRef.current[0].focus();
+    inputsRef.current[0]?.focus();
     startTimer();
   };
 
   return (
-     <div className="loginContainer" dir="rtl">
-      <div className="loginCard">
-          <div className="headerContainer">
+    <div className="loginContainer container-fluid" dir="rtl">
+      <div className="row justify-content-center w-100 m-0">
+        <div className="loginCard col-11 col-sm-10 col-md-8 col-lg-5 p-0">
+          <div className="headerContainer mt-3">
             <img src={resetPassword} alt="reset" className="tyre" />
-
           </div>
-            <p className="headerText">استعادة كلمة السر</p>
-            <p className="para">أدخل الرمز المرسل إلى هاتفك</p>
-          <form className="formSection" onSubmit={submitCode}>
-                            <div className="formSectionContainer">
- 
-          <div className="otpContainer" dir="ltr">
+
+          <p className="headerText">استعادة كلمة السر</p>
+          <p className="para">أدخل الرمز المرسل إلى هاتفك</p>
+
+          <form className="formSection w-100" onSubmit={submitCode}>
+            <div className="formSectionContainer mx-auto">
+              <div className="otpContainer" dir="ltr">
                 {otp.map((num, index) => (
                   <input
                     key={index}
@@ -114,15 +117,16 @@ const navigate=useNavigate()
 
               <button
                 type="button"
-                className=" resendBtn"
+                className="resendBtn"
                 disabled={counter > 0}
                 onClick={resendCode}
               >
                 إعادة إرسال الرمز
-            </button>
+              </button>
             </div>
           </form>
         </div>
+      </div>
     </div>
   );
 };

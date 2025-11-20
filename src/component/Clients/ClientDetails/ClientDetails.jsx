@@ -8,13 +8,13 @@ import {
 } from "react-icons/pi";
 import { LuTrash2, LuPencil } from "react-icons/lu";
 import { IoChevronDownOutline, IoChevronUpOutline } from "react-icons/io5";
-import AlertModal from "../../AlertModal/AlertModal";
+import AlertModal from "../../Modals/AlertModal/AlertModal";
 import { useNavigate, useParams } from "react-router-dom";
 import { IoIosArrowForward } from "react-icons/io";
 
 const ClientDetails = () => {
   const navigate = useNavigate();
-  const { id } = useParams(); 
+  const { id } = useParams();
 
   const [client, setClient] = useState({
     name: "محمد احمد",

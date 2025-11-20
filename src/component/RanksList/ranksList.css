@@ -4,16 +4,13 @@
 }
 
 .ranksGrid {
-       width: 100%;
- display: flex;
- flex-wrap:wrap;
- align-items: center; */
+    width: 100%;
+    display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 20px;
 }
 
 .rankCard {
-    width:25%;
     background: #ffffff;
     border: 0.5px solid #eacccc;
     border-radius: 15px;
@@ -32,7 +29,6 @@
 
 .rankIcon {
     font-size: 40px;
-    margin: 0 auto;
 }
 
 .rankTitle {
@@ -46,14 +42,13 @@
     color: #666;
     display: flex;
     justify-content: space-between;
-    padding: 0 15px;
 }
 
 .sendOfferBtn {
     background: #DD2912;
     color: white;
     border: none;
-    padding: 8px ;
+    padding: 8px;
     border-radius: 10px;
     font-size: 15px;
 }
@@ -65,19 +60,15 @@
     padding: 20px;
 }
 
-
 .sentOfferItem {
     display: flex;
     align-items: center;
     justify-content: space-between;
-
     background: white;
     border: 1.5px solid #efcbcb;
     border-radius: 12px;
-
     padding: 14px 18px;
     margin-bottom: 15px;
-
     height: 60px;
 }
 
@@ -109,11 +100,10 @@
     font-size: 14px;
 }
 
-.rankHeader{
+.rankHeader {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 8px;
+    align-items: center;    justify-content: space-between;
+
 }
 
 .rankImg {
@@ -122,7 +112,19 @@
     flex-shrink: 0;
 }
 
-.emptyBtns{
+.emptyBtns {
     display: flex;
     gap: 12px;
+}
+
+@media (max-width: 992px) {
+    .ranksGrid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 576px) {
+    .ranksGrid {
+        grid-template-columns: 1fr;
+    }
 }

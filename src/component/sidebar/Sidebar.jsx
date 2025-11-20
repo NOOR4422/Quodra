@@ -11,9 +11,9 @@ import { IoLogOutOutline } from "react-icons/io5";
 
 import tyre from "../../assets/tyre.png";
 
-const Sidebar = () => {
+const Sidebar = ({ isOpen }) => {
   return (
-    <div className="sidebar">
+    <div className={`sidebar ${isOpen ? "sidebar--open" : ""}`}>
       <div className="sideLogo">
         <img src={tyre} className="logoImg" alt="" />
         <p className="logoText">قُدْرَة</p>

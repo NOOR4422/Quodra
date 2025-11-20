@@ -31,18 +31,12 @@ const CarModal = ({ isOpen, onClose, onSave }) => {
   return (
     <div className="modalOverlay">
       <div className="carModalContainer" dir="rtl">
-        <div className="closeIcon" onClick={onClose}>
-            &times;
-            
-
-        </div>
-        {/* <h3 className="modalTitle">إضافة سيارة جديدة</h3> */}
+      
 
         <form className="carForm" onSubmit={handleSubmit(onSubmit)}>
-
-
-       
-          <div className="formRow">
+         <div className="closeIcon" onClick={onClose}>
+          &times;
+        </div>   <div className="formRow">
             <div className="formCol">
               <div className="inputGroup">
                 <label>
@@ -88,7 +82,9 @@ const CarModal = ({ isOpen, onClose, onSave }) => {
                 <input
                   type="text"
                   placeholder="رقم اللوحة"
-                  {...register("plateNumber", { required: "هذا الحقل مطلوب" })}
+                  {...register("plateNumber", {
+                    required: "هذا الحقل مطلوب",
+                  })}
                   className={errors.plateNumber ? "inputError" : ""}
                 />
                 <p className="errorMsg">{errors.plateNumber?.message}</p>
@@ -109,7 +105,6 @@ const CarModal = ({ isOpen, onClose, onSave }) => {
                   <option value="5W-30 Synthetic">5W-30 Synthetic</option>
                   <option value="10W-40">10W-40</option>
                 </select>
-
                 <p className="errorMsg">{errors.oilType?.message}</p>
               </div>
             </div>

@@ -1,10 +1,8 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { FaStar } from "react-icons/fa";
-import AlertModal from "../../AlertModal/AlertModal";
+import AlertModal from "../../Modals/AlertModal/AlertModal";
 import "./addNotificationForm.css";
-import "../../styles/formsStyle.css";
-
 
 const AddNotificationForm = () => {
   const [showAlert, setShowAlert] = useState(false);
@@ -64,8 +62,7 @@ const AddNotificationForm = () => {
 
           <div className="inputGroup">
             <label>التاريخ</label>
-                      <input type="date" {...register("date")} placeholder="التاريخ" />
-                      
+            <input type="date" {...register("date")} placeholder="التاريخ" />
           </div>
         </div>
 
@@ -102,8 +99,8 @@ const AddNotificationForm = () => {
               placeholder="اكتب نص الإشعار هنا..."
               {...register("message", { required: "يجب إدخال نص الإشعار" })}
               className={errors.message ? "inputError" : ""}
-                      />
-                      <p className="errorMsg">{errors.message?.message}</p>
+            />
+            <p className="errorMsg">{errors.message?.message}</p>
           </div>
         </div>
       </form>

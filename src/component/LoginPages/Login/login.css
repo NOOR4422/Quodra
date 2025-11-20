@@ -4,7 +4,7 @@
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    padding-top: 40px ;
+    padding-top: 40px;
     padding-bottom: 40px;
 }
 
@@ -12,7 +12,7 @@
     width: 40%;
     background: #fff;
     border-radius: 16px;
-  
+
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -49,19 +49,20 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-        border: 1px solid #E4DDDD;
-            border-radius: 15px;
+    border: 1px solid #E4DDDD;
+    border-radius: 15px;
 }
 
 
-.formSectionContainer{       
-     padding: 50px 70px;
+.formSectionContainer {
+    padding: 50px 20px;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     width: 90%;
     gap: 20px;
 }
+
 .inputGroup {
     width: 100%;
 }
@@ -85,22 +86,20 @@
 
 .inputField {
     width: 100%;
-   
+
     box-sizing: border-box;
-        padding: 16px 8px;
-            border-radius: 12px;
-            border: 1px solid #eacccc;
-            font-size: 16px;
-            background: #fff;
-            transition: 0.2s;
-        padding-right: 40px;
+    padding: 16px 8px;
+    border-radius: 12px;
+    border: 1px solid #eacccc;
+    font-size: 16px;
+    background: #fff;
+    transition: 0.2s;
+    padding-right: 40px;
 
 
 }
 
-.inputField::placeholder {
-   
-}
+.inputField::placeholder {}
 
 .inputField:focus {
     border-color: #DD2912;

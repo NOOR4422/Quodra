@@ -1,0 +1,113 @@
+.alertOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.18);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  padding: 12px;
+}
+
+.alertCard {
+  background: #fff8f7;
+  border: 1.6px solid #f2d9d9;
+  border-radius: 16px;
+  padding: 32px 32px;
+  text-align: center;
+  direction: rtl;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  animation: fadeIn 0.25s ease-out;
+  box-sizing: border-box;
+
+  width: min(420px, 100%);  
+}
+
+.alertHeader {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Cairo", sans-serif;
+  margin: 0;
+  color: #000;
+}
+
+.alertIcon {
+  font-size: 24px;
+  margin-right: 4px;
+}
+
+.alertTitle {
+  margin: 0;
+  margin-bottom: 12px;
+  font-size: 20px;
+  color: #DD2912;
+  font-weight: 600;
+}
+
+.alertMessage {
+  font-size: 15px;
+  color: #444;
+  margin: 0 0 24px 0;
+}
+
+.alertButtons {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+.alertBtn {
+  min-width: 120px;
+  padding: 10px 0;
+  border-radius: 10px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.alertBtn.cancel {
+  background: #fff;
+  border: 1.7px solid #e0bfbf;
+  color: #DD2912;
+}
+
+.alertBtn.confirm {
+  background: #DD2912;
+  border: none;
+  color: #fff;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@media (max-width: 768px) {
+  .alertCard {
+    padding: 24px 20px;
+  }
+
+  .alertTitle {
+    font-size: 18px;
+  }
+
+  .alertMessage {
+    font-size: 14px;
+    margin-bottom: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .alertCard {
+    width: 100%;
+    padding: 20px 16px;
+  }
+
+}

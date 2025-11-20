@@ -3,7 +3,7 @@ import "./clientsList.css";
 import { PiUserFill } from "react-icons/pi";
 import { LuTrash2, LuPencil } from "react-icons/lu";
 import { useNavigate } from "react-router-dom";
-import AlertModal from "../../AlertModal/AlertModal";
+import AlertModal from "../../Modals/AlertModal/AlertModal";
 import box from "../../../assets/box.png";
 import { MdOutlinePhoneAndroid } from "react-icons/md";
 import user from "../../../assets/user.png";

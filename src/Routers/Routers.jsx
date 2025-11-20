@@ -2,10 +2,10 @@ import { Routes, Route } from "react-router-dom";
 
 import Layout from "../component/Layout/Layout";
 
-import Login from "../component/loginPage/Login";
-import ResetPassword from "../component/resetPassword/ResetPassword";
-import ResetPasswordCode from "../component/resetPasswordCode/ResetPasswordCode";
-import ChangePassword from "../component/changePassword/ChangePassword";
+import Login from "../component/LoginPages/Login/Login";
+import ResetPassword from "../component/LoginPages/resetPassword/ResetPassword";
+import ResetPasswordCode from "../component/LoginPages/resetPasswordCode/ResetPasswordCode";
+import ChangePassword from "../component/LoginPages/changePassword/ChangePassword";
 
 import Dashboard from "../component/Dashboard/Dashboard";
 import ClientsList from "../component/Clients/ClientsList/ClientsList";

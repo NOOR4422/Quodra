@@ -2,34 +2,36 @@
   background: #fff8f7;
   border: 1.7px dashed #f0bebe;
   border-radius: 14px;
-  padding: 45px 30px;    
+  padding: 45px 30px;
   direction: rtl;
   font-family: "Cairo", sans-serif;
   gap: 20px;
 }
 
 .formTitle {
- 
   text-align: center;
-      font-size: 20px;
-        font-weight: 600;
-        color: #3a3a3a;
-        margin-bottom:20px ;
+  font-size: 20px;
+  font-weight: 600;
+  color: #3a3a3a;
+  margin-bottom: 20px;
 }
 
 .mainForm {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-width: 100%;
-  
+  width: 100%;
+  gap: 20px;
+  flex-wrap: wrap;
 }
 
-.formCol{
+.formCol {
   display: flex;
   flex-direction: column;
-  width: 40%;
+  width: 100%;
+  gap: 12px;
 }
+
 .formCol label {
   font-size: 15px;
   font-weight: 500;
@@ -44,27 +46,32 @@ width: 100%;
   font-size: 10px;
 }
 
-
-.mainForm input ,select{
+.mainForm input,
+.mainForm select {
   font-family: "Cairo", sans-serif;
-  padding:  16px 8px;      
+  padding: 16px 8px;
   border-radius: 12px;
   border: 1px solid #eacccc;
   font-size: 16px;
   background: #fff;
   transition: 0.2s;
+  width: 100%;
+  box-sizing: border-box;
 }
 
-.mainForm input:focus {
+.mainForm input:focus,
+.mainForm select:focus {
   border-color: #dd2912;
   outline: none;
 }
+
 .inputGroup {
   width: 100%;
   display: flex;
   flex-direction: column;
   gap: 4px;
 }
+
 .inputError {
   border-color: #dd2912 !important;
   background: #fff2ef;
@@ -92,16 +99,32 @@ width: 100%;
   transition: 0.25s;
 }
 
-
-
 .submitBtn:hover {
   opacity: 0.9;
 }
 
 @media (max-width: 850px) {
-  .mainForm {
-    grid-template-columns: 1fr;
-    column-gap: 0;
+  .formContainer {
+    padding: 30px 16px;
   }
 
+  .mainForm {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .formCol {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .formContainer {
+    padding: 24px 12px;
+  }
+
+  .submitBtn {
+    width: 100%;
+    padding-inline: 0;
+  }
 }

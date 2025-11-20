@@ -5,7 +5,7 @@ import carIcon from "../../../assets/car.png";
 import serviceIcon from "../../../assets/process.png";
 import { IoPersonOutline } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
-import AlertModal from "../../AlertModal/AlertModal";
+import AlertModal from "../../Modals/AlertModal/AlertModal";
 import box from "../../../assets/box.png";
 
 const VisitsList = () => {

@@ -2,7 +2,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import "../AddVisitForm/addVisitForm.css";
 import { FaStar } from "react-icons/fa";
-import AlertModal from "../../AlertModal/AlertModal";
+import AlertModal from "../../Modals/AlertModal/AlertModal";
 
 import { useState } from "react";
 const EditVisitForm = ({ visitData }) => {
@@ -19,7 +19,7 @@ const EditVisitForm = ({ visitData }) => {
       visitDate: "2025-10-25",
       services: "غسيل و تلميع",
       price: "300",
-      oilChanged: "no", 
+      oilChanged: "no",
       oilType: "5W-30",
       oilAmount: "4",
       kmAtChange: "15000",
@@ -121,7 +121,6 @@ const EditVisitForm = ({ visitData }) => {
               <p className="errorMsg">{errors.kmAtChange?.message}</p>
             </div>
           )}
-
         </div>{" "}
         <div className="formCol">
           <div className="inputGroup">

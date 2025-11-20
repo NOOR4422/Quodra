@@ -10,23 +10,26 @@
 
 .carModalContainer {
     width: 850px;
+    max-width: 95vw;
     background: #fff8f7;
     border: 1.7px dashed #f0bebe;
     border-radius: 14px;
-    padding: 50px  ;
+    padding: 50px;
     font-family: "Cairo", sans-serif;
     position: relative;
+    box-sizing: border-box;
 }
-.closeIcon{
+
+.closeIcon {
     position: absolute;
     top: 20px;
     right: 20px;
     font-size: 22px;
     color: #dd2912;
     cursor: pointer;
-    margin-bottom: 20px;
-    
+    margin-bottom: 40px;
 }
+
 .modalTitle {
     text-align: center;
     margin-bottom: 35px;
@@ -47,6 +50,7 @@
     justify-content: space-between;
     gap: 20px;
 }
+
 .formCol {
     width: 48%;
     display: flex;
@@ -54,9 +58,7 @@
     gap: 25px;
 }
 
-
-
-label {
+.carModalContainer label {
     font-size: 15px;
     font-weight: 600;
     color: #333;
@@ -68,17 +70,19 @@ label {
     margin-right: 3px;
 }
 
-/* input,
-select {
+.carModalContainer input,
+.carModalContainer select {
     padding: 16px 10px;
     border: 1.4px solid #eacccc;
     border-radius: 12px;
     background: white;
     font-size: 15px;
-} */
+    width: 100%;
+    box-sizing: border-box;
+}
 
-input:focus,
-select:focus {
+.carModalContainer input:focus,
+.carModalContainer select:focus {
     border-color: #dd2912;
     outline: none;
 }
@@ -109,4 +113,36 @@ select:focus {
 
 .saveBtn:hover {
     opacity: 0.9;
+}
+
+@media (max-width: 768px) {
+    .modalOverlay {
+        padding: 12px;
+    }
+
+    .carModalContainer {
+        width: 100%;
+        max-width: 100%;
+        padding: 30px 20px;
+    }
+
+    .formRow {
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .formCol {
+        width: 100%;
+        gap: 18px;
+    }
+
+    .saveBtn {
+        width: 100%;
+        padding-inline: 0;
+    }
+
+    .closeIcon {
+        top: 12px;
+        right: 12px;
+    }
 }

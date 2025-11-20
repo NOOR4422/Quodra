@@ -2,10 +2,10 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import "./addVisitForm.css";
 import { FaStar } from "react-icons/fa";
-import AlertModal from "../../AlertModal/AlertModal";
+import AlertModal from "../../Modals/AlertModal/AlertModal";
 import { useState } from "react";
 const AddVisitForm = () => {
-      const [showAlert, setShowAlert] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
 
   const {
     register,
@@ -39,8 +39,8 @@ const AddVisitForm = () => {
     }
 
     console.log("✅ Visit Added:", data);
-      clearErrors("serviceCheck");
-        setShowAlert(true);
+    clearErrors("serviceCheck");
+    setShowAlert(true);
   };
 
   const isOilChanged = watch("oilChanged");

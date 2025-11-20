@@ -8,7 +8,7 @@ import gold from "../../assets/gold.png";
 import winner from "../../assets/winner.png";
 import box from "../../assets/box.png";
 import { useNavigate } from "react-router-dom";
-import OfferMessage from "../OfferMessage/OfferMessage";
+import OfferMessage from "../Modals/OfferMessage/OfferMessage";
 const RanksList = () => {
   const navigate = useNavigate();
 

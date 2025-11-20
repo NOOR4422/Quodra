@@ -8,6 +8,8 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 12px;
+    width: 100%;
 }
 
 .action-buttons {
@@ -42,13 +44,9 @@
 }
 
 .stats {
-    display: flex;
-    justify-content: space-between;
-    gap: 20px;
 }
 
 .statCard {
-    width: 32%;
     background: #FFF8F7;
     border: 0.5px solid #eacccc;
     border-radius: 15px;
@@ -58,6 +56,7 @@
     flex-direction: column;
     justify-content: space-between;
     box-shadow: 0px 1px 6px rgba(0, 0, 0, 0.03);
+    width: 100%;
 }
 
 .statTop {
@@ -103,6 +102,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin: 0;
 }
 
 .recentTitle {
@@ -139,13 +139,14 @@
     display: flex;
     flex-direction: column;
     width: 100%;
-    /* gap: 5px; */
 }
+
 
 .cardRow {
     display: flex;
     justify-content: space-between;
     width: 100%;
+    gap: 8px;
 }
 
 .cardTitle {
@@ -155,20 +156,11 @@
     margin: 0;
 }
 
-.sectionTitle {
-    /* font-size: 20px; */
-    font-size: 20px;
-    font-weight: 600;
-    text-align: center;
-    display: flex;
-    align-items: start;
-    justify-content: space-between;
-    margin: 0;
-}
 .cardDetails {
     display: flex;
     align-items: center;
     gap: 10px;
+    flex-wrap: wrap;
 }
 
 .cardBlock {
@@ -199,7 +191,6 @@
     font-weight: 500;
     cursor: pointer;
     margin: 0;
-    cursor: pointer;
 }
 
 .emptyState {
@@ -223,4 +214,31 @@
 
 .emptySubText {
     color: #777;
+}
+
+@media (max-width: 767.98px) {
+
+    .dashboard-header {
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+    
+        .action-buttons {
+            width: 100%;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+    .welcome {
+        margin-bottom: 10px;
+    }
+
+    .action-buttons {
+        justify-content: space-between;
+    }
+
+    .mainCard {
+        flex-direction: row;
+        align-items: flex-start;
+    }
 }

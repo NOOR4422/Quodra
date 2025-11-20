@@ -1,37 +1,29 @@
-
 .navbar {
     background: #FFF8F7;
     padding: 12px 0;
     border-bottom: 1px solid #f1eaea;
     box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.08);
-
-    
-.navbar {
-        width: calc(100% - 230px);
-        margin-right: 230px;
-        background: #FFF8F7;
-        padding: 12px 0;
-        border-bottom: 1px solid #f1eaea;
-        box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.08);
-    }
-        
-
+    width: 100%;
+    margin-right: 0;
 }
 
-.navbar-container {    
-    max-width: 1200px;
-    margin: auto;
+.navbar-container {
+    width: 100%;
+    margin: 0;
+    padding: 0 16px;
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    padding: 0 20px;
+    justify-content: space-between;
+    gap: 12px;
 }
+
 
 .profileSection {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0px;
+    gap: 0;
+    flex-shrink: 0;
 }
 
 .profileImage {
@@ -48,10 +40,10 @@
 .navRightSection {
     display: flex;
     align-items: center;
-    justify-content: center;
-    gap: 15px;
-    width: 826px;
-    height: 56px;
+    gap: 10px;
+    flex: 1;
+    justify-content: flex-start;
+    min-width: 0;
 }
 
 .searchBar {
@@ -62,9 +54,11 @@
     border: 1px solid #f1eaea;
     border-radius: 12px;
     padding: 8px 40px 8px 12px;
-    width: 660px;
-    height: 36px;
+    height: 50px;
     direction: rtl;
+    flex: 1 1 280px;
+    max-width: 460px;
+    min-width: 160px;
 }
 
 .searchInput {
@@ -89,4 +83,41 @@
     font-size: 24px;
     cursor: pointer;
     color: #444;
+    flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+    .navbar-container {
+        padding: 0 10px;
+    }
+
+    .searchBar {
+        flex: 0 1 55%;
+    }
+}
+.menuToggle {
+    display: none;
+    background: transparent;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #444;
+}
+@media (max-width: 480px) {
+.menuToggle {
+        display: block;
+    }
+    .searchBar {
+        flex: 0 1 50%;
+        padding: 6px 32px 6px 8px;
+    }
+
+    .profileImage {
+        width: 32px;
+        height: 32px;
+    }
+
+    .settingsIcon {
+        font-size: 22px;
+    }
 }
