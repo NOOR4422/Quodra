@@ -4,7 +4,6 @@ import { AiOutlineEyeInvisible, AiOutlineEye } from "react-icons/ai";
 import { LuLockKeyhole } from "react-icons/lu";
 import tyre from "../../../assets/tyre.png";
 import "./changePassword.css";
-import "../login/login.css"; 
 import { useNavigate } from "react-router-dom";
 
 const ChangePassword = () => {
