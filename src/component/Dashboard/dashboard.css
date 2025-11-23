@@ -295,8 +295,8 @@
       text-align: center;
   }
     .cardRow:last-child .btnRow {
-        flex-direction: row;
-        justify-content: space-between;
+        /* flex-direction: row; */
+        /* justify-content: space-between; */
     }
 
     .editRow,
