@@ -63,7 +63,7 @@
   }
 
   .alertButtons {
-    flex-direction: column;
+    /* flex-direction: column; */
     align-items: stretch;
     gap: 10px;
   }

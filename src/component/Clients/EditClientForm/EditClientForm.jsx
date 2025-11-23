@@ -32,16 +32,16 @@ const EditClientForm = () => {
 
   return (
     <>
-      <div className="formContainer ">
+      <div className="formContainer container-fluid">
         <h2 className="formTitle">تعديل بيانات العميل</h2>
 
         <form
           id="editForm"
-          className="mainForm"
+          className="mainForm row"
           onSubmit={handleSubmit(onSubmit)}
           dir="rtl"
         >
-          <div className="formCol">
+          <div className="formCol col-12 col-md-6">
             <div className="inputGroup">
               <label>
                 الاسم{" "}
@@ -116,7 +116,7 @@ const EditClientForm = () => {
             </div>
           </div>
 
-          <div className="formCol">
+          <div className="formCol col-12 col-md-6">
             <div className="inputGroup">
               <label>
                 رقم الهاتف{" "}

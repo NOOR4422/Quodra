@@ -21,7 +21,7 @@ const AddNotificationForm = () => {
   };
 
   return (
-    <div className="formContainer ">
+    <div className="formContainer container-fluid ">
       <AlertModal
         show={showAlert}
         title="تم بنجاح"
@@ -36,11 +36,11 @@ const AddNotificationForm = () => {
 
       <form
         id="addNotificationForm"
-        className="mainForm"
+        className="mainForm row"
         onSubmit={handleSubmit(onSubmit)}
         dir="rtl"
       >
-        <div className="formCol">
+        <div className="formCol col-12 col-md-6">
           <div className="inputGroup">
             <label>
               الفئة{" "}
@@ -66,7 +66,7 @@ const AddNotificationForm = () => {
           </div>
         </div>
 
-        <div className="formCol">
+        <div className="formCol col-12 col-md-6">
           <div className="inputGroup">
             <label>
               نوع الإشعار{" "}

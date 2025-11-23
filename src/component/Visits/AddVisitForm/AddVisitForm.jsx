@@ -46,7 +46,7 @@ const AddVisitForm = () => {
   const isOilChanged = watch("oilChanged");
 
   return (
-    <div className="formContainer ">
+    <div className="formContainer container-fluid">
       <AlertModal
         show={showAlert}
         title="تم بنجاح"
@@ -64,11 +64,11 @@ const AddVisitForm = () => {
 
       <form
         id="addVisitForm"
-        className="mainForm"
+        className="mainForm row"
         onSubmit={handleSubmit(onSubmit)}
         dir="rtl"
       >
-        <div className="formCol">
+        <div className="formCol col-12 col-md-6">
           <div className="inputGroup">
             <label>
               اسم العميل{" "}
@@ -196,7 +196,7 @@ const AddVisitForm = () => {
           )}
         </div>
 
-        <div className="formCol">
+        <div className="formCol col-12 col-md-6">
           <div className="inputGroup">
             <label>
               نوع السيارة{" "}

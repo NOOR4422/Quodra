@@ -50,7 +50,7 @@ const ClientDetails = () => {
 
   return (
     <>
-      <div className="mainContainer">
+      <div className="mainContainer container-fluid" dir="rtl">
         <AlertModal
           show={showAlert}
           title="تحذير"
@@ -147,8 +147,8 @@ const ClientDetails = () => {
               </div>
 
               {car.open && (
-                <div className="mainForm">
-                  <div className="formCol">
+                <div className="mainForm row">
+                  <div className="formCol col-12 col-md-6">
                     <div className="inputGroup">
                       <label>نوع السيارة</label>
                       <input type="text" defaultValue={car.type} readOnly />
@@ -160,7 +160,7 @@ const ClientDetails = () => {
                     </div>
                   </div>
 
-                  <div className="formCol">
+                  <div className="formCol col-12 col-md-6">
                     <div className="inputGroup">
                       <label>قراءة العداد الحالية</label>
                       <input type="text" defaultValue={car.mileage} readOnly />

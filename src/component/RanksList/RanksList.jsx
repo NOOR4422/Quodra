@@ -144,7 +144,7 @@ const [selectedRank, setSelectedRank] = useState(null);
           </div>
 
           <div className="mainContainer roundedSection">
-            <p className="sectionTitle ">العروض المرسلة</p>
+            <p className="cardTitle ">العروض المرسلة</p>
             {offers.map((offer, index) => (
               <>
                 <div className="mainCard" key={index}>

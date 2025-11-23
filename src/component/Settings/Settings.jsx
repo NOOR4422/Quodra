@@ -60,11 +60,13 @@ const Settings = () => {
 
   return (
     <div className="mainContainer" dir="rtl">
-      <div className="mainContainer innerContainer">
+      <div className="innerContainer mainContainer container-fluid">
         {" "}
-        <p className="languageRow sectionTitle">معلومات الورشة</p>
-        <form className="mainForm" dir="rtl">
-          <div className="formCol">
+        <div className="languageRow">
+          <p className=" languageLabel">معلومات الورشة</p>
+        </div>
+        <form className="mainForm row" dir="rtl">
+          <div className="formCol col-12 col-md-6">
             <div className="inputGroup">
               <label>
                 اسم الورشة <span className="req"></span>
@@ -80,7 +82,7 @@ const Settings = () => {
             </div>
           </div>
 
-          <div className="formCol">
+          <div className="formCol col-12 col-md-6">
             <div className="inputGroup">
               <label>
                 عنوان الورشة <span className="req"></span>
@@ -99,7 +101,7 @@ const Settings = () => {
       <div className="innerContainer mainContainer">
         <div className="languageRow">
           <div>
-            <p className="sectionTitle">خدمات الورشة</p>
+            <p className="cardTitle">خدمات الورشة</p>
           </div>
 
           <div>
