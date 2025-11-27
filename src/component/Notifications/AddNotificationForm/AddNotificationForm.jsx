@@ -33,6 +33,8 @@ const selectStyles = {
   option: (base, state) => ({
     ...base,
     textAlign: "right",
+    borderRadius: 12,
+
     fontFamily: "Cairo, sans-serif",
     backgroundColor: state.isSelected
       ? "#dd2912"
