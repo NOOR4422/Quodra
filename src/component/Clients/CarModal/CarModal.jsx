@@ -2,6 +2,8 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import "./carModal.css";
 import { FaStar } from "react-icons/fa";
+import Select from "react-select";
+import {  Controller } from "react-hook-form";
 
 const CarModal = ({ isOpen, onClose, onSave }) => {
   if (!isOpen) return null;
@@ -9,9 +11,14 @@ const CarModal = ({ isOpen, onClose, onSave }) => {
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors },
     reset,
   } = useForm({ mode: "onTouched" });
+const oilOptions = [
+  { value: "5W-30 Synthetic", label: "5W-30 Synthetic" },
+  { value: "10W-40", label: "10W-40" },
+];
 
   const saveToLocalStorage = (carData) => {
     const existingCars = JSON.parse(localStorage.getItem("cars")) || [];
@@ -96,23 +103,68 @@ const CarModal = ({ isOpen, onClose, onSave }) => {
                     <FaStar />
                   </span>
                 </label>
-                <select
-                  {...register("oilType", { required: "هذا الحقل مطلوب" })}
-                  className={errors.oilType ? "inputError" : ""}
-                >
-                  <option value="">اختر نوع الزيت</option>
-                  <option value="5W-30 Synthetic">5W-30 Synthetic</option>
-                  <option value="10W-40">10W-40</option>
-                </select>
+                <Controller
+                  name="oilType"
+                  control={control}
+                  render={({ field }) => (
+                    <Select
+                      {...field}
+                      options={oilOptions}
+                      classNamePrefix="oilSelect"
+                      isSearchable={false}
+                      styles={{
+                        container: (base) => ({
+                          ...base,
+                          outline: "none",
+                        }),
+                        control: (base, state) => ({
+                          ...base,
+                          borderRadius: 12,
+                          borderColor: state.isFocused ? "#dd2912" : "#eacccc",
+                          boxShadow: "none",
+                          outline: "none",
+                          height: 55,
+                          paddingInline: 4,
+                          direction: "rtl",
+                          "&:hover": {
+                            borderColor: state.isFocused
+                              ? "#dd2912"
+                              : "#eacccc",
+                          },
+                        }),
+                        menu: (base) => ({
+                          ...base,
+                          borderRadius: 12,
+                          zIndex: 9999,
+                          marginTop: 2,
+                        }),
+                        option: (base, state) => ({
+                          ...base,
+                          borderRadius: 12,
+
+                          textAlign: "right",
+                          fontFamily: "Cairo, sans-serif",
+                          backgroundColor: state.isSelected
+                            ? "#dd2912"
+                            : state.isFocused
+                            ? "#fff"
+                            : "#fff",
+                          color: state.isSelected ? "#fff" : "#333",
+                        }),
+                        indicatorSeparator: () => ({ display: "none" }),
+                      }}
+                    />
+                  )}
+                />
                 <p className="errorMessage">{errors.oilType?.message}</p>
               </div>
             </div>
           </div>
           <div>
-          <button type="submit" className="submitBtn">
-            حفظ
-          </button>
-          </div>  
+            <button type="submit" className="submitBtn">
+              حفظ
+            </button>
+          </div>
         </form>
       </div>
     </div>

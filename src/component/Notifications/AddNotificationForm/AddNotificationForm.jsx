@@ -1,8 +1,60 @@
 import React, { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { FaStar } from "react-icons/fa";
 import AlertModal from "../../Modals/AlertModal/AlertModal";
+import Select from "react-select";
 import "./addNotificationForm.css";
+
+// 🔹 shared dropdown styles (same as in your other forms)
+const selectStyles = {
+  container: (base) => ({
+    ...base,
+    outline: "none",
+  }),
+  control: (base, state) => ({
+    ...base,
+    borderRadius: 12,
+    borderColor: state.isFocused ? "#dd2912" : "#eacccc",
+    boxShadow: "none",
+    outline: "none",
+    height: 55,
+    paddingInline: 4,
+    direction: "rtl",
+    "&:hover": {
+      borderColor: state.isFocused ? "#dd2912" : "#eacccc",
+    },
+  }),
+  menu: (base) => ({
+    ...base,
+    borderRadius: 12,
+    zIndex: 9999,
+    marginTop: 2,
+  }),
+  option: (base, state) => ({
+    ...base,
+    textAlign: "right",
+    fontFamily: "Cairo, sans-serif",
+    backgroundColor: state.isSelected
+      ? "#dd2912"
+      : state.isFocused
+      ? "#fff"
+      : "#fff",
+    color: state.isSelected ? "#fff" : "#333",
+  }),
+  indicatorSeparator: () => ({ display: "none" }),
+};
+
+const categoryOptions = [
+  { value: "العملاء", label: "العملاء" },
+  { value: "الفنيين", label: "الفنيين" },
+  { value: "الإدارة", label: "الإدارة" },
+];
+
+const notificationTypeOptions = [
+  { value: "تنبيه", label: "تنبيه" },
+  { value: "تذكير", label: "تذكير" },
+  { value: "إعلان", label: "إعلان" },
+];
 
 const AddNotificationForm = () => {
   const [showAlert, setShowAlert] = useState(false);
@@ -12,7 +64,16 @@ const AddNotificationForm = () => {
     handleSubmit,
     formState: { errors },
     reset,
-  } = useForm({ mode: "onTouched" });
+    control,
+  } = useForm({
+    mode: "onTouched",
+    defaultValues: {
+      category: "",
+      notificationType: "",
+      date: "",
+      message: "",
+    },
+  });
 
   const onSubmit = (data) => {
     console.log("✅ Notification Sent:", data);
@@ -48,16 +109,41 @@ const AddNotificationForm = () => {
                 <FaStar />
               </span>
             </label>
-            <select
-              {...register("category", { required: "يجب اختيار الفئة" })}
-              className={errors.category ? "inputError" : ""}
-            >
-              <option value="">اختر الفئة التي تستقبل الإشعار</option>
-              <option value="العملاء">العملاء</option>
-              <option value="الفنيين">الفنيين</option>
-              <option value="الإدارة">الإدارة</option>
-            </select>
-            <p className="errorMessage">{errors.category?.message}</p>
+
+            <Controller
+              name="category"
+              control={control}
+              rules={{ required: "يجب اختيار الفئة" }}
+              render={({ field, fieldState }) => {
+                const selectedOption =
+                  categoryOptions.find((o) => o.value === field.value) || null;
+
+                return (
+                  <>
+                    <Select
+                      {...field}
+                      value={selectedOption}
+                      onChange={(opt) => field.onChange(opt ? opt.value : "")}
+                      options={categoryOptions}
+                      classNamePrefix="categorySelect"
+                      isSearchable={false}
+                      styles={{
+                        ...selectStyles,
+                        control: (base, state) => ({
+                          ...selectStyles.control(base, state),
+                          borderColor: fieldState.invalid
+                            ? "#dd2912"
+                            : state.isFocused
+                            ? "#dd2912"
+                            : "#eacccc",
+                        }),
+                      }}
+                    />
+                    <p className="errorMessage">{fieldState.error?.message}</p>
+                  </>
+                );
+              }}
+            />
           </div>
 
           <div className="inputGroup">
@@ -74,18 +160,43 @@ const AddNotificationForm = () => {
                 <FaStar />
               </span>
             </label>
-            <select
-              {...register("notificationType", {
-                required: "يجب اختيار نوع الإشعار",
-              })}
-              className={errors.notificationType ? "inputError" : ""}
-            >
-              <option value="">اختر نوع الإشعار</option>
-              <option value="تنبيه">تنبيه</option>
-              <option value="تذكير">تذكير</option>
-              <option value="إعلان">إعلان</option>
-            </select>
-            <p className="errorMessage">{errors.notificationType?.message}</p>
+
+            <Controller
+              name="notificationType"
+              control={control}
+              rules={{ required: "يجب اختيار نوع الإشعار" }}
+              render={({ field, fieldState }) => {
+                const selectedOption =
+                  notificationTypeOptions.find(
+                    (o) => o.value === field.value
+                  ) || null;
+
+                return (
+                  <>
+                    <Select
+                      {...field}
+                      value={selectedOption}
+                      onChange={(opt) => field.onChange(opt ? opt.value : "")}
+                      options={notificationTypeOptions}
+                      classNamePrefix="notifTypeSelect"
+                      isSearchable={false}
+                      styles={{
+                        ...selectStyles,
+                        control: (base, state) => ({
+                          ...selectStyles.control(base, state),
+                          borderColor: fieldState.invalid
+                            ? "#dd2912"
+                            : state.isFocused
+                            ? "#dd2912"
+                            : "#eacccc",
+                        }),
+                      }}
+                    />
+                    <p className="errorMessage">{fieldState.error?.message}</p>
+                  </>
+                );
+              }}
+            />
           </div>
 
           <div className="inputGroup">

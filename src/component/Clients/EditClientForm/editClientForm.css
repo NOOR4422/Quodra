@@ -12,3 +12,40 @@
     gap: 6px;
 }
 
+.css-s1agl3-control {
+    padding: 0;
+    border: none;
+    box-shadow: none;
+    font-size: 16px;
+    height: 55px;
+}
+.css-553jf9 {
+    height: 55px;
+}
+.css-s1agl3-control:hover {
+    border-color: #dd2912;
+}
+.customSelect {
+    font-family: "Cairo", sans-serif;
+    padding: 16px 16px;
+    border-radius: 12px;
+    border: 1px solid #eacccc;
+    height: 55px;
+    font-size: 16px;
+    background-color: #fff;
+    transition: 0.2s;
+    width: 100%;
+
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23333' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: left 16px center;
+}
+
+.customSelect:focus {
+    border-color: #dd2912;
+    outline: none;
+}

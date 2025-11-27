@@ -4,12 +4,20 @@ import "./addVisitForm.css";
 import { FaStar } from "react-icons/fa";
 import AlertModal from "../../Modals/AlertModal/AlertModal";
 import { useState } from "react";
+import Select from "react-select";
+import { Controller } from "react-hook-form";
+
 const AddVisitForm = () => {
   const [showAlert, setShowAlert] = useState(false);
+const oilOptions = [
+  { value: "5W-30 Synthetic", label: "5W-30 Synthetic" },
+  { value: "10W-40", label: "10W-40" },
+];
 
   const {
     register,
     handleSubmit,
+    control,
     watch,
     formState: { errors },
     setError,
@@ -164,14 +172,65 @@ const AddVisitForm = () => {
                   <FaStar />
                 </span>
               </label>
-              <select
-                {...register("oilType", { required: "هذا الحقل مطلوب" })}
-                className={errors.oilType ? "inputError" : ""}
-              >
-                <option value="">اختر نوع الزيت</option>
-                <option value="5W-30">5W-30</option>
-                <option value="10W-40">10W-40</option>
-              </select>
+              <Controller
+                name="oilType"
+                control={control}
+                rules={{
+                  validate: (value) => {
+                    if (watch("oilChanged") === "yes" && !value) {
+                      return "هذا الحقل مطلوب";
+                    }
+                    return true;
+                  },
+                }}
+                render={({ field }) => (
+                  <Select
+                    {...field}
+                    options={oilOptions}
+                    classNamePrefix="oilSelect"
+                    isSearchable={false}
+                    styles={{
+                      container: (base) => ({
+                        ...base,
+                        outline: "none",
+                      }),
+                      control: (base, state) => ({
+                        ...base,
+                        borderRadius: 12,
+                        borderColor: state.isFocused ? "#dd2912" : "#eacccc",
+                        boxShadow: "none",
+                        outline: "none",
+                        height: 55,
+                        paddingInline: 4,
+                        direction: "rtl",
+                        "&:hover": {
+                          borderColor: state.isFocused ? "#dd2912" : "#eacccc",
+                        },
+                      }),
+                      menu: (base) => ({
+                        ...base,
+                        borderRadius: 12,
+                        zIndex: 9999,
+                        marginTop: 2,
+                      }),
+                      option: (base, state) => ({
+                        ...base,
+                        textAlign: "right",
+                        borderRadius: 12,
+
+                        fontFamily: "Cairo, sans-serif",
+                        backgroundColor: state.isSelected
+                          ? "#dd2912"
+                          : state.isFocused
+                          ? "#fff"
+                          : "#fff",
+                        color: state.isSelected ? "#fff" : "#333",
+                      }),
+                      indicatorSeparator: () => ({ display: "none" }),
+                    }}
+                  />
+                )}
+              />
               <p className="errorMessage">{errors.oilType?.message}</p>
             </div>
           )}

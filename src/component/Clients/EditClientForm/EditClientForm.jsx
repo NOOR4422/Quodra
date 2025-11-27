@@ -5,13 +5,19 @@ import { FaStar } from "react-icons/fa";
 import { IoAddCircleOutline } from "react-icons/io5";
 import CarModal from "../CarModal/CarModal";
 import Select from "react-select";
+import {  Controller } from "react-hook-form";
 
 const EditClientForm = () => {
   const [carModalOpen, setCarModalOpen] = useState(false);
+const oilOptions = [
+  { value: "5W-30 Synthetic", label: "5W-30 Synthetic" },
+  { value: "10W-40", label: "10W-40" },
+];
 
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors },
   } = useForm({
     mode: "onTouched",
@@ -153,7 +159,7 @@ const EditClientForm = () => {
               <p className="errorMessage">{errors.email?.message}</p>
             </div>
 
-            <div className="inputGroup" >
+            <div className="inputGroup">
               <label>
                 رقم اللوحة{" "}
                 <span className="req">
@@ -176,10 +182,66 @@ const EditClientForm = () => {
 
             <div className="inputGroup">
               <label>نوع الزيت الحالي</label>
-              <select {...register("oilType")} className="customSelect">
-                <option value="5W-30 Synthetic">5W-30 Synthetic</option>
-                <option value="10W-40">10W-40</option>
-              </select>
+
+              <Controller
+                name="oilType"
+                control={control}
+                render={({ field }) => {
+                  const selectedOption =
+                    oilOptions.find((opt) => opt.value === field.value) || null;
+
+                  return (
+                    <Select
+                      {...field}
+                      value={selectedOption}
+                      onChange={(opt) => field.onChange(opt ? opt.value : "")}
+                      options={oilOptions}
+                      classNamePrefix="oilSelect"
+                      isSearchable={false}
+                      styles={{
+                        container: (base) => ({
+                          ...base,
+                          outline: "none",
+                        }),
+                        control: (base, state) => ({
+                          ...base,
+                          borderRadius: 12,
+                          borderColor: state.isFocused ? "#dd2912" : "#eacccc",
+                          boxShadow: "none",
+                          outline: "none",
+                          height: 55,
+                          paddingInline: 4,
+                          direction: "rtl",
+                          "&:hover": {
+                            borderColor: state.isFocused
+                              ? "#dd2912"
+                              : "#eacccc",
+                          },
+                        }),
+                        menu: (base) => ({
+                          ...base,
+                          borderRadius: 12,
+                          zIndex: 9999,
+                          marginTop: 2,
+                        }),
+                        option: (base, state) => ({
+                          ...base,
+                          textAlign: "right",
+                          borderRadius: 12,
+                          fontFamily: "Cairo, sans-serif",
+                          backgroundColor: state.isSelected
+                            ? "#dd2912"
+                            : state.isFocused
+                            ? "#fff"
+                            : "#fff",
+                          color: state.isSelected ? "#fff" : "#333",
+                        }),
+                        indicatorSeparator: () => ({ display: "none" }),
+                      }}
+                    />
+                  );
+                }}
+              />
             </div>
           </div>
         </form>

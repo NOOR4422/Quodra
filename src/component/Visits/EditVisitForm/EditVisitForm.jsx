@@ -3,12 +3,15 @@ import { useForm } from "react-hook-form";
 import "../AddVisitForm/addVisitForm.css";
 import { FaStar } from "react-icons/fa";
 import AlertModal from "../../Modals/AlertModal/AlertModal";
+import Select from "react-select";
+import {  Controller } from "react-hook-form";
 
 import { useState } from "react";
 const EditVisitForm = ({ visitData }) => {
   const {
     register,
     handleSubmit,
+    control,
     watch,
     formState: { errors },
   } = useForm({
@@ -20,12 +23,19 @@ const EditVisitForm = ({ visitData }) => {
       services: "غسيل و تلميع",
       price: "300",
       oilChanged: "no",
-      oilType: "5W-30",
+      oilType: "5W-30 Synthetic", 
+
       oilAmount: "4",
       kmAtChange: "15000",
       nextRecommendedKm: "20000",
     },
   });
+
+  const oilOptions = [
+  { value: "5W-30 Synthetic", label: "5W-30 Synthetic" },
+  { value: "10W-40", label: "10W-40" },
+];
+
   const [showAlert, setShowAlert] = useState(false);
 
   const isOilChanged = watch("oilChanged");
@@ -98,11 +108,65 @@ const EditVisitForm = ({ visitData }) => {
           {isOilChanged === "yes" && (
             <div className="inputGroup">
               <label>نوع الزيت</label>
-              <select {...register("oilType")}>
-                <option value="">اختر نوع الزيت</option>
-                <option value="5W-30">5W-30</option>
-                <option value="10W-40">10W-40</option>
-              </select>
+              <Controller
+                name="oilType"
+                control={control}
+                render={({ field }) => {
+                  const selectedOption =
+                    oilOptions.find((opt) => opt.value === field.value) || null;
+
+                  return (
+                    <Select
+                      {...field}
+                      value={selectedOption}
+                      onChange={(opt) => field.onChange(opt ? opt.value : "")}
+                      options={oilOptions}
+                      classNamePrefix="oilSelect"
+                      isSearchable={false}
+                      styles={{
+                        container: (base) => ({
+                          ...base,
+                          outline: "none",
+                        }),
+                        control: (base, state) => ({
+                          ...base,
+                          borderRadius: 12,
+                          borderColor: state.isFocused ? "#dd2912" : "#eacccc",
+                          boxShadow: "none",
+                          outline: "none",
+                          height: 55,
+                          paddingInline: 4,
+                          direction: "rtl",
+                          "&:hover": {
+                            borderColor: state.isFocused
+                              ? "#dd2912"
+                              : "#eacccc",
+                          },
+                        }),
+                        menu: (base) => ({
+                          ...base,
+                          borderRadius: 12,
+                          zIndex: 9999,
+                          marginTop: 2,
+                        }),
+                        option: (base, state) => ({
+                          ...base,
+                          textAlign: "right",
+                          borderRadius: 12,
+                          fontFamily: "Cairo, sans-serif",
+                          backgroundColor: state.isSelected
+                            ? "#dd2912"
+                            : state.isFocused
+                            ? "#fff"
+                            : "#fff",
+                          color: state.isSelected ? "#fff" : "#333",
+                        }),
+                        indicatorSeparator: () => ({ display: "none" }),
+                      }}
+                    />
+                  );
+                }}
+              />
             </div>
           )}
 
