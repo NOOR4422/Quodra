@@ -2,7 +2,7 @@
     width: 230px;
     height: 96.5vh;
     background: #FFF8F7;
-    padding: 12px 22px;
+    padding: 8px 20px;
     display: flex;
     flex-direction: column;
     gap: 18px;
@@ -19,9 +19,8 @@
     align-items: flex-end;
     justify-content: center;
     gap: 6px;
-    margin-top: 20px;
     margin-bottom: 30px;
-    height: 56px;
+    height: 60px;
 }
 
 .logoText {

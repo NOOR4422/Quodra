@@ -1,15 +1,61 @@
 
-
-input:focus,
-select:focus {
-    border-color: #dd2912;
-    outline: none;
-    background: #fffdfd;
-}
-
 input[type="checkbox"],
 input[type="radio"] {
     width: auto;
     transform: scale(1.1);
     accent-color: #dd2912;
+
+    display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-direction: column;
+} 
+
+
+.checkboxGroup{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    /* justify-content: space-between; */
+}
+.radioGroup{
+    display: flex;
+   
+    justify-content: space-between;
+}
+.radioItem{
+    display: flex;
+    align-items: center;
+    gap: 8px
+;
+height: 30px;
+    ;}
+
+.radioOptions{
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+
+
+        font-family: "Cairo", sans-serif;
+            padding: 16px 0px;
+            border-radius: 12px;
+            height: 55px;
+            font-size: 16px;
+            transition: 0.2s;
+}
+
+
+
+
+
+
+
+.checkboxItem{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    flex-direction: column;
+    height: 55px;
 }

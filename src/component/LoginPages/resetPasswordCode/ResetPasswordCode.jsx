@@ -78,7 +78,7 @@ const ResetPasswordCode = () => {
 
   return (
     <div className="loginContainer container-fluid" dir="rtl">
-      <div className="row justify-content-center w-100 m-0">
+      <div className="mainLoginCard row justify-content-center  m-0">
         <div className="loginCard col-11 col-sm-10 col-md-8 col-lg-5 p-0">
           <div className="headerContainer mt-3">
             <img src={resetPassword} alt="reset" className="tyre" />

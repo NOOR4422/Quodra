@@ -19,7 +19,6 @@
     font-size: 24px;
     font-weight: 600;
     margin: 0;
-    margin-bottom: 20px;
     color: #000;
 }
 .alertCard {
@@ -72,7 +71,7 @@
 addClientForm White Cancel Button */
 .alertBtn.cancel {
     background: #fff;
-    border: 1.7px solid #e0bfbf;
+    border: 1px solid #e0bfbf;
     color: #DD2912;
 }
 
@@ -116,8 +115,7 @@ addClientForm Label */
     gap: 4px;
 }
 
-addClientForm Input */
-.modalInput {
+.modalInput  {
     width: 100%;
     padding: 12px 10px;
     border-radius: 10px;

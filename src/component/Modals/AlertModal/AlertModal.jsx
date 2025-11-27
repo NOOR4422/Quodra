@@ -20,11 +20,13 @@ const AlertModal = ({
     <div className="alertOverlay">
       <div className="alertCard" dir="rtl">
         <div className="alertHeader">
-          <div className="alertIcon">{alertIcon}</div>
-          <h2 className="alertTitle">{title}</h2>
+                   <h2 className="alertTitle">{title}</h2>
+ <div className="alertIcon">{alertIcon}</div>
         </div>
-
-        {showMessage && <p className="alertMessage">{message}</p>}
+        <div>
+              {showMessage && <p className="alertMessage">{message}</p>}
+    
+</div>
 
         <div className="alertButtons">
           {showConfirm && (

@@ -42,7 +42,7 @@ const AddClientForm = () => {
               })}
               className={errors.name ? "inputError" : ""}
             />
-            <p className="errorMsg">{errors.name?.message}</p>
+            <p className="errorMessage">{errors.name?.message}</p>
           </div>
 
           <div className="inputGroup">
@@ -72,7 +72,7 @@ const AddClientForm = () => {
               })}
               className={errors.whatsapp ? "inputError" : ""}
             />
-            <p className="errorMsg">{errors.whatsapp?.message}</p>
+            <p className="errorMessage">{errors.whatsapp?.message}</p>
           </div>
 
           <div className="inputGroup">
@@ -90,7 +90,7 @@ const AddClientForm = () => {
               })}
               className={errors.carType ? "inputError" : ""}
             />
-            <p className="errorMsg">{errors.carType?.message}</p>
+            <p className="errorMessage">{errors.carType?.message}</p>
           </div>
 
           <div className="inputGroup">
@@ -107,7 +107,7 @@ const AddClientForm = () => {
               })}
               className={errors.firstVisit ? "inputError" : ""}
             />
-            <p className="errorMsg">{errors.firstVisit?.message}</p>
+            <p className="errorMessage">{errors.firstVisit?.message}</p>
           </div>
         </div>
 
@@ -139,7 +139,7 @@ const AddClientForm = () => {
               })}
               className={errors.phone ? "inputError" : ""}
             />
-            <p className="errorMsg">{errors.phone?.message}</p>
+            <p className="errorMessage">{errors.phone?.message}</p>
           </div>
 
           <div className="inputGroup">
@@ -155,7 +155,7 @@ const AddClientForm = () => {
               })}
               className={errors.email ? "inputError" : ""}
             />
-            <p className="errorMsg">{errors.email?.message}</p>
+            <p className="errorMessage">{errors.email?.message || " "}</p>
           </div>
 
           <div className="inputGroup">
@@ -177,7 +177,7 @@ const AddClientForm = () => {
               })}
               className={errors.plateNumber ? "inputError" : ""}
             />
-            <p className="errorMsg">{errors.plateNumber?.message}</p>
+            <p className="errorMessage">{errors.plateNumber?.message}</p>
           </div>
 
           <div className="inputGroup">

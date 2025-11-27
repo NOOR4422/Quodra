@@ -117,18 +117,18 @@ const [selectedRank, setSelectedRank] = useState(null);
                 className={`rankCard ${rank.highlight ? "activeCard" : ""}`}
               >
                 <div className="rankHeader">
-                  <span className="rankTitle">{rank.title}</span>
+                  <span className="cardTitle">{rank.title}</span>
                   <div className="rankIcon">
                     <img src={rank.img} alt="" className="rankImg" />
                   </div>
                 </div>
 
                 <div className="rankInfo">
-                  <span>{rank.visits} زيارات</span>
+                  <span className="subText">{rank.visits} زيارات</span>
                 </div>
 
                 <div className="rankHeader">
-                  <span>{rank.clients} عميل</span>
+                  <span className="subTextb">{rank.clients} عميل</span>
                   <button
                     className="sendOfferBtn"
                     onClick={() => {

@@ -4,6 +4,7 @@ import "./editClientForm.css";
 import { FaStar } from "react-icons/fa";
 import { IoAddCircleOutline } from "react-icons/io5";
 import CarModal from "../CarModal/CarModal";
+import Select from "react-select";
 
 const EditClientForm = () => {
   const [carModalOpen, setCarModalOpen] = useState(false);
@@ -54,7 +55,7 @@ const EditClientForm = () => {
                 {...register("name", { required: "هذا الحقل مطلوب" })}
                 className={errors.name ? "inputError" : ""}
               />
-              <p className="errorMsg">{errors.name?.message}</p>
+              <p className="errorMessage">{errors.name?.message}</p>
             </div>
 
             <div className="inputGroup">
@@ -74,7 +75,7 @@ const EditClientForm = () => {
                 })}
                 className={errors.whatsapp ? "inputError" : ""}
               />
-              <p className="errorMsg">{errors.whatsapp?.message}</p>
+              <p className="errorMessage">{errors.whatsapp?.message}</p>
             </div>
 
             <div className="inputGroup">
@@ -91,7 +92,7 @@ const EditClientForm = () => {
                 })}
                 className={errors.carType ? "inputError" : ""}
               />
-              <p className="errorMsg">{errors.carType?.message}</p>
+              <p className="errorMessage">{errors.carType?.message}</p>
 
               <button
                 type="button"
@@ -112,7 +113,7 @@ const EditClientForm = () => {
                 })}
                 className={errors.mileage ? "inputError" : ""}
               />
-              <p className="errorMsg">{errors.mileage?.message}</p>
+              <p className="errorMessage">{errors.mileage?.message}</p>
             </div>
           </div>
 
@@ -134,7 +135,7 @@ const EditClientForm = () => {
                 })}
                 className={errors.phone ? "inputError" : ""}
               />
-              <p className="errorMsg">{errors.phone?.message}</p>
+              <p className="errorMessage">{errors.phone?.message}</p>
             </div>
 
             <div className="inputGroup">
@@ -149,10 +150,10 @@ const EditClientForm = () => {
                 })}
                 className={errors.email ? "inputError" : ""}
               />
-              <p className="errorMsg">{errors.email?.message}</p>
+              <p className="errorMessage">{errors.email?.message}</p>
             </div>
 
-            <div className="inputGroup">
+            <div className="inputGroup" >
               <label>
                 رقم اللوحة{" "}
                 <span className="req">
@@ -170,12 +171,12 @@ const EditClientForm = () => {
                 })}
                 className={errors.plateNumber ? "inputError" : ""}
               />
-              <p className="errorMsg">{errors.plateNumber?.message}</p>
+              <p className="errorMessage">{errors.plateNumber?.message}</p>
             </div>
 
-            <div className="inputGroup" style={{ marginTop: "28px" }}>
+            <div className="inputGroup">
               <label>نوع الزيت الحالي</label>
-              <select {...register("oilType")}>
+              <select {...register("oilType")} className="customSelect">
                 <option value="5W-30 Synthetic">5W-30 Synthetic</option>
                 <option value="10W-40">10W-40</option>
               </select>

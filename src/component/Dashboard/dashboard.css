@@ -34,13 +34,14 @@
 .welcome {
     text-align: center;
     margin-top: -5px;
-    margin-bottom: 20px;
+    /* margin-bottom: 20px; */
 }
 
 .welcome h2 {
     font-size: 22px;
     font-weight: 700;
     color: #333;
+    margin: 0;
 }
 
 .stats {
@@ -62,7 +63,7 @@
 .statTop {
     display: flex;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: space-between;
     gap: 12px;
 }
 
@@ -81,7 +82,8 @@
 .statTitle {
     font-size: 15px;
     color: #5c5c5c;
-    font-weight: 500;
+    font-weight: 600;
+    margin: 0;
 }
 
 .statNumber {

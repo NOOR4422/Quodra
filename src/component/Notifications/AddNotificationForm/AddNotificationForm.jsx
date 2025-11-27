@@ -57,7 +57,7 @@ const AddNotificationForm = () => {
               <option value="الفنيين">الفنيين</option>
               <option value="الإدارة">الإدارة</option>
             </select>
-            <p className="errorMsg">{errors.category?.message}</p>
+            <p className="errorMessage">{errors.category?.message}</p>
           </div>
 
           <div className="inputGroup">
@@ -85,7 +85,7 @@ const AddNotificationForm = () => {
               <option value="تذكير">تذكير</option>
               <option value="إعلان">إعلان</option>
             </select>
-            <p className="errorMsg">{errors.notificationType?.message}</p>
+            <p className="errorMessage">{errors.notificationType?.message}</p>
           </div>
 
           <div className="inputGroup">
@@ -100,7 +100,7 @@ const AddNotificationForm = () => {
               {...register("message", { required: "يجب إدخال نص الإشعار" })}
               className={errors.message ? "inputError" : ""}
             />
-            <p className="errorMsg">{errors.message?.message}</p>
+            <p className="errorMessage">{errors.message?.message}</p>
           </div>
         </div>
       </form>

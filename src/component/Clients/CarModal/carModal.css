@@ -12,7 +12,7 @@
     width: 850px;
     max-width: 95vw;
     background: #fff8f7;
-    border: 1.7px dashed #f0bebe;
+    border: 1px dashed #f0bebe;
     border-radius: 14px;
     padding: 50px;
     font-family: "Cairo", sans-serif;
@@ -55,7 +55,7 @@
     width: 48%;
     display: flex;
     flex-direction: column;
-    gap: 25px;
+    gap: 20px;
 }
 
 .carModalContainer label {
@@ -73,12 +73,13 @@
 .carModalContainer input,
 .carModalContainer select {
     padding: 16px 10px;
-    border: 1.4px solid #eacccc;
+    border: 1px solid #eacccc;
     border-radius: 12px;
     background: white;
     font-size: 15px;
     width: 100%;
     box-sizing: border-box;
+    height: 55px;
 }
 
 .carModalContainer input:focus,
@@ -87,33 +88,6 @@
     outline: none;
 }
 
-.inputError {
-    border-color: #dd2912 !important;
-    background: #fff2ef;
-}
-
-.errorMsg {
-    font-size: 12px;
-    color: #dd2912;
-    margin-top: -3px;
-}
-
-.saveBtn {
-    background: #dd2912;
-    color: white;
-    padding: 14px 55px;
-    border: none;
-    border-radius: 12px;
-    font-size: 18px;
-    margin: 35px auto 0;
-    cursor: pointer;
-    transition: 0.25s;
-    display: block;
-}
-
-.saveBtn:hover {
-    opacity: 0.9;
-}
 
 @media (max-width: 768px) {
     .modalOverlay {

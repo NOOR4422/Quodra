@@ -49,7 +49,7 @@ const Login = () => {
 
   return (
     <div className="loginContainer container-fluid" dir="rtl">
-      <div className="row justify-content-center w-100 m-0">
+      <div className="mainLoginCard row justify-content-center m-0">
         <div className="loginCard col-11 col-sm-10 col-md-8 col-lg-5 p-0">
           <div className="headerContainer mt-3">
             <img src={tyre} alt="tyre" className="tyre" />
@@ -80,14 +80,14 @@ const Login = () => {
                     })}
                   />
 
-                  {errors.phoneNumber && (
-                    <p className="errorMessage">{errors.phoneNumber.message}</p>
-                  )}
-
+                
                   <span className="inputIcon">
                     <IoPhonePortraitOutline />
                   </span>
-                </div>
+                </div>  {errors.phoneNumber && (
+                    <p className="errorMessage">{errors.phoneNumber.message}</p>
+                  )}
+
               </div>
 
               <div className="inputGroup">
@@ -110,16 +110,16 @@ const Login = () => {
                     })}
                   />
 
-                  {errors.workshopCode && (
+                
+                  <span className="inputIcon">
+                    <LuKeySquare />
+                  </span>
+                </div>  {errors.workshopCode && (
                     <p className="errorMessage">
                       {errors.workshopCode.message}
                     </p>
                   )}
 
-                  <span className="inputIcon">
-                    <LuKeySquare />
-                  </span>
-                </div>
               </div>
 
               <div className="inputGroup">
@@ -152,9 +152,7 @@ const Login = () => {
                     })}
                   />
 
-                  {errors.password && (
-                    <p className="errorMessage">{errors.password.message}</p>
-                  )}
+              
 
                   <span className="inputIcon">
                     <LuLockKeyhole />
@@ -170,7 +168,9 @@ const Login = () => {
                       <AiOutlineEyeInvisible />
                     )}
                   </span>
-                </div>
+                </div>    {errors.password && (
+                    <p className="errorMessage">{errors.password.message}</p>
+                  )}
               </div>
 
               <p className="forgetPassword" onClick={navigateToResetPassword}>

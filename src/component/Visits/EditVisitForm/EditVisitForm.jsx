@@ -67,7 +67,7 @@ const EditVisitForm = ({ visitData }) => {
               {...register("clientName")}
               className={errors.clientName ? "inputError" : ""}
             />
-            <p className="errorMsg">{errors.clientName?.message}</p>
+            <p className="errorMessage">{errors.clientName?.message}</p>
           </div>
 
           <div className="inputGroup">
@@ -78,7 +78,7 @@ const EditVisitForm = ({ visitData }) => {
               {...register("services")}
               className={errors.services ? "inputError" : ""}
             />
-            <p className="errorMsg">{errors.services?.message}</p>
+            <p className="errorMessage">{errors.services?.message}</p>
           </div>
 
           <div className="inputGroup">
@@ -92,7 +92,7 @@ const EditVisitForm = ({ visitData }) => {
               })}
               className={errors.price ? "inputError" : ""}
             />
-            <p className="errorMsg">{errors.price?.message}</p>
+            <p className="errorMessage">{errors.price?.message}</p>
           </div>
 
           {isOilChanged === "yes" && (
@@ -118,7 +118,7 @@ const EditVisitForm = ({ visitData }) => {
                 })}
                 className={errors.kmAtChange ? "inputError" : ""}
               />
-              <p className="errorMsg">{errors.kmAtChange?.message}</p>
+              <p className="errorMessage">{errors.kmAtChange?.message}</p>
             </div>
           )}
         </div>{" "}
@@ -131,7 +131,7 @@ const EditVisitForm = ({ visitData }) => {
               {...register("carType")}
               className={errors.carType ? "inputError" : ""}
             />
-            <p className="errorMsg">{errors.carType?.message}</p>
+            <p className="errorMessage">{errors.carType?.message}</p>
           </div>
 
           <div className="inputGroup">
@@ -145,31 +145,32 @@ const EditVisitForm = ({ visitData }) => {
               })}
               className={errors.visitDate ? "inputError" : ""}
             />
-            <p className="errorMsg">{errors.visitDate?.message}</p>
+            <p className="errorMessage">{errors.visitDate?.message}</p>
           </div>
-
-          <div className="inputGroup" style={{ marginTop: "25px" }}>
+          <div className="inputGroup ">
             <label>هل تم تغيير الزيت؟</label>
-            <div style={{ display: "flex", gap: "25px", marginTop: "5px" }}>
-              <label>
+
+            <div className="radioOptions">
+              <div className="radioItem">
                 <input
                   type="radio"
                   value="yes"
-                  {...register("oilChanged")}
-                  defaultChecked={visitData?.oilChanged === "yes"}
+                  {...register("oilChanged", { required: "اختر إجابة" })}
+                  className="m-0"
                 />{" "}
-                نعم
-              </label>
-              <label>
+                <p>نعم</p>
+              </div>
+              <div className="radioItem">
                 <input
                   type="radio"
                   value="no"
-                  {...register("oilChanged")}
-                  defaultChecked={visitData?.oilChanged === "no"}
+                  {...register("oilChanged", { required: "اختر إجابة" })}
                 />{" "}
-                لا
-              </label>
+                <p>لا </p>
+              </div>
             </div>
+
+            <p className="errorMessage">{errors.oilChanged?.message || ""}</p>
           </div>
 
           {isOilChanged === "yes" && (
@@ -184,7 +185,7 @@ const EditVisitForm = ({ visitData }) => {
                 })}
                 className={errors.oilAmount ? "inputError" : ""}
               />
-              <p className="errorMsg">{errors.oilAmount?.message}</p>
+              <p className="errorMessage">{errors.oilAmount?.message}</p>
             </div>
           )}
 
@@ -200,7 +201,9 @@ const EditVisitForm = ({ visitData }) => {
                 })}
                 className={errors.nextRecommendedKm ? "inputError" : ""}
               />
-              <p className="errorMsg">{errors.nextRecommendedKm?.message}</p>
+              <p className="errorMessage">
+                {errors.nextRecommendedKm?.message}
+              </p>
             </div>
           )}
         </div>

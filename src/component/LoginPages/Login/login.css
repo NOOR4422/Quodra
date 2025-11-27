@@ -9,7 +9,7 @@
 }
 
 .loginCard {
-    width: 40%;
+    width: 30%;
     background: #fff;
     border-radius: 16px;
 
@@ -20,7 +20,9 @@
     margin: 0;
     padding: 0;
 }
-
+.mainLoginCard{
+    width: 90%;
+}
 .headerContainer {
     text-align: center;
 }
@@ -44,7 +46,7 @@
 }
 
 .formSection {
-    margin-top: 35px;
+    margin-top: 20px;
     width: 80%;
     display: flex;
     flex-direction: column;
@@ -152,6 +154,6 @@
 
 .errorMessage {
     color: #DD2912;
-    font-size: 13px;
+    font-size: 12px;
     margin-top: 6px;
 }

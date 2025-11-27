@@ -82,49 +82,49 @@ const AddVisitForm = () => {
               {...register("clientName", { required: "هذا الحقل مطلوب" })}
               className={errors.clientName ? "inputError" : ""}
             />
-            <p className="errorMsg">{errors.clientName?.message}</p>
+            <p className="errorMessage">{errors.clientName?.message}</p>
           </div>
 
-          <div className="inputGroup inputGroupCheckBox">
+          <div className="inputGroup ">
             <label>
               نوع الخدمة{" "}
               <span className="req">
                 <FaStar />
               </span>
             </label>
-            <div style={{ display: "flex", gap: "18px", marginTop: "6px" }}>
-              <label>
+            <div className="checkboxGroup">
+              <div className="checkboxItem">
                 <input
                   type="checkbox"
                   value="صيانة شاملة"
                   {...register("services")}
                 />{" "}
-                صيانة شاملة
-              </label>
-              <label>
+                <p>صيانة شاملة</p>
+              </div>
+              <div className="checkboxItem">
                 <input
                   type="checkbox"
                   value="غسيل & تلميع"
                   {...register("services")}
                 />{" "}
-                غسيل & تلميع
-              </label>
-              <label>
+                <p>غسيل & تلميع</p>
+              </div>
+              <div className="checkboxItem">
                 <input
                   type="checkbox"
                   value="فحص أعطال"
                   {...register("services")}
                 />{" "}
-                فحص أعطال
-              </label>
-              <label>
+                <p>فحص أعطال</p>
+              </div>
+              <div className="checkboxItem">
                 <input
                   type="checkbox"
                   value="صيانة تكييف"
                   {...register("services")}
                 />{" "}
-                صيانة تكييف
-              </label>
+                <p>صيانة تكييف</p>
+              </div>
             </div>
 
             <input
@@ -136,9 +136,11 @@ const AddVisitForm = () => {
               })}
             />
 
-            {errors.serviceCheck && (
-              <p className="errorMsg">{errors.serviceCheck.message}</p>
-            )}
+            {/* {errors.serviceCheck && (
+              <p className="errorMessage">{errors.serviceCheck.message || ""}</p>
+            )} */}
+
+            <p className="errorMessage">{errors.serviceCheck?.message || ""}</p>
           </div>
 
           <div className="inputGroup">
@@ -151,7 +153,7 @@ const AddVisitForm = () => {
               })}
               className={errors.price ? "inputError" : ""}
             />
-            <p className="errorMsg">{errors.price?.message}</p>
+            <p className="errorMessage">{errors.price?.message || " "}</p>
           </div>
 
           {isOilChanged === "yes" && (
@@ -170,7 +172,7 @@ const AddVisitForm = () => {
                 <option value="5W-30">5W-30</option>
                 <option value="10W-40">10W-40</option>
               </select>
-              <p className="errorMsg">{errors.oilType?.message}</p>
+              <p className="errorMessage">{errors.oilType?.message}</p>
             </div>
           )}
 
@@ -191,7 +193,7 @@ const AddVisitForm = () => {
                 })}
                 className={errors.kmAtChange ? "inputError" : ""}
               />
-              <p className="errorMsg">{errors.kmAtChange?.message}</p>
+              <p className="errorMessage">{errors.kmAtChange?.message}</p>
             </div>
           )}
         </div>
@@ -211,7 +213,7 @@ const AddVisitForm = () => {
               {...register("carType", { required: "هذا الحقل مطلوب" })}
               className={errors.carType ? "inputError" : ""}
             />
-            <p className="errorMsg">{errors.carType?.message}</p>
+            <p className="errorMessage">{errors.carType?.message}</p>
           </div>
 
           <div className="inputGroup">
@@ -227,30 +229,33 @@ const AddVisitForm = () => {
               {...register("visitDate", { required: "هذا الحقل مطلوب" })}
               className={errors.visitDate ? "inputError" : ""}
             />
-            <p className="errorMsg">{errors.visitDate?.message}</p>
+            <p className="errorMessage">{errors.visitDate?.message}</p>
           </div>
 
-          <div className="inputGroup" style={{ marginBottom: "0px" }}>
+          <div className="inputGroup ">
             <label>هل تم تغيير الزيت؟</label>
-            <div style={{ display: "flex", gap: "25px", marginTop: "5px" }}>
-              <label>
+
+            <div className="radioOptions">
+              <div className="radioItem">
                 <input
                   type="radio"
                   value="yes"
                   {...register("oilChanged", { required: "اختر إجابة" })}
+                  className="m-0"
                 />{" "}
-                نعم
-              </label>
-              <label>
+                <p>نعم</p>
+              </div>
+              <div className="radioItem">
                 <input
                   type="radio"
                   value="no"
                   {...register("oilChanged", { required: "اختر إجابة" })}
                 />{" "}
-                لا
-              </label>
+                <p>لا </p>
+              </div>
             </div>
-            <p className="errorMsg">{errors.oilChanged?.message}</p>
+
+            <p className="errorMessage">{errors.oilChanged?.message || ""}</p>
           </div>
 
           {isOilChanged === "yes" && (
@@ -264,7 +269,7 @@ const AddVisitForm = () => {
                 })}
                 className={errors.oilAmount ? "inputError" : ""}
               />
-              <p className="errorMsg">{errors.oilAmount?.message}</p>
+              <p className="errorMessage">{errors.oilAmount?.message}</p>
             </div>
           )}
 
@@ -285,7 +290,9 @@ const AddVisitForm = () => {
                 })}
                 className={errors.nextRecommendedKm ? "inputError" : ""}
               />
-              <p className="errorMsg">{errors.nextRecommendedKm?.message}</p>
+              <p className="errorMessage">
+                {errors.nextRecommendedKm?.message}
+              </p>
             </div>
           )}
         </div>

@@ -10,7 +10,7 @@
 .navbar-container {
     width: 100%;
     margin: 0;
-    padding: 0 16px;
+    padding: 0 40px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -57,8 +57,8 @@
     height: 50px;
     direction: rtl;
     flex: 1 1 280px;
-    max-width: 460px;
-    min-width: 160px;
+    max-width: 700px;
+    min-width: 200px;
 }
 
 .searchInput {

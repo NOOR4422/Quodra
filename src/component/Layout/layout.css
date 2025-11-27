@@ -16,7 +16,7 @@
 
 .content-area {
     flex: 1;
-    padding: 45px;
+    padding: 40px;
     overflow-y: auto;
     background: #ffffff;
 }

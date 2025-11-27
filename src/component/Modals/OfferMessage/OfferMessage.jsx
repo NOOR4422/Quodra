@@ -44,7 +44,9 @@ const OfferMessage = ({
               className={errors.offer ? "inputError" : ""}
             />
 
-            {errors.offer && <p className="errorMsg">{errors.offer.message}</p>}
+            {errors.offer && (
+              <p className="errorMessage">{errors.offer.message}</p>
+            )}
           </div>
 
           <div className="alertButtons">

@@ -97,52 +97,52 @@ const ClientDetails = () => {
         </div>
 
         <div className="roundedSection">
-          <h3 className="sectionTitle">المعلومات الشخصية</h3>
+          <p className="cardTitle">المعلومات الشخصية</p>
 
           <div className="personalInfo">
             <div className="infoGrid">
               <div className="infoRow">
                 <PiUserThin className="iconLg" />
                 <span>{client.name}</span>
-                <span className="arrow">
+                {/* <span className="arrow">
                   <IoIosArrowForward />
-                </span>
+                </span> */}
               </div>
 
               <div className="infoRow">
                 <PiPhoneLight className="iconLg" />
                 <span>{client.phone}</span>
-                <span className="arrow">
+                {/* <span className="arrow">
                   <IoIosArrowForward />
-                </span>
+                </span> */}
               </div>
 
               <div className="infoRow">
                 <PiClipboardTextLight className="iconLg" />
                 <span>{client.id}</span>
-                <span className="arrow">
+                {/* <span className="arrow">
                   <IoIosArrowForward />
-                </span>
+                </span> */}
               </div>
 
               <div className="infoRow">
                 <PiEnvelopeSimpleLight className="iconLg" />
                 <span>{client.email}</span>
-                <span className="arrow">
+                {/* <span className="arrow">
                   <IoIosArrowForward />
-                </span>
+                </span> */}
               </div>
             </div>
           </div>
         </div>
 
         <div className="roundedSection">
-          <h3 className="sectionTitle">السيارات</h3>
+          <p className="cardTitle mb-2">السيارات</p>
 
           {cars.map((car, index) => (
             <div key={index}>
               <div className="carHeader" onClick={() => toggleCar(index)}>
-                <span className="carTitle">السيارة {index + 1}</span>
+                <span className="subTitle">السيارة {index + 1}</span>
                 {car.open ? <IoChevronUpOutline /> : <IoChevronDownOutline />}
               </div>
 

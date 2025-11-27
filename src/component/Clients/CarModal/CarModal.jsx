@@ -31,12 +31,11 @@ const CarModal = ({ isOpen, onClose, onSave }) => {
   return (
     <div className="modalOverlay">
       <div className="carModalContainer" dir="rtl">
-      
-
-        <form className="carForm" onSubmit={handleSubmit(onSubmit)}>
-         <div className="closeIcon" onClick={onClose}>
-          &times;
-        </div>   <div className="formRow">
+        <form className="mainForm row" onSubmit={handleSubmit(onSubmit)}>
+          <div className="closeIcon" onClick={onClose}>
+            &times;
+          </div>{" "}
+          <div className="formRow">
             <div className="formCol">
               <div className="inputGroup">
                 <label>
@@ -51,7 +50,7 @@ const CarModal = ({ isOpen, onClose, onSave }) => {
                   {...register("carType", { required: "هذا الحقل مطلوب" })}
                   className={errors.carType ? "inputError" : ""}
                 />
-                <p className="errorMsg">{errors.carType?.message}</p>
+                <p className="errorMessage">{errors.carType?.message}</p>
               </div>
 
               <div className="inputGroup">
@@ -67,7 +66,7 @@ const CarModal = ({ isOpen, onClose, onSave }) => {
                   })}
                   className={errors.mileage ? "inputError" : ""}
                 />
-                <p className="errorMsg">{errors.mileage?.message}</p>
+                <p className="errorMessage">{errors.mileage?.message}</p>
               </div>
             </div>
 
@@ -87,7 +86,7 @@ const CarModal = ({ isOpen, onClose, onSave }) => {
                   })}
                   className={errors.plateNumber ? "inputError" : ""}
                 />
-                <p className="errorMsg">{errors.plateNumber?.message}</p>
+                <p className="errorMessage">{errors.plateNumber?.message}</p>
               </div>
 
               <div className="inputGroup">
@@ -105,14 +104,15 @@ const CarModal = ({ isOpen, onClose, onSave }) => {
                   <option value="5W-30 Synthetic">5W-30 Synthetic</option>
                   <option value="10W-40">10W-40</option>
                 </select>
-                <p className="errorMsg">{errors.oilType?.message}</p>
+                <p className="errorMessage">{errors.oilType?.message}</p>
               </div>
             </div>
           </div>
-
-          <button type="submit" className="saveBtn">
+          <div>
+          <button type="submit" className="submitBtn">
             حفظ
           </button>
+          </div>  
         </form>
       </div>
     </div>
