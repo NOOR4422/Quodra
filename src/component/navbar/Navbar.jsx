@@ -30,7 +30,7 @@ const Navbar = ({ onToggleSidebar }) => {
 
         <div className="profileSection">
           <img src={gas} alt="profile" className="profileImage" />
-          <p className="profileName">ورشة اوتو فيكس</p>
+          <p className="profileName">nouuuuuuuuurورشة اوتو فيكس</p>
         </div>
       </div>
     </nav>
