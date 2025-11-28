@@ -37,7 +37,7 @@ height: 50px;
 .sideBtn {
     height: 48px;
     background: #ffffff;
-    border: 1px solid #eee6e6;
+    border: 0.5px solid #eee6e6;
     border-radius: 10px;
     display: flex;
     flex-direction: row;

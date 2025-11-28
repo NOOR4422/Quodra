@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import "./editClientForm.css";
 import { FaStar } from "react-icons/fa";
 import { IoAddCircleOutline } from "react-icons/io5";
-import CarModal from "../CarModal/CarModal";
+import CarModal from "../../Modals/CarModal/CarModal";
 import Select from "react-select";
 import {  Controller } from "react-hook-form";
 

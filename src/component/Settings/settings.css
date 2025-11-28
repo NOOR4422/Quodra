@@ -7,7 +7,7 @@
 
 .sectionBox {
     background: #fff8f7;
-    border: 1.6px dashed #f0bebe;
+    border: 0.5px dashed #f0bebe;
     border-radius: 14px;
     padding: 30px 25px;
 }
@@ -125,7 +125,7 @@ input:focus {
 .languageToggle {
     display: flex;
     background: #fff;
-    border: 1.4px solid #eacccc;
+    border: 0.5px solid #eacccc;
     border-radius: 10px;
     overflow: hidden;
     direction: rtl;
@@ -146,7 +146,7 @@ input:focus {
 
 .langBtn.active {
     background: #fff8f7;
-    border: 1.6px solid #eacccc;
+    border: 0.5px solid #eacccc;
     color: #dd2912;
     font-weight: 600;
     box-shadow: inset 0 0 3px rgba(221, 41, 18, 0.15);

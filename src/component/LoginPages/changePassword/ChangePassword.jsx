@@ -5,6 +5,7 @@ import { LuLockKeyhole } from "react-icons/lu";
 import tyre from "../../../assets/tyre.png";
 import "./changePassword.css";
 import { useNavigate } from "react-router-dom";
+import AlertModal from "../../Modals/AlertModal/AlertModal";
 
 const ChangePassword = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -13,6 +14,7 @@ const ChangePassword = () => {
   const togglePasswordVisibility = () => setShowPassword((prev) => !prev);
   const toggleConfirmPasswordVisibility = () =>
     setShowConfirmPassword((prev) => !prev);
+  const [showAlert, setShowAlert] = useState(false);
 
   const {
     register,
@@ -27,12 +29,27 @@ const ChangePassword = () => {
 
   const onSubmit = (data) => {
     console.log("Form Data:", data);
-    alert("تم تغيير كلمة السر بنجاح!");
-    navigate("/");
+       setShowAlert(true);
   };
 
   return (
     <div className="loginContainer container-fluid" dir="rtl">
+      <AlertModal
+        show={showAlert}
+        title="تم بنجاح"
+        alertIcon=" ✅"
+        message="تم تغيير كلمة السر بنجاح."
+        showCancel={false}
+        confirmText="تم"
+        onCancel={() => setShowAlert(false)}
+        onConfirm={() => {
+          setShowAlert(false);
+          navigate("/"); 
+
+          
+        }}
+      />
+
       <div className="mainLoginCard row justify-content-center m-0">
         <div className="loginCard col-11 col-sm-10 col-md-8 col-lg-5 p-0">
           <div className="headerContainer mt-3">
@@ -137,7 +154,11 @@ const ChangePassword = () => {
                   )}
                 </div>
 
-                <button type="submit" className="loginButton">
+                <button
+                  type="submit"
+                  className="loginButton"
+                  onClick={() => setShowAlert(true)}
+                >
                   تغيير كلمة السر
                 </button>
               </div>

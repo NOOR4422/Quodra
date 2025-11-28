@@ -1,10 +1,59 @@
 .addTopRow {
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
+    align-items: center;
     width: 100%;
-    /* margin-bottom: 16px; */
+    gap: 16px;
 }
 
+.addLeft {
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    gap: 12px;
+}
+
+.topPlusIcon {
+    font-size: 28px;
+    color: #DD2912;
+    cursor: pointer;
+    margin-top: -2px;
+}
+
+.tabsWrapper {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.tabBtn {
+    background: #ffffff;
+    color: #333;
+    border-radius: 10px;
+    border: 0.5px solid #f0d0d0;
+    padding: 8px 24px;
+    font-size: 15px;
+    cursor: pointer;
+    font-family: "Cairo", sans-serif;
+}
+
+.tabBtn.active {
+    background: #DD2912;
+    color: #ffffff;
+    border-color: #f6a79b;
+}
+
+@media (max-width: 768px) {
+    .addTopRow {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .tabsWrapper {
+        justify-content: flex-end;
+        flex-wrap: wrap;
+    }
+}
 .addBtn {
     background: white;
     color: #DD2912;
@@ -39,6 +88,11 @@
     padding: 16px 18px;
     /* margin-bottom: 14px; */
     font-family: "Cairo", sans-serif;
+}
+
+.mainCard:hover {
+    border: 0.5px solid #DD2912;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 .cardImg {
@@ -90,7 +144,7 @@
     color: #DD2912;
     padding: 6px 22px;
     border-radius: 10px;
-    border: 1px solid #efc9c9;
+    border: 0.5px solid #efc9c9;
     font-size: 14px;
     cursor: pointer;
 }

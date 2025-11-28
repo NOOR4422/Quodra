@@ -11,7 +11,7 @@
 
 .alertCard {
   background: #fff8f7;
-  border: 1px solid #f2d9d9;
+  border: 0.5px solid #f2d9d9;
   border-radius: 16px;
   padding: 32px 32px;
   text-align: center;
@@ -26,6 +26,50 @@
   gap: 20px;
 }
 
+
+
+.alertFieldGroup {
+  margin-top: 16px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.alertFieldLabel {
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  text-align: start;
+}
+
+.alertTextarea {
+  width: 100%;
+  min-height: 50px;
+  resize: vertical;
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1px solid #ded1ce;
+  background-color: #fff;
+  font-family: "Cairo", sans-serif;
+  font-size: 14px;
+  color: #333;
+  direction: rtl;
+  text-align: right;
+  box-sizing: border-box;
+}
+
+.alertTextarea::placeholder {
+  color: #b6a8a4;
+  font-size: 13px;
+}
+
+.alertTextarea:focus {
+  outline: none;
+  border-color: #dd2912;
+  box-shadow: 0 0 0 2px rgba(221, 41, 18, 0.12);
+}
+
 .alertHeader {
   display: inline-flex;
   align-items: center;
@@ -33,18 +77,22 @@
   font-family: "Cairo", sans-serif;
   margin: 0;
   color: #000;
+  margin-bottom: 0;
 }
 
 .alertIcon {
-  font-size: 24px;
+  font-size: 18px;
+  margin-bottom: 0;
   margin-right: 4px;
 }
 
 .alertTitle {
   margin: 0;
-  font-size: 20px;
+  font-size: 18px;
   color: #DD2912;
   font-weight: 600;
+      margin: 0;
+ 
 }
 
 .alertMessage {
@@ -70,7 +118,7 @@
 
 .alertBtn.cancel {
   background: #fff;
-  border: 1px solid #e0bfbf;
+  border: 0.5px solid #e0bfbf;
   color: #DD2912;
 }
 
@@ -79,7 +127,24 @@
   border: none;
   color: #fff;
 }
+.alertCloseContainer{
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
 
+}
+.alertCloseBtn {
+  border: none;
+  background: transparent;
+  font-size: 16px;
+  cursor: pointer;
+  line-height: 1;
+  color: #DD2912;
+}
+
+.alertCloseBtn:focus {
+  outline: none;
+}
 @keyframes fadeIn {
   from {
     opacity: 0;

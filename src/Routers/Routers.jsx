@@ -15,11 +15,12 @@ import RanksList from "../component/RanksList/RanksList";
 import ClientDetails from "../component/Clients/ClientDetails/ClientDetails";
 import AddClientForm from "../component/Clients/AddClientForm/AddClientForm";
 import EditClientForm from "../component/Clients/EditClientForm/EditClientForm";
-import AddCarModal from "../component/Clients/CarModal/CarModal";
+import AddCarModal from "../component/Modals/CarModal/CarModal";
 import AddVisitForm from "../component/Visits/AddVisitForm/AddVisitForm";
 import EditVisitForm from "../component/Visits/EditVisitForm/EditVisitForm";
 import AddNotificationForm from "../component/Notifications/AddNotificationForm/AddNotificationForm";
 import Settings from "../component/Settings/Settings";
+import TransferRequestsList from "../component/Clients/TransferRequestsList/TransferRequestsList";
 
 const Routers = () => {
   return (
@@ -40,6 +41,8 @@ const Routers = () => {
           <Route path=":id" element={<ClientDetails />} />
           <Route path=":id/edit" element={<EditClientForm />} />
           <Route path="car/add" element={<AddCarModal />} />
+          <Route path="current" element={<ClientsList />} />
+          <Route path="transfer" element={<TransferRequestsList />} />
         </Route>
 
         <Route path="visits">

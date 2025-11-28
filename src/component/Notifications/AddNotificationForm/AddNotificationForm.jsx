@@ -5,7 +5,6 @@ import AlertModal from "../../Modals/AlertModal/AlertModal";
 import Select from "react-select";
 import "./addNotificationForm.css";
 
-// 🔹 shared dropdown styles (same as in your other forms)
 const selectStyles = {
   container: (base) => ({
     ...base,

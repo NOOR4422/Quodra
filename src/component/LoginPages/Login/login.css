@@ -51,7 +51,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    border: 1px solid #E4DDDD;
+    border: 0.5px solid #E4DDDD;
     border-radius: 15px;
 }
 
@@ -92,7 +92,7 @@
     box-sizing: border-box;
     padding: 16px 8px;
     border-radius: 12px;
-    border: 1px solid #eacccc;
+    border: 0.5px solid #eacccc;
     font-size: 16px;
     background: #fff;
     transition: 0.2s;

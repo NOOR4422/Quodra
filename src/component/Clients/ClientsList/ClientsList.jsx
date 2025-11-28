@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import "./clientsList.css";
-import { PiUserFill } from "react-icons/pi";
 import { LuTrash2, LuPencil } from "react-icons/lu";
+import { MdOutlinePhoneAndroid } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import AlertModal from "../../Modals/AlertModal/AlertModal";
 import box from "../../../assets/box.png";
-import { MdOutlinePhoneAndroid } from "react-icons/md";
 import user from "../../../assets/user.png";
+import ClientsTopBar from "../ClientsTopBar/ClientsTopBar";
 
 const ClientsList = () => {
   const navigate = useNavigate();
@@ -40,13 +40,7 @@ const ClientsList = () => {
         }}
       />
 
-      {!isEmpty && (
-        <div className="addTopRow">
-          <button className="addBtn" onClick={() => navigate("/clients/add")}>
-            إضافة عميل جديد <span className="plusIcon">+</span>
-          </button>
-        </div>
-      )}
+      <ClientsTopBar />
 
       {isEmpty ? (
         <div className="emptyState">
@@ -68,7 +62,7 @@ const ClientsList = () => {
           {clients.map((client) => (
             <div className="mainCard" key={client.id}>
               <span>
-                <img src={user} className="cardImg" />
+                <img src={user} className="cardImg" alt={client.name} />
               </span>
 
               <div className="cardCol">
@@ -103,7 +97,7 @@ const ClientsList = () => {
                       <p className="subText">{client.phone}</p>
                     </div>
 
-                    <div className="cardBlick subText">
+                    <div className="cardBlock subText">
                       {client.visits} زيارات
                     </div>
 

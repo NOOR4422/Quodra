@@ -6,6 +6,7 @@ const AlertModal = ({
   title,
   alertIcon,
   message,
+  children,
   showMessage = true,
   cancelText,
   confirmText,
@@ -20,27 +21,31 @@ const AlertModal = ({
     <div className="alertOverlay">
       <div className="alertCard" dir="rtl">
         <div className="alertHeader">
-                   <h2 className="alertTitle">{title}</h2>
- <div className="alertIcon">{alertIcon}</div>
+          {title && <h2 className="alertTitle">{title}</h2>}
+          {alertIcon && <div className="alertIcon">{alertIcon}</div>}
         </div>
-        <div>
-              {showMessage && <p className="alertMessage">{message}</p>}
-    
-</div>
 
-        <div className="alertButtons">
-          {showConfirm && (
-            <button className="alertBtn confirm" onClick={onConfirm}>
-              {confirmText}
-            </button>
-          )}
-
-          {showCancel && (
-            <button className="alertBtn cancel" onClick={onCancel}>
-              {cancelText}
-            </button>
-          )}
+        <div className="alertBody">
+          {children
+            ? children
+            : showMessage && <p className="alertMessage">{message}</p>}
         </div>
+
+        {(showCancel || showConfirm) && (
+          <div className="alertButtons">
+            {showConfirm && (
+              <button className="alertBtn confirm" onClick={onConfirm}>
+                {confirmText}
+              </button>
+            )}
+
+            {showCancel && (
+              <button className="alertBtn cancel" onClick={onCancel}>
+                {cancelText}
+              </button>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

@@ -24,7 +24,7 @@
 .alertCard {
     width: 420px;
     background: #fff8f7;
-    border: 1.6px solid #f2d9d9;
+    border: 0.5px solid #f2d9d9;
     border-radius: 16px;
     padding: 35px 40px;
     text-align: center;
@@ -33,19 +33,7 @@
     animation: fadeIn 0.25s ease-out;
 }
 
-.alertIcon {
-    font-size: 24px;
-    margin-bottom: 8px;
-}
 
-.alertTitle {
-    margin: 0;
-    margin-bottom: 12px;
-    margin-left: 8px;
-    font-size: 20px;
-    color: #DD2912;
-    font-weight: 600;
-}
 
 .alertMessage {
     font-size: 15px;
@@ -71,7 +59,7 @@
 addClientForm White Cancel Button */
 .alertBtn.cancel {
     background: #fff;
-    border: 1px solid #e0bfbf;
+    border: 0.5px solid #e0bfbf;
     color: #DD2912;
 }
 
@@ -119,7 +107,7 @@ addClientForm Label */
     width: 100%;
     padding: 12px 10px;
     border-radius: 10px;
-    border: 1.4px solid #ccc;
+    border: 0.5px solid #ccc;
     font-size: 15px;
     background: white;
     font-family: "Cairo", sans-serif;

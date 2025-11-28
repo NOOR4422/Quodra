@@ -66,11 +66,19 @@ const VisitsList = () => {
       />
 
       {!isEmpty && (
-        <div className="addTopRow">
-          <button className="addBtn" onClick={() => navigate("/visits/add")}>
-            إضافة زيارة جديدة <span className="plusIcon">+</span>
-          </button>
-        </div>
+        
+
+          <div className="addLeft">
+            <span
+              className="topPlusIcon"
+              onClick={() => navigate("/clients/add")}
+            >
+              +
+            </span>
+            <button className="addBtn" onClick={() => navigate("/visits/add")}>
+              إضافة زيارة جديد
+            </button>
+          </div>
       )}
 
       {isEmpty ? (

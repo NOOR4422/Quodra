@@ -58,12 +58,27 @@ const NotificationsList = () => {
   return (
     <div className="mainContainer">
       {!isEmpty && (
-        <div className="addTopRow">
+        // <div className="addTopRow">
+        //   <button
+        //     className="addBtn"
+        //     onClick={() => navigate("/notifications/add")}
+        //   >
+        //     إرسال إشعار جديد <span className="plusIcon">+</span>
+        //   </button>
+        // </div>
+
+        <div className="addLeft">
+          <span
+            className="topPlusIcon"
+            onClick={() => navigate("/clients/add")}
+          >
+            +
+          </span>
           <button
             className="addBtn"
             onClick={() => navigate("/notifications/add")}
           >
-            إرسال إشعار جديد <span className="plusIcon">+</span>
+            إرسال إشعار جديد
           </button>
         </div>
       )}

@@ -1,0 +1,164 @@
+
+
+.transferListWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    direction: rtl;
+    font-family: "Cairo", sans-serif;
+}
+
+
+.transferCard {
+    width: 100%;
+    border-radius: 15px;
+    padding: 18px 20px;
+    background: #fffdfd;
+    border: 1px solid #eacccc;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.transferCard-pending {
+    border-color: #f3b4b4;
+}
+
+.transferCard-accepted {
+    border-color: #8bd48b;
+    background: #fbfffb;
+}
+
+.transferCard-rejected {
+    border-color: #d1d1d1;
+    background: #fdfdfd;
+}
+
+.transferBodyRow {
+    display: flex;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 14px;
+    align-items: flex-start;
+    justify-content: space-between;
+}
+
+.transferBodyRow.hasActions {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+}
+
+.transferBodyCell {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: right;
+    gap: 4px;
+}
+
+.cellKey {
+    font-size: 16px;
+    font-weight: 600;
+    color: #000000;
+}
+
+.cellValue {
+    font-size: 15px;
+    color: #333;
+}
+
+
+.reasonText {
+    white-space: normal;
+    word-break: break-word;
+}
+
+.reasonText-expanded {
+    white-space: normal;
+    word-break: break-word;
+}
+
+.linkMore {
+    background: none;
+    border: none;
+    color: #dd2912;
+    font-size: 14px;
+    cursor: pointer;
+    padding: 0;
+    margin-inline-start: 4px;
+}
+
+
+.statusBadge {
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.statusBadge-pending {
+    color: #dd2912;
+    background: #ffe7e2;
+}
+
+.statusBadge-accepted {
+    color: #1b8b3a;
+    background: #e2f6e6;
+}
+
+.statusBadge-rejected {
+    color: #777;
+    background: #eeeeee;
+}
+
+
+.btnTransferAccept,
+.btnTransferReject {
+    padding: 6px 16px;
+    border-radius: 10px;
+    font-size: 14px;
+    cursor: pointer;
+    background: #ffffff;
+    margin-inline-start: 6px;
+}
+
+.btnTransferAccept {
+    border: 1px solid #1b8b3a;
+    color: #1b8b3a;
+}
+
+.btnTransferReject {
+    border: 1px solid #dd2912;
+    color: #dd2912;
+}
+
+@media (max-width: 992px) {
+
+    .transferBodyRow,
+    .transferBodyRow.hasActions {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 768px) {
+
+    .transferBodyRow,
+    .transferBodyRow.hasActions {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .transferBodyCell {
+        width: 100%;
+    }
+
+    .reasonText,
+    .reasonText-expanded {
+        white-space: normal;
+        word-break: break-word;
+    }
+
+    .btnTransferAccept,
+    .btnTransferReject {
+        min-width: 100px;
+    }
+}
