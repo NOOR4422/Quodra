@@ -1,5 +1,5 @@
-import React from "react";
-import { NavLink } from "react-router-dom";
+import React, { useState } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
 import "./sidebar.css";
 
 import { FaUsers } from "react-icons/fa6";
@@ -10,10 +10,36 @@ import { PiLightningBold } from "react-icons/pi";
 import { IoLogOutOutline } from "react-icons/io5";
 
 import tyre from "../../assets/tyre.png";
+import AlertModal from "../Modals/AlertModal/AlertModal";
 
 const Sidebar = ({ isOpen }) => {
+  const navigate = useNavigate();
+  const [showLogout, setShowLogout] = useState(false);
+
+  const doLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("workshopId");
+
+
+    setShowLogout(false);
+    navigate("/auth/login", { replace: true });
+  };
+
   return (
     <div className={`sidebar ${isOpen ? "sidebar--open" : ""}`}>
+      <AlertModal
+        show={showLogout}
+        title="تأكيد تسجيل الخروج"
+        alertIcon="⚠️"
+        message="هل أنت متأكد أنك تريد تسجيل الخروج؟"
+        cancelText="إلغاء"
+        confirmText="تسجيل الخروج"
+        onCancel={() => setShowLogout(false)}
+        onConfirm={doLogout}
+        showCancel={true}
+        showConfirm={true}
+      />
+
       <div className="sideLogo">
         <img src={tyre} className="logoImg" alt="" />
         <p className="logoText">قُدْرَة</p>
@@ -44,10 +70,14 @@ const Sidebar = ({ isOpen }) => {
         <span className="btnText">المستويات</span>
       </NavLink>
 
-      <NavLink to="/auth/login" className="sideBtn">
+      <button
+        type="button"
+        className="sideBtn "
+        onClick={() => setShowLogout(true)}
+      >
         <IoLogOutOutline className="btnIcon" />
         <span className="btnText">تسجيل الخروج</span>
-      </NavLink>
+      </button>
     </div>
   );
 };

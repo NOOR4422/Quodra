@@ -1,58 +1,18 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "../ClientsList/clientsList.css";
 import "./transferRequestsList.css";
 import ClientsTopBar from "../ClientsTopBar/ClientsTopBar";
 import AlertModal from "../../Modals/AlertModal/AlertModal";
 
+import { transferRequestsApi } from "../../../api/clients";
+
+const onlyDate = (iso) => (iso ? String(iso).slice(0, 10) : "");
+
 const TransferRequests = () => {
-  const [requests, setRequests] = useState([
-    {
-      id: 1,
-      customerName: "احمد محمد",
-      phone: "01234566787",
-      date: "27/10/2025",
-      reason:
-        "واجهت صعوبة في الوصول للفرع الحالي بسبب بعد المسافة وزحمة الطريق بشكل يومي.",
-      status: "قيد المراجعة",
-    },
-    {
-      id: 2,
-      customerName: "احمد محمد",
-      phone: "01234566787",
-      date: "27/10/2025",
-      reason:
-        "أرغب في النقل إلى فرع أقرب لمقر العمل لتسهيل مواعيد الصيانة والمتابعة الدورية.",
-      status: "قيد المراجعة",
-    },
-    {
-      id: 3,
-      customerName: "احمد محمد",
-      phone: "01234566787",
-      date: "27/10/2025",
-      reason: "واجهت صعوبة في الوصول للفرع الحالي بسبب بعد المسافة.",
-      status: "مقبول",
-    },
-    {
-      id: 4,
-      customerName: "احمد محمد",
-      phone: "01234566787",
-      date: "27/10/2025",
-      reason:
-        "أرغب في النقل إلى فرع أقرب لمقر العمل لتسهيل مواعيد الصيانة والمتابعة الدورية.",
-      status: "مرفوض",
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-    },
-    {
-      id: 5,
-      customerName: "احمد محمد",
-      phone: "01234566787",
-      date: "27/10/2025",
-      reason: "واجهت صعوبة في الوصول للفرع الحالي بسبب بعد المسافة.",
-      status: "قيد المراجعة",
-
-    },
-  
-  ]);
+  const [requests, setRequests] = useState([]);
 
   const REASON_LIMIT = 40;
 
@@ -68,6 +28,29 @@ const TransferRequests = () => {
 
   const [rejectNote, setRejectNote] = useState("");
 
+  const mapStatusFromState = (state) => {
+    if (state === 1) return "قيد المراجعة";
+    if (state === 2) return "مقبول";
+    if (state === 3) return "مرفوض";
+
+    if (state === true) return "مقبول";
+    if (state === false) return "مرفوض";
+
+    return "قيد المراجعة";
+  };
+
+  const normalizeRequest = (x) => {
+    return {
+      id: x?.id ?? x?.requestId ?? x?.RequestId ?? "",
+      customerName: x?.userName ?? x?.customerName ?? "-",
+      phone: x?.phoneNumber ?? x?.phone ?? "-",
+      date: x?.date ?? "",
+      reason: x?.resion ?? x?.reason ?? "",
+      status: mapStatusFromState(x?.state),
+      raw: x,
+    };
+  };
+
   const getStatusCardClass = (status) => {
     if (status === "مقبول") return "transferCard-accepted";
     if (status === "مرفوض") return "transferCard-rejected";
@@ -80,11 +63,10 @@ const TransferRequests = () => {
     return "statusBadge statusBadge-pending";
   };
 
-
   const openViewReason = (reasonText) => {
     setReasonModal({
       show: true,
-      text: reasonText,
+      text: reasonText || "-",
     });
   };
 
@@ -108,29 +90,80 @@ const TransferRequests = () => {
     setModal({ type: null, request: null });
   };
 
+  useEffect(() => {
+    let alive = true;
 
-  const handleConfirmModal = () => {
-    if (!modal.request) return;
+    const load = async () => {
+      try {
+        setLoading(true);
+        setError("");
 
-    if (modal.type === "acceptConfirm") {
-      setRequests((prev) =>
-        prev.map((r) =>
-          r.id === modal.request.id ? { ...r, status: "مقبول" } : r
-        )
-      );
-      setModal({ type: "acceptSuccess", request: modal.request });
-      return;
-    }
 
-    if (modal.type === "rejectConfirm") {
+        const res = await transferRequestsApi.getAll({ lang: "ar" });
+        if (!alive) return;
 
-      setRequests((prev) =>
-        prev.map((r) =>
-          r.id === modal.request.id ? { ...r, status: "مرفوض" } : r
-        )
-      );
-      setModal({ type: "rejectSuccess", request: modal.request });
-      return;
+        const list = Array.isArray(res) ? res : res?.data || res?.message || [];
+        setRequests((list || []).map(normalizeRequest));
+      } catch (err) {
+        if (!alive) return;
+        setError(transferRequestsApi.getErrorMessage(err));
+        setRequests([]);
+      } finally {
+        if (alive) setLoading(false);
+      }
+    };
+
+    load();
+
+    return () => {
+      alive = false;
+    };
+  }, []);
+
+  const handleConfirmModal = async () => {
+    if (!modal.request?.id) return;
+
+    try {
+      setError("");
+
+      const RequestId = modal.request.id;
+
+      if (modal.type === "acceptConfirm") {
+        const res = await transferRequestsApi.accept({
+          RequestId,
+          lang: "ar",
+        });
+        if (!res?.success) throw new Error(res?.message || "فشل قبول الطلب");
+
+        setRequests((prev) =>
+          prev.map((r) =>
+            String(r.id) === String(RequestId) ? { ...r, status: "مقبول" } : r
+          )
+        );
+
+        setModal({ type: "acceptSuccess", request: modal.request });
+        return;
+      }
+
+      if (modal.type === "rejectConfirm") {
+        const res = await transferRequestsApi.reject({
+          RequestId,
+          lang: "ar",
+        });
+        if (!res?.success) throw new Error(res?.message || "فشل رفض الطلب");
+
+        setRequests((prev) =>
+          prev.map((r) =>
+            String(r.id) === String(RequestId) ? { ...r, status: "مرفوض" } : r
+          )
+        );
+
+        setModal({ type: "rejectSuccess", request: modal.request });
+        return;
+      }
+    } catch (err) {
+      setError(transferRequestsApi.getErrorMessage(err));
+      closeModal();
     }
   };
 
@@ -143,9 +176,21 @@ const TransferRequests = () => {
     <div className="mainContainer">
       <ClientsTopBar />
 
+      {loading && <p style={{ padding: 12 }}>جاري تحميل الطلبات...</p>}
+
+      {!!error && (
+        <div style={{ padding: 12 }}>
+          <p style={{ color: "crimson" }}>{error}</p>
+        </div>
+      )}
+
+      {!loading && !error && requests.length === 0 && (
+        <p style={{ padding: 12 }}>لا توجد طلبات نقل.</p>
+      )}
+
       <div className="transferListWrapper">
         {requests.map((req) => {
-          const isLong = req.reason.length > REASON_LIMIT;
+          const isLong = (req.reason || "").length > REASON_LIMIT;
           const shortReason = isLong
             ? `${req.reason.slice(0, REASON_LIMIT)}...`
             : req.reason;
@@ -172,13 +217,13 @@ const TransferRequests = () => {
 
                 <div className="transferBodyCell">
                   <span className="cellKey">تاريخ الطلب</span>
-                  <span className="cellValue">{req.date}</span>
+                  <span className="cellValue">{onlyDate(req.date)}</span>
                 </div>
 
                 <div className="transferBodyCell">
                   <span className="cellKey">السبب</span>
                   <span className="cellValue reasonText">
-                    {shortReason}
+                    {shortReason || "-"}
                     {isLong && (
                       <button
                         type="button"
@@ -256,7 +301,7 @@ const TransferRequests = () => {
                 <label className="alertFieldLabel">سبب الرفض</label>
                 <textarea
                   className="alertTextarea"
-                  placeholder="اكتب سبب الرفض (اختياري لتحسين التواصل مع العميل)"
+                  placeholder="اكتب سبب الرفض (اختياري)"
                   value={rejectNote}
                   onChange={(e) => setRejectNote(e.target.value)}
                 />
@@ -265,13 +310,11 @@ const TransferRequests = () => {
           )}
 
           {modal.type === "acceptSuccess" && (
-            <p className="alertMessage">
-              سيتم نقل بيانات العميل إلى الورشة الجديدة.
-            </p>
+            <p className="alertMessage">تم قبول الطلب.</p>
           )}
 
           {modal.type === "rejectSuccess" && (
-            <p className="alertMessage">تم رفض طلب النقل وإخطار العميل.</p>
+            <p className="alertMessage">تم رفض الطلب.</p>
           )}
         </AlertModal>
       )}

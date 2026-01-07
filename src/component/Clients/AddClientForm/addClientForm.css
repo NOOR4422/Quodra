@@ -1,8 +1,9 @@
 .formContainer {
   background: #fff8f7;
-  border: .5px dashed #f0bebe;
-  border-radius: 14px;
-  padding: 45px 30px;    
+  border: .5px dashed #DD2912;
+  border-radius: 10px;
+  /* padding: 45px 30px;     */
+  padding: 32px;
   direction: rtl;
   font-family: "Cairo", sans-serif;
   gap: 20px;
@@ -26,6 +27,7 @@ width: 100%;
 }
 
 .formCol{
+  padding: 0;
   display: flex;
   flex-direction: column;
   width: 40%;
@@ -34,7 +36,8 @@ width: 100%;
   font-size: 15px;
   font-weight: 500;
   color: #333;
-  display: block;
+  display: flex;
+  gap: 4px;
   margin-bottom: 8px;
 }
 
@@ -79,12 +82,6 @@ p
   background: #fff2ef;
 }
 
-
-errorMessage {
-  font-size: 12px;
-  color: #dd2912;
-  margin-top: 4px;
-}
 .submitBtn {
   background-color: #dd2912;
   color: white;

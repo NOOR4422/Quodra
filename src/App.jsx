@@ -1,11 +1,16 @@
 import { BrowserRouter } from "react-router-dom";
 import Routers from "./Routers/Routers";
+import ProtectedRoute from "./ProtectedRoute/ProtectedRoute";
 
 function App() {
   return (
-    <BrowserRouter>
+    <ProtectedRoute>
+  <BrowserRouter>
       <Routers />
     </BrowserRouter>
+
+    </ProtectedRoute>
+  
   );
 }
 

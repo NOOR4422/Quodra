@@ -1,262 +1,210 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import "./editClientForm.css";
-import { FaStar } from "react-icons/fa";
-import { IoAddCircleOutline } from "react-icons/io5";
-import CarModal from "../../Modals/CarModal/CarModal";
-import Select from "react-select";
-import {  Controller } from "react-hook-form";
+import AlertModal from "../../Modals/AlertModal/AlertModal";
+import { useNavigate, useParams } from "react-router-dom";
+import { getUserById, updateUser } from "../../../api/clients";
 
 const EditClientForm = () => {
-  const [carModalOpen, setCarModalOpen] = useState(false);
-const oilOptions = [
-  { value: "5W-30 Synthetic", label: "5W-30 Synthetic" },
-  { value: "10W-40", label: "10W-40" },
-];
+  const { id } = useParams(); 
+  const navigate = useNavigate();
+
+  const [loading, setLoading] = useState(true);
+  const [apiError, setApiError] = useState("");
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const {
     register,
     handleSubmit,
-    control,
+    reset,
     formState: { errors },
   } = useForm({
     mode: "onTouched",
     defaultValues: {
-      name: "كريم محمد علي",
-      whatsapp: "01012345678",
-      phone: "01012345678",
-      email: "kareem.m.ali@example.com",
-      plateNumber: "3456 ب س",
-      carType: "تويوتا كورولا 2020",
-      mileage: "85300",
-      oilType: "5W-30 Synthetic",
+      name: "",
+      phone: "",
+      whatsapp: "",
+      email: "",
     },
   });
 
-  const onSubmit = (data) => {
-    console.log("✅ Client Updated:", data);
+  useEffect(() => {
+    let mounted = true;
+
+    (async () => {
+      try {
+        setLoading(true);
+        setApiError("");
+
+        const res = await getUserById(id);
+
+        if (!res?.success) {
+          setApiError(res?.message || "فشل تحميل بيانات العميل");
+          return;
+        }
+
+        const user = res?.message;
+        if (!user) {
+          setApiError("لا توجد بيانات لهذا العميل");
+          return;
+        }
+
+        if (!mounted) return;
+
+        reset({
+          name: user.name || "",
+          phone: user.phone || "",
+          whatsapp: user.whats || "",
+          email: user.email || "",
+        });
+      } catch (err) {
+        setApiError(
+          err?.response?.data?.message || err?.message || "Request failed"
+        );
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    })();
+
+    return () => {
+      mounted = false;
+    };
+  }, [id, reset]);
+
+  const onSubmit = async (form) => {
+    if (isSubmitting) return;
+
+    if (!form.name?.trim()) return setApiError("الاسم مطلوب");
+    if (!form.phone?.trim()) return setApiError("رقم الهاتف مطلوب");
+    if (!form.whatsapp?.trim()) return setApiError("رقم الواتساب مطلوب");
+
+    setIsSubmitting(true);
+    setApiError("");
+
+    try {
+      const payload = {
+        name: form.name.trim(),
+        phone: form.phone.trim(),
+        whats: form.whatsapp.trim(), 
+        email: (form.email || "").trim(),
+      };
+
+      const res = await updateUser(id, payload);
+
+      if (!res?.success) {
+        setApiError(res?.message || "فشل تعديل بيانات العميل");
+        return;
+      }
+
+      setShowSuccess(true);
+    } catch (err) {
+      setApiError(
+        err?.response?.data?.message || err?.message || "حدث خطأ أثناء الحفظ"
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
-    <>
-      <div className="formContainer container-fluid">
-        <h2 className="formTitle">تعديل بيانات العميل</h2>
-
-        <form
-          id="editForm"
-          className="mainForm row"
-          onSubmit={handleSubmit(onSubmit)}
-          dir="rtl"
-        >
-          <div className="formCol col-12 col-md-6">
-            <div className="inputGroup">
-              <label>
-                الاسم{" "}
-                <span className="req">
-                  <FaStar />
-                </span>
-              </label>
-              <input
-                type="text"
-                {...register("name", { required: "هذا الحقل مطلوب" })}
-                className={errors.name ? "inputError" : ""}
-              />
-              <p className="errorMessage">{errors.name?.message}</p>
-            </div>
-
-            <div className="inputGroup">
-              <label>
-                واتساب{" "}
-                <span className="req">
-                  <FaStar />
-                </span>
-              </label>
-              <input
-                type="text"
-                {...register("whatsapp", {
-                  required: "هذا الحقل مطلوب",
-                  pattern: { value: /^[0-9]+$/, message: "يسمح فقط بالأرقام" },
-                  minLength: { value: 9, message: "رقم غير صالح" },
-                  maxLength: { value: 15, message: "رقم طويل جداً" },
-                })}
-                className={errors.whatsapp ? "inputError" : ""}
-              />
-              <p className="errorMessage">{errors.whatsapp?.message}</p>
-            </div>
-
-            <div className="inputGroup">
-              <label>
-                نوع السيارة{" "}
-                <span className="req">
-                  <FaStar />
-                </span>
-              </label>
-              <input
-                type="text"
-                {...register("carType", {
-                  required: "هذا الحقل مطلوب",
-                })}
-                className={errors.carType ? "inputError" : ""}
-              />
-              <p className="errorMessage">{errors.carType?.message}</p>
-
-              <button
-                type="button"
-                className="addCarBtn"
-                onClick={() => setCarModalOpen(true)}
-              >
-                <IoAddCircleOutline />
-                إضافة سيارة
-              </button>
-            </div>
-
-            <div className="inputGroup">
-              <label>قراءة العداد الحالية</label>
-              <input
-                type="text"
-                {...register("mileage", {
-                  pattern: { value: /^[0-9]+$/, message: "يسمح فقط بالأرقام" },
-                })}
-                className={errors.mileage ? "inputError" : ""}
-              />
-              <p className="errorMessage">{errors.mileage?.message}</p>
-            </div>
-          </div>
-
-          <div className="formCol col-12 col-md-6">
-            <div className="inputGroup">
-              <label>
-                رقم الهاتف{" "}
-                <span className="req">
-                  <FaStar />
-                </span>
-              </label>
-              <input
-                type="text"
-                {...register("phone", {
-                  required: "هذا الحقل مطلوب",
-                  pattern: { value: /^[0-9]+$/, message: "يسمح فقط بالأرقام" },
-                  minLength: { value: 9, message: "رقم غير صالح" },
-                  maxLength: { value: 15, message: "رقم طويل جداً" },
-                })}
-                className={errors.phone ? "inputError" : ""}
-              />
-              <p className="errorMessage">{errors.phone?.message}</p>
-            </div>
-
-            <div className="inputGroup">
-              <label>البريد الإلكتروني</label>
-              <input
-                type="text"
-                {...register("email", {
-                  pattern: {
-                    value: /^[^@ ]+@[^@ ]+\.[^@ ]+$/,
-                    message: "البريد الإلكتروني غير صالح",
-                  },
-                })}
-                className={errors.email ? "inputError" : ""}
-              />
-              <p className="errorMessage">{errors.email?.message}</p>
-            </div>
-
-            <div className="inputGroup">
-              <label>
-                رقم اللوحة{" "}
-                <span className="req">
-                  <FaStar />
-                </span>
-              </label>
-              <input
-                type="text"
-                {...register("plateNumber", {
-                  required: "هذا الحقل مطلوب",
-                  pattern: {
-                    value: /^[A-Za-z0-9أ-ي ]+$/,
-                    message: "صيغة رقم اللوحة غير صحيحة",
-                  },
-                })}
-                className={errors.plateNumber ? "inputError" : ""}
-              />
-              <p className="errorMessage">{errors.plateNumber?.message}</p>
-            </div>
-
-            <div className="inputGroup">
-              <label>نوع الزيت الحالي</label>
-
-              <Controller
-                name="oilType"
-                control={control}
-                render={({ field }) => {
-                  const selectedOption =
-                    oilOptions.find((opt) => opt.value === field.value) || null;
-
-                  return (
-                    <Select
-                      {...field}
-                      value={selectedOption}
-                      onChange={(opt) => field.onChange(opt ? opt.value : "")}
-                      options={oilOptions}
-                      classNamePrefix="oilSelect"
-                      isSearchable={false}
-                      styles={{
-                        container: (base) => ({
-                          ...base,
-                          outline: "none",
-                        }),
-                        control: (base, state) => ({
-                          ...base,
-                          borderRadius: 12,
-                          borderColor: state.isFocused ? "#dd2912" : "#eacccc",
-                          boxShadow: "none",
-                          outline: "none",
-                          height: 55,
-                          paddingInline: 4,
-                          direction: "rtl",
-                          "&:hover": {
-                            borderColor: state.isFocused
-                              ? "#dd2912"
-                              : "#eacccc",
-                          },
-                        }),
-                        menu: (base) => ({
-                          ...base,
-                          borderRadius: 12,
-                          zIndex: 9999,
-                          marginTop: 2,
-                        }),
-                        option: (base, state) => ({
-                          ...base,
-                          textAlign: "right",
-                          borderRadius: 12,
-                          fontFamily: "Cairo, sans-serif",
-                          backgroundColor: state.isSelected
-                            ? "#dd2912"
-                            : state.isFocused
-                            ? "#fff"
-                            : "#fff",
-                          color: state.isSelected ? "#fff" : "#333",
-                        }),
-                        indicatorSeparator: () => ({ display: "none" }),
-                      }}
-                    />
-                  );
-                }}
-              />
-            </div>
-          </div>
-        </form>
-
-        <button type="submit" form="editForm" className="submitBtn">
-          حفظ
-        </button>
-      </div>
-
-      <CarModal
-        isOpen={carModalOpen}
-        onClose={() => setCarModalOpen(false)}
-        onSave={(carData) => console.log("🚗 Car Added:", carData)}
+    <div className="formContainer">
+      <AlertModal
+        show={showSuccess}
+        title="تم بنجاح"
+        alertIcon="✅"
+        confirmText="تم"
+        showCancel={false}
+        message="تم تعديل بيانات العميل بنجاح"
+        onConfirm={() => {
+          setShowSuccess(false);
+          navigate("/clients", { state: { refresh: Date.now() } });
+        }}
       />
-    </>
+
+      <h2 className="formTitle">تعديل بيانات العميل</h2>
+
+      {loading && <p style={{ padding: 12 }}>جاري تحميل البيانات...</p>}
+      {!!apiError && <p className="errorMessage">{apiError}</p>}
+
+      {!loading && (
+        <>
+          <form
+            id="editForm"
+            className="mainForm row"
+            onSubmit={handleSubmit(onSubmit)}
+            dir="rtl"
+          >
+            <div className="formCol col-12 col-md-6">
+              <div className="inputGroup">
+                <label>الاسم</label>
+                <input
+                  {...register("name", {
+                    validate: (v) => v.trim() !== "" || "هذا الحقل مطلوب",
+                  })}
+                  className={errors.name ? "inputError" : ""}
+                />
+                <p className="errorMessage">{errors.name?.message}</p>
+              </div>
+
+              <div className="inputGroup">
+                <label>واتساب</label>
+                <input
+                  {...register("whatsapp", {
+                    validate: (v) => v.trim() !== "" || "هذا الحقل مطلوب",
+                  })}
+                  className={errors.whatsapp ? "inputError" : ""}
+                />
+                <p className="errorMessage">{errors.whatsapp?.message}</p>
+              </div>
+            </div>
+
+            <div className="formCol col-12 col-md-6">
+              <div className="inputGroup">
+                <label>رقم الهاتف</label>
+                <input
+                  {...register("phone", {
+                    validate: (v) => v.trim() !== "" || "هذا الحقل مطلوب",
+                  })}
+                  className={errors.phone ? "inputError" : ""}
+                />
+                <p className="errorMessage">{errors.phone?.message}</p>
+              </div>
+
+              <div className="inputGroup">
+                <label>البريد الإلكتروني </label>
+                <input type="email" {...register("email",
+                  {
+                    validate: (v) => {
+                      if (v?.trim() === "") return true; 
+                      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                      return (
+                        emailRegex.test(v) || "يرجى إدخال بريد إلكتروني صالح"
+                      );
+                    }
+                  }
+                )
+                  
+
+
+                } />
+                <p className="errorMessage">{errors.email?.message}</p>
+              </div>
+            </div>
+          </form>
+
+          <button
+            type="submit"
+            form="editForm"
+            className="submitBtn"
+            disabled={isSubmitting}
+            style={{ opacity: isSubmitting ? 0.7 : 1 }}
+          >
+            {isSubmitting ? "جاري الحفظ..." : "حفظ"}
+          </button>
+        </>
+      )}
+    </div>
   );
 };
 

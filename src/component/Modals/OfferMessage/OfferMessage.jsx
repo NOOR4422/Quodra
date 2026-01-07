@@ -1,17 +1,16 @@
 import { FaStar } from "react-icons/fa";
 import { useForm } from "react-hook-form";
 import "./OfferMessage.css";
+
 const OfferMessage = ({
   show,
-  cancelText = " إلغاء ",
-  confirmText = " إرسال ",
+  cancelText = "إلغاء",
+  confirmText = "إرسال",
   onCancel,
   onConfirm,
   showCancel = true,
   showConfirm = true,
 }) => {
-  if (!show) return null;
-
   const {
     register,
     handleSubmit,
@@ -19,9 +18,9 @@ const OfferMessage = ({
     reset,
   } = useForm({ mode: "onTouched" });
 
-  const onSubmit = (data) => {
-    console.log("✔ Offer Message Sent:", data);
+  if (!show) return null;
 
+  const onSubmit = (data) => {
     if (onConfirm) onConfirm(data.offer);
     reset();
   };
@@ -37,7 +36,7 @@ const OfferMessage = ({
 
             <input
               type="text"
-              placeholder=" رسالة العرض "
+              placeholder="رسالة العرض"
               {...register("offer", {
                 required: "هذا الحقل مطلوب",
               })}

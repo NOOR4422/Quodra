@@ -1,150 +1,354 @@
-import React, { useState } from "react";
-import { useForm } from "react-hook-form";
-import { FaPlus, FaTrashAlt, FaEdit } from "react-icons/fa";
+import React, { useEffect, useMemo, useState, useCallback } from "react";
+import { FaPlus, FaRegEdit } from "react-icons/fa";
+import { IoIosArrowBack } from "react-icons/io";
+import { RiDeleteBin6Line } from "react-icons/ri";
+import { useNavigate } from "react-router-dom";
+
 import AddEditAlertModal from "../Modals/AddEditAlertModal/AddEditAlertModal";
 import AlertModal from "../Modals/AlertModal/AlertModal";
 import "./settings.css";
-import { useNavigate } from "react-router-dom";
-import { IoIosArrowBack } from "react-icons/io";
-import { FaRegEdit } from "react-icons/fa";
-import { RiDeleteBin6Line } from "react-icons/ri";
+
+import serviceTypeApi from "../../api/serviceType";
+import oilTypeApi from "../../api/oilType";
+import userApi from "../../api/user";
 
 const Settings = () => {
-  const [workshopInfo] = useState({
-    name: "ورشة أوتو فيكس للخدمات",
-    phone: "01235795767",
-    address: "مدينة نصر - القاهرة",
-    hours: "السبت - الخميس: 8:00 ص - 10:00 م",
-  });
+  const [currentLang, setCurrentLang] = useState("العربية");
+  const lang = useMemo(
+    () => (currentLang === "العربية" ? "ar" : "en"),
+    [currentLang]
+  );
 
-  const [services, setServices] = useState([
-    "فحص أعطال",
-    "غسيل وتلميع",
-    "صيانة تكييف",
-    "صيانة شاملة",
-  ]);
+  const navigate = useNavigate();
+  const workshopId = localStorage.getItem("workshopId");
+
+  const [workshopInfo, setWorkshopInfo] = useState(null);
+  const [workshopLoading, setWorkshopLoading] = useState(false);
+  const [workshopErrorMsg, setWorkshopErrorMsg] = useState("");
+
+  const fetchWorkshop = useCallback(async () => {
+    setWorkshopLoading(true);
+    setWorkshopErrorMsg("");
+    try {
+      const data = await userApi.getWorkshop({ lang });
+      setWorkshopInfo(data);
+    } catch (err) {
+      setWorkshopErrorMsg(userApi.getErrorMessage(err));
+    } finally {
+      setWorkshopLoading(false);
+    }
+  }, [lang]);
+
+  const [services, setServices] = useState([]);
+  const [servicesLoading, setServicesLoading] = useState(false);
+  const [servicesErrorMsg, setServicesErrorMsg] = useState("");
+
+  const fetchServices = useCallback(async () => {
+    setServicesLoading(true);
+    setServicesErrorMsg("");
+    try {
+      if (!workshopId) {
+        setServices([]);
+        setServicesErrorMsg("لا يمكن تحميل الخدمات بدون workshopId");
+        return;
+      }
+      const list = await serviceTypeApi.getAllByWorkshopId({
+        workshopId,
+        lang,
+      });
+      setServices(list || []);
+    } catch (err) {
+      setServicesErrorMsg(serviceTypeApi.getErrorMessage(err));
+    } finally {
+      setServicesLoading(false);
+    }
+  }, [workshopId, lang]);
+
+  const [oilTypes, setOilTypes] = useState([]);
+  const [oilLoading, setOilLoading] = useState(false);
+  const [oilErrorMsg, setOilErrorMsg] = useState("");
+
+  const fetchOilTypes = useCallback(async () => {
+    setOilLoading(true);
+    setOilErrorMsg("");
+    try {
+      if (!workshopId) {
+        setOilTypes([]);
+        setOilErrorMsg("لا يمكن تحميل الزيوت بدون workshopId");
+        return;
+      }
+      const list = await oilTypeApi.getAllByWorkshop({ workshopId, lang });
+      setOilTypes(list || []);
+    } catch (err) {
+      setOilErrorMsg(oilTypeApi.getErrorMessage(err));
+    } finally {
+      setOilLoading(false);
+    }
+  }, [workshopId, lang]);
+
+  useEffect(() => {
+    fetchWorkshop();
+    fetchServices();
+    fetchOilTypes();
+  }, [fetchWorkshop, fetchServices, fetchOilTypes]);
 
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+  const [showAddOilModal, setShowAddOilModal] = useState(false);
+  const [showDeleteOilModal, setShowDeleteOilModal] = useState(false);
+
   const [showSuccessModal, setShowSuccessModal] = useState(false);
-  const [selectedService, setSelectedService] = useState("");
-  const [modalMode, setModalMode] = useState("");
+  const [successTitle, setSuccessTitle] = useState("");
 
-  const [currentLang, setCurrentLang] = useState("العربية");
+  const [selectedService, setSelectedService] = useState(null);
+  const [selectedOil, setSelectedOil] = useState(null);
 
-  const { register, handleSubmit, reset, setValue } = useForm();
-  const navigate = useNavigate();
+  const [modalMode, setModalMode] = useState(""); 
+  const [modalValue, setModalValue] = useState("");
+  const [oilKmValue, setOilKmValue] = useState("");
 
-  const onSubmit = (data) => {
-    if (modalMode === "add") {
-      setServices([...services, data.serviceName]);
-      setShowAddModal(false);
-      setShowSuccessModal("تم إضافة الخدمة بنجاح");
-    } else if (modalMode === "edit") {
-      const updated = services.map((s) =>
-        s === selectedService ? data.serviceName : s
-      );
-      setServices(updated);
-      setShowEditModal(false);
-      setShowSuccessModal("تم تعديل الخدمة بنجاح");
-    }
-    reset();
+  const openAddService = () => {
+    setModalMode("add");
+    setModalValue("");
+    setSelectedService(null);
+    setShowAddModal(true);
   };
 
-  const handleDelete = () => {
-    setServices(services.filter((s) => s !== selectedService));
-    setShowDeleteModal(false);
-    setShowSuccessModal("تم حذف الخدمة بنجاح");
+  const openEditService = (service) => {
+    setSelectedService(service);
+    setModalMode("edit");
+    setModalValue(service?.name || "");
+    setShowEditModal(true);
+  };
+
+  const openDeleteService = (service) => {
+    setSelectedService(service);
+    setModalMode("delete");
+    setShowDeleteModal(true);
+  };
+
+  const handleAddEditServiceConfirm = async (serviceName) => {
+    try {
+      const name = (serviceName || "").trim();
+      if (!name) throw new Error("اسم الخدمة مطلوب");
+
+      if (modalMode === "add") {
+        await serviceTypeApi.create({ name, workshopId, lang });
+        setShowAddModal(false);
+        setSuccessTitle("تم إضافة الخدمة بنجاح ✅");
+      } else if (modalMode === "edit") {
+        await serviceTypeApi.update({ id: selectedService?.id, name, lang });
+        setShowEditModal(false);
+        setSuccessTitle("تم تعديل الخدمة بنجاح ✅");
+      }
+
+      setShowSuccessModal(true);
+      await fetchServices();
+    } catch (err) {
+      setSuccessTitle(serviceTypeApi.getErrorMessage(err));
+      setShowSuccessModal(true);
+    }
+  };
+
+  const handleDeleteServiceConfirm = async () => {
+    try {
+      await serviceTypeApi.remove({ id: selectedService?.id, lang });
+      setShowDeleteModal(false);
+      setSuccessTitle("تم حذف الخدمة بنجاح ✅");
+      setShowSuccessModal(true);
+      await fetchServices();
+    } catch (err) {
+      setShowDeleteModal(false);
+      setSuccessTitle(serviceTypeApi.getErrorMessage(err));
+      setShowSuccessModal(true);
+    }
+  };
+
+  const openAddOil = () => {
+    setModalMode("addOil");
+    setModalValue("");
+    setOilKmValue("");
+    setSelectedOil(null);
+    setShowAddOilModal(true);
+  };
+
+  const openDeleteOil = (oil) => {
+    setModalMode("deleteOil");
+    setSelectedOil(oil);
+    setShowDeleteOilModal(true);
+  };
+
+  const handleAddOilConfirm = async (payload) => {
+    try {
+      const oiltybe = (payload?.name || "").trim();
+      const kmNumber = Number(payload?.km);
+
+      if (!oiltybe) throw new Error("اسم الزيت مطلوب");
+      if (!Number.isFinite(kmNumber) || kmNumber <= 0) {
+        throw new Error("KM غير صحيح");
+      }
+
+      await oilTypeApi.create({ oiltybe, km: kmNumber, workshopId, lang });
+
+      setShowAddOilModal(false);
+      setSuccessTitle("تم إضافة نوع الزيت بنجاح ✅");
+      setShowSuccessModal(true);
+      await fetchOilTypes();
+    } catch (err) {
+      setSuccessTitle(oilTypeApi.getErrorMessage(err));
+      setShowSuccessModal(true);
+    }
+  };
+
+  const handleDeleteOilConfirm = async () => {
+    try {
+      await oilTypeApi.remove({ id: selectedOil?.id, lang });
+      setShowDeleteOilModal(false);
+      setSuccessTitle("تم حذف نوع الزيت بنجاح ✅");
+      setShowSuccessModal(true);
+      await fetchOilTypes();
+    } catch (err) {
+      setShowDeleteOilModal(false);
+      setSuccessTitle(oilTypeApi.getErrorMessage(err));
+      setShowSuccessModal(true);
+    }
   };
 
   return (
     <div className="mainContainer" dir="rtl">
-      <div className="innerContainer mainContainer container-fluid">
-        {" "}
-        <div className="languageRow">
-          <p className=" languageLabel">معلومات الورشة</p>
-        </div>
-        <form className="mainForm row" dir="rtl">
-          <div className="formCol col-12 col-md-6">
-            <div className="inputGroup">
-              <label>
-                اسم الورشة <span className="req"></span>
-              </label>
-              <input type="text" value={workshopInfo.name} readOnly />
-            </div>
-
-            <div className="inputGroup">
-              <label>
-                رقم الهاتف <span className="req"></span>
-              </label>
-              <input type="text" value={workshopInfo.phone} readOnly />
-            </div>
-          </div>
-
-          <div className="formCol col-12 col-md-6">
-            <div className="inputGroup">
-              <label>
-                عنوان الورشة <span className="req"></span>
-              </label>
-              <input type="text" value={workshopInfo.address} readOnly />
-            </div>{" "}
-            <div className="inputGroup">
-              <label>
-                ساعات العمل <span className="req"></span>
-              </label>
-              <input type="text" value={workshopInfo.hours} readOnly />
-            </div>
-          </div>
-        </form>
-      </div>
       <div className="innerContainer mainContainer">
         <div className="languageRow">
-          <div>
-            <p className="cardTitle">خدمات الورشة</p>
-          </div>
-
-          <div>
-            <button
-              className="addServiceBtn"
-              onClick={() => {
-                setModalMode("add");
-                setShowAddModal(true);
-                reset();
-              }}
-            >
-              <FaPlus /> إضافة خدمة
-            </button>
-          </div>
+          <p className="languageLabel">معلومات الورشة</p>
         </div>
+
+        {workshopLoading && (
+          <p style={{ padding: 12 }}>جارِ تحميل بيانات الورشة...</p>
+        )}
+        {!!workshopErrorMsg && (
+          <p style={{ padding: 12, color: "crimson" }}>{workshopErrorMsg}</p>
+        )}
+
+        {!workshopLoading && !workshopErrorMsg && (
+          <form className="mainForm row" dir="rtl">
+            <div className="formCol col-12 col-md-6">
+              <div className="inputGroup">
+                <label>اسم الورشة</label>
+                <input type="text" value={workshopInfo?.name || ""} readOnly />
+              </div>
+
+              <div className="inputGroup">
+                <label>رقم الهاتف</label>
+                <input
+                  type="text"
+                  value={workshopInfo?.phone || workshopInfo?.phoneNumber || ""}
+                  readOnly
+                />
+              </div>
+            </div>
+
+            <div className="formCol col-12 col-md-6">
+              <div className="inputGroup">
+                <label>عنوان الورشة</label>
+                <input
+                  type="text"
+                  value={workshopInfo?.address || ""}
+                  readOnly
+                />
+              </div>
+
+              <div className="inputGroup">
+                <label>ساعات العمل</label>
+                <input
+                  type="text"
+                  value={workshopInfo?.workingHours || ""}
+                  readOnly
+                />
+              </div>
+            </div>
+          </form>
+        )}
+      </div>
+
+      <div className="innerContainer mainContainer">
+        <div className="languageRow">
+          <p className="cardTitle">خدمات الورشة</p>
+
+          <button
+            className="addServiceBtn"
+            type="button"
+            onClick={openAddService}
+          >
+            <FaPlus /> إضافة خدمة
+          </button>
+        </div>
+
+        {servicesLoading && (
+          <p style={{ padding: 12 }}>جارِ تحميل الخدمات...</p>
+        )}
+        {!!servicesErrorMsg && (
+          <p style={{ padding: 12, color: "crimson" }}>{servicesErrorMsg}</p>
+        )}
 
         <ul className="servicesList">
           {services.map((service) => (
-            <li key={service}>
-              <span>{service}</span>
+            <li key={service.id ?? service.name}>
+              <span>{service.name}</span>
+
               <div className="actions">
                 <button
                   className="editBtn"
-                  onClick={() => {
-                    setSelectedService(service);
-                    setValue("serviceName", service);
-                    setModalMode("edit");
-                    setShowEditModal(true);
-                  }}
+                  type="button"
+                  onClick={() => openEditService(service)}
                 >
                   <FaRegEdit />
                   تعديل الخدمة
                 </button>
+
                 <button
                   className="deleteBtn"
-                  onClick={() => {
-                    setSelectedService(service);
-                    setModalMode("delete");
-                    setShowDeleteModal(true);
-                  }}
+                  type="button"
+                  onClick={() => openDeleteService(service)}
                 >
                   <RiDeleteBin6Line />
                   حذف الخدمة
+                </button>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div className="innerContainer mainContainer">
+        <div className="languageRow">
+          <p className="cardTitle">زيوت تغيير الزيت</p>
+
+          <button className="addServiceBtn" type="button" onClick={openAddOil}>
+            <FaPlus /> إضافة زيت
+          </button>
+        </div>
+
+        {oilLoading && <p style={{ padding: 12 }}>جارِ تحميل الزيوت...</p>}
+        {!!oilErrorMsg && (
+          <p style={{ padding: 12, color: "crimson" }}>{oilErrorMsg}</p>
+        )}
+
+        <ul className="servicesList">
+          {oilTypes.map((oil) => (
+            <li key={oil.id ?? `${oil.oiltybe}-${oil.km}`}>
+              <span>
+                {oil.oiltybe} - {oil.km} KM
+              </span>
+
+              <div className="actions">
+                <button
+                  className="deleteBtn"
+                  type="button"
+                  onClick={() => openDeleteOil(oil)}
+                >
+                  <RiDeleteBin6Line />
+                  حذف
                 </button>
               </div>
             </li>
@@ -158,10 +362,10 @@ const Settings = () => {
       >
         <div className="languageRow">
           <label className="languageLabel">اللغة</label>
-
           <div className="languageToggle">
             <button
               className="langBtn"
+              type="button"
               onClick={() =>
                 setCurrentLang(
                   currentLang === "العربية" ? "English" : "العربية"
@@ -176,6 +380,7 @@ const Settings = () => {
         <div className="passwordRow">
           <button
             className="changePasswordBtn"
+            type="button"
             onClick={() => navigate("/auth/reset/change")}
           >
             تغيير كلمة السر
@@ -191,13 +396,13 @@ const Settings = () => {
           confirmText={modalMode === "add" ? "إضافة" : "تعديل"}
           cancelText="إلغاء"
           showCancel={true}
+          inputValue={modalValue}
+          setInputValue={setModalValue}
           onCancel={() => {
             setShowAddModal(false);
             setShowEditModal(false);
           }}
-          onConfirm={handleSubmit(onSubmit)}
-          inputValue={register("serviceName").value}
-          setInputValue={(val) => setValue("serviceName", val)}
+          onConfirm={handleAddEditServiceConfirm}
         />
       )}
 
@@ -205,23 +410,51 @@ const Settings = () => {
         <AlertModal
           show={true}
           title="تحذير ⚠️"
-          message={`هل أنت متأكد من حذف خدمة ${selectedService} ؟`}
+          message={`هل أنت متأكد من حذف خدمة ${selectedService?.name} ؟`}
           confirmText="نعم"
           cancelText="لا"
           showCancel={true}
           onCancel={() => setShowDeleteModal(false)}
-          onConfirm={handleDelete}
+          onConfirm={handleDeleteServiceConfirm}
+        />
+      )}
+
+      {showAddOilModal && (
+        <AddEditAlertModal
+          show={true}
+          title="إضافة زيت"
+          confirmText="إضافة"
+          cancelText="إلغاء"
+          showCancel={true}
+          placeholder="اكتب اسم الزيت (مثال: Mobil)"
+          kmPlaceholder="أدخل KM (مثال: 10000)"
+          showKm={true}
+          inputValue={modalValue}
+          setInputValue={setModalValue}
+          kmValue={oilKmValue}
+          setKmValue={setOilKmValue}
+          onCancel={() => setShowAddOilModal(false)}
+          onConfirm={handleAddOilConfirm}
+        />
+      )}
+
+      {showDeleteOilModal && (
+        <AlertModal
+          show={true}
+          title="تحذير ⚠️"
+          message={`هل أنت متأكد من حذف زيت ${selectedOil?.oiltybe} ؟`}
+          confirmText="نعم"
+          cancelText="لا"
+          showCancel={true}
+          onCancel={() => setShowDeleteOilModal(false)}
+          onConfirm={handleDeleteOilConfirm}
         />
       )}
 
       {showSuccessModal && (
         <AlertModal
           show={true}
-          title={
-            modalMode === "add"
-              ? "تم إضافة الخدمة  بنجاح ✅"
-              : "تم تعديل الخدمة  بنجاح ✅"
-          }
+          title={successTitle}
           confirmText="تم"
           showCancel={false}
           onConfirm={() => setShowSuccessModal(false)}
