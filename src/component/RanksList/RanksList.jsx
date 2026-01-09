@@ -54,10 +54,10 @@ const RANK_NAME_TO_ID = {
 };
 
 const RANK_META = {
-  0: { title: "المستوى العادي", visits: 1, img: normal },
-  1: { title: "المستوى البرونزي", visits: 2, img: bronze },
-  2: { title: "المستوى الفضي", visits: 3, img: silver },
-  3: { title: "المستوى الذهبي", visits: 4, img: gold },
+  0: { title: "المستوى العادي", visits: 5, img: normal },
+  1: { title: "المستوى البرونزي", visits: 5, img: bronze },
+  2: { title: "المستوى الفضي", visits: 5, img: silver },
+  3: { title: "المستوى الذهبي", visits: 5, img: gold },
   4: { title: "المستوى البلاتيني", visits: 5, img: winner, highlight: true },
 };
 
@@ -297,12 +297,13 @@ const RanksList = () => {
 
                   <div className="rankInfo">
                     <span className="subText">{rank.visits} زيارات</span>
-                    <span className="subTextb">{rank.clients} عميل</span>
+                    {/* <span className="subTextb">{rank.clients} عميل</span> */}
                   </div>
 
-                  <div className="rankHeader">
-                    <span className="subTextb" />
-                    <button
+                  <div className="rankInfo">
+                    {/* <span className="subTextb" /> */}
+                                    <span className="subTextb">{rank.clients} عميل</span>
+    <button
                       className="sendOfferBtn"
                       onClick={() => {
                         setSelectedRank(rank);
