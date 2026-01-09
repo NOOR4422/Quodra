@@ -220,7 +220,9 @@ const ClientsList = () => {
         title="تحذير"
         alertIcon="⚠️"
         message={
-          deleting ? "جاري حذف العميل..." : "هل أنت متأكد من حذف هذا العميل؟ سيتم حذف جميع بياناته المرتبطة وجميع الزيارات الخاصة به."
+          deleting
+            ? "جاري حذف العميل..."
+            : "هل أنت متأكد من حذف هذا العميل؟ سيتم حذف جميع بياناته المرتبطة وجميع الزيارات الخاصة به."
         }
         cancelText="إلغاء"
         confirmText={deleting ? "جاري الحذف..." : "حذف"}
@@ -232,8 +234,23 @@ const ClientsList = () => {
         onConfirm={handleDeleteConfirm}
       />
 
-      <ClientsTopBar />
+      {!isEmpty && !loading && (
+        <div className="addLeft">
+          <span
+            className="topPlusIcon"
+            onClick={() => navigate("/clients/add")}
+          >
+            +
+          </span>
+          <button
+            className="addBtn"
+            onClick={() => navigate("/clients/add")}
+          >
 
+            إضافة عميل جديد
+          </button>
+        </div>
+      )}
       {loading && <p style={{ padding: 12 }}>جاري تحميل العملاء...</p>}
 
       {!!usersError && (
