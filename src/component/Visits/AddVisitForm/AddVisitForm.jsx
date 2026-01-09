@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
+import { useLocation } from "react-router-dom";
 import "./addVisitForm.css";
 import { FaStar } from "react-icons/fa";
 import AlertModal from "../../Modals/AlertModal/AlertModal";
@@ -49,6 +50,9 @@ const AddVisitForm = () => {
 
   const workshopId = localStorage.getItem("workshopId");
   const lang = "ar";
+
+  const location = useLocation();
+  const preselectedClientId = location.state?.clientId || null;
 
   const [serviceTypes, setServiceTypes] = useState([]);
   const [oilTypes, setOilTypes] = useState([]);
@@ -164,7 +168,7 @@ const AddVisitForm = () => {
     return () => {
       alive = false;
     };
-  }, [selectedClient?.value, setValue]);
+  }, [selectedClient?.value, setValue, lang]);
 
   const clientOptions = useMemo(
     () =>
@@ -178,11 +182,21 @@ const AddVisitForm = () => {
 
   const carOptions = useMemo(
     () =>
-      (cars || []).map((c) => ({
-        value: c.id,
-        label: `${c.carModel}${c.plateNumber ? ` - ${c.plateNumber}` : ""}`,
-        raw: c,
-      })),
+      (cars || []).map((c) => {
+        const parts = [
+          c.brand || c.carBrand,
+          c.carModel || c.model,
+          c.yearModel || c.year,
+          c.color,
+          c.plateNumber && `لوحة ${c.plateNumber}`,
+        ].filter(Boolean);
+
+        return {
+          value: c.id,
+          label: parts.join(" - ") || "سيارة بدون بيانات",
+          raw: c,
+        };
+      }),
     [cars]
   );
 
@@ -205,6 +219,22 @@ const AddVisitForm = () => {
       })),
     [oilTypes]
   );
+
+  useEffect(() => {
+    if (!preselectedClientId) return;
+    if (!clientOptions.length) return;
+
+    const found = clientOptions.find(
+      (opt) => String(opt.value) === String(preselectedClientId)
+    );
+
+    if (found) {
+      setValue("client", found, {
+        shouldValidate: true,
+        shouldDirty: true,
+      });
+    }
+  }, [preselectedClientId, clientOptions, setValue]);
 
   const onSubmit = async (data) => {
     setSubmitError("");
@@ -310,6 +340,7 @@ const AddVisitForm = () => {
             />
             <p className="errorMessage">{errors.client?.message}</p>
           </div>
+
           <div className="inputGroup">
             <label>
               نوع الخدمة{" "}
@@ -354,7 +385,8 @@ const AddVisitForm = () => {
           </div>
 
           <div className="inputGroup">
-            <label>السعر
+            <label>
+              السعر
               <span className="req">
                 <FaStar />
               </span>
@@ -410,8 +442,8 @@ const AddVisitForm = () => {
               <p className="errorMessage">{errors.oilType?.message}</p>
             </div>
           )}
-          {oilChanged === "yes" && (
 
+          {oilChanged === "yes" && (
             <div className="inputGroup">
               <label>
                 الكيلومترات الموصى بها للتغيير القادم{" "}
@@ -430,11 +462,11 @@ const AddVisitForm = () => {
                 })}
                 className={errors.nextRecommendedKm ? "inputError" : ""}
               />
-              <p className="errorMessage">{errors.nextRecommendedKm?.message}</p>
+              <p className="errorMessage">
+                {errors.nextRecommendedKm?.message}
+              </p>
             </div>
-
           )}
-
         </div>
 
         <div className="formCol col-12 col-md-6">
@@ -478,6 +510,7 @@ const AddVisitForm = () => {
             />
             <p className="errorMessage">{errors.car?.message}</p>
           </div>
+
           <div className="inputGroup">
             <label>
               تاريخ الزيارة{" "}
@@ -492,6 +525,7 @@ const AddVisitForm = () => {
             />
             <p className="errorMessage">{errors.visitDate?.message}</p>
           </div>
+
           <div className="inputGroup">
             <label>هل تم تغيير الزيت؟</label>
             <div className="radioOptions">
@@ -537,6 +571,7 @@ const AddVisitForm = () => {
                 />
                 <p className="errorMessage">{errors.kmAtChange?.message}</p>
               </div>
+
               <div className="inputGroup">
                 <label>ملاحظات</label>
                 <input
@@ -547,7 +582,6 @@ const AddVisitForm = () => {
               </div>
             </>
           )}
-
         </div>
       </form>
 

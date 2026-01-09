@@ -288,7 +288,11 @@ const ClientsList = () => {
                       </button>
                       <button
                         className="btnVisit"
-                        onClick={() => navigate("/visits/add")}
+                        onClick={() =>
+                          navigate("/visits/add", {
+                            state: { clientId: client.id },
+                          })
+                        }
                       >
                         زيارة جديدة
                       </button>
