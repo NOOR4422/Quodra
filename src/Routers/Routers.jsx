@@ -1,4 +1,3 @@
-// Routers.jsx
 import { Routes, Route } from "react-router-dom";
 
 import Layout from "../component/Layout/Layout";

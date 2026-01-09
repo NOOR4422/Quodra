@@ -6,10 +6,9 @@ import { useNavigate, useLocation } from "react-router-dom";
 import AlertModal from "../../Modals/AlertModal/AlertModal";
 import box from "../../../assets/box.png";
 import user from "../../../assets/user.png";
-import ClientsTopBar from "../ClientsTopBar/ClientsTopBar";
-
 import { getAllUsers, deleteUser } from "../../../api/clients";
 import { getSessionsForWorkshop, sessionApi } from "../../../api/sessions";
+import ClientNotificationModal from "../../Modals/ClientNotificationModal/ClientNotificationModal";
 
 const PAGE_SIZE = 10;
 
@@ -56,6 +55,10 @@ const ClientsList = () => {
 
   const [page, setPage] = useState(1);
   const [deleting, setDeleting] = useState(false);
+
+  // new state for notification modal
+  const [showNotifyModal, setShowNotifyModal] = useState(false);
+  const [notifyClient, setNotifyClient] = useState(null);
 
   const lang = "ar";
   const workshopId = localStorage.getItem("workshopId");
@@ -135,7 +138,6 @@ const ClientsList = () => {
       setClients(mapped);
       setPage(1);
 
-  
       if (sessionsList.length) {
         console.log("Sample session keys:", sessionsList[0]);
         console.log(
@@ -152,7 +154,7 @@ const ClientsList = () => {
     } finally {
       setLoading(false);
     }
-  }, [workshopId]);
+  }, [workshopId, lang]);
 
   useEffect(() => {
     loadClients();
@@ -242,15 +244,12 @@ const ClientsList = () => {
           >
             +
           </span>
-          <button
-            className="addBtn"
-            onClick={() => navigate("/clients/add")}
-          >
-
+          <button className="addBtn" onClick={() => navigate("/clients/add")}>
             إضافة عميل جديد
           </button>
         </div>
       )}
+
       {loading && <p style={{ padding: 12 }}>جاري تحميل العملاء...</p>}
 
       {!!usersError && (
@@ -299,7 +298,10 @@ const ClientsList = () => {
                     <div className="btnRow">
                       <button
                         className="btnNotify"
-                        onClick={() => navigate("/notifications/add")}
+                        onClick={() => {
+                          setNotifyClient(client);
+                          setShowNotifyModal(true);
+                        }}
                       >
                         إرسال إشعار
                       </button>
@@ -397,6 +399,16 @@ const ClientsList = () => {
           </>
         )
       )}
+
+      {/* per-client notification modal */}
+      <ClientNotificationModal
+        show={showNotifyModal}
+        client={notifyClient}
+        onClose={() => {
+          setShowNotifyModal(false);
+          setNotifyClient(null);
+        }}
+      />
     </div>
   );
 };

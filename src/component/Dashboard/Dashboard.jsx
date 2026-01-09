@@ -544,9 +544,9 @@ const Dashboard = () => {
                                 {visit.date}
                               </div>
 
-                              <div className="cardBlock moreDetails">
+                              {/* <div className="cardBlock moreDetails">
                                 تفاصيل أكثر
-                              </div>
+                              </div> */}
                             </div>
                           </div>
                         </div>

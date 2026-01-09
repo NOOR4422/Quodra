@@ -13,6 +13,7 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import { getAllUsers, deleteUser } from "../../../api/clients";
 import { getCarsCached } from "../../../store/carsStore";
+import ClientNotificationModal from "../../Modals/ClientNotificationModal/ClientNotificationModal";
 
 const formatKm = (km) => {
   if (km === null || km === undefined || km === "") return "—";
@@ -39,6 +40,8 @@ const ClientDetails = () => {
   const [deleting, setDeleting] = useState(false);
   const [error, setError] = useState("");
 
+  const [showNotifyModal, setShowNotifyModal] = useState(false);
+
   const toggleCar = (index) => {
     setCars((prev) =>
       prev.map((c, i) => (i === index ? { ...c, open: !c.open } : c))
@@ -59,8 +62,7 @@ const ClientDetails = () => {
           : users?.message || users?.data || [];
 
         const found = (list || []).find((u) => String(u.id) === String(id));
-console.log("ALL USERS:", list);
-
+        console.log("ALL USERS:", list);
 
         const normalizedClient = {
           id: found?.id ?? id,
@@ -69,7 +71,7 @@ console.log("ALL USERS:", list);
           whatsapp: found?.whats ?? found?.whatsapp ?? "-",
           email: found?.raw.email ?? found?.mail ?? "-",
         };
-console.log("FOUND CLIENT:", normalizedClient);
+        console.log("FOUND CLIENT:", normalizedClient);
 
         const userCars = await getCarsCached(id, "ar");
 
@@ -167,20 +169,24 @@ console.log("FOUND CLIENT:", normalizedClient);
           </div>
         )}
 
-        {!loading && !error && (
+        {!loading && !error && client && (
           <>
             <div className="detailsHeader">
               <div className="topButtons">
                 <button
                   className="btnNotify"
-                  onClick={() => navigate("/notifications/add")}
+                  onClick={() => setShowNotifyModal(true)}
                 >
                   إرسال إشعار
                 </button>
 
                 <button
                   className="btnVisit"
-                  onClick={() => navigate("/visits/add")}
+                  onClick={() =>
+                    navigate("/visits/add", {
+                      state: { clientId: client.id },
+                    })
+                  }
                 >
                   زيارة جديدة
                 </button>
@@ -282,6 +288,13 @@ console.log("FOUND CLIENT:", normalizedClient);
           </>
         )}
       </div>
+
+      {/* per-client notification modal */}
+      <ClientNotificationModal
+        show={showNotifyModal}
+        client={client}
+        onClose={() => setShowNotifyModal(false)}
+      />
     </>
   );
 };

@@ -16,7 +16,6 @@ const Sidebar = ({ isOpen, onClose }) => {
   const navigate = useNavigate();
   const [showLogout, setShowLogout] = useState(false);
 
-  // close only on mobile
   const autoClose = () => {
     if (window.innerWidth <= 768 && onClose) {
       onClose();

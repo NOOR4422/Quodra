@@ -23,12 +23,10 @@ const TransferRequests = () => {
   const [rejectNote, setRejectNote] = useState("");
 
   const mapStatusFromState = (state) => {
-    // server returns: 1 pending, 2 accepted, 3 rejected
     if (state === 1) return "قيد المراجعة";
     if (state === 2) return "مقبول";
     if (state === 3) return "مرفوض";
 
-    // sometimes it returns boolean
     if (state === true) return "مقبول";
     if (state === false) return "مرفوض";
 
@@ -41,7 +39,6 @@ const TransferRequests = () => {
       customerName: x?.userName ?? x?.customerName ?? "-",
       phone: x?.phoneNumber ?? x?.phone ?? "-",
       date: x?.date ?? "",
-      // ✅ في Postman عندك اسمها resion
       reason: x?.resion ?? x?.reason ?? "",
       status: mapStatusFromState(x?.state),
       raw: x,
@@ -131,7 +128,6 @@ const TransferRequests = () => {
           );
         }
 
-        // ✅ refetch from server so refresh shows the updated state
         await load();
 
         setModal({ type: "acceptSuccess", request: modal.request });
@@ -148,7 +144,6 @@ const TransferRequests = () => {
           );
         }
 
-        // ✅ refetch
         await load();
 
         setModal({ type: "rejectSuccess", request: modal.request });

@@ -349,13 +349,13 @@ const VisitsList = () => {
                       </div>
 
                       <div className="cardBlick subText">{visit.date}</div>
-
+{/* 
                       <div
                         className="cardBlock moreDetails"
                         style={{ cursor: "pointer" }}
                       >
                         تفاصيل أكثر
-                      </div>
+                      </div> */}
                     </div>
 
                     <div className="btnRow">

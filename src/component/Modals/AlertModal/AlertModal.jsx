@@ -14,12 +14,25 @@ const AlertModal = ({
   onConfirm,
   showCancel = true,
   showConfirm = true,
+  showClose = false,
+  onClose,
 }) => {
   if (!show) return null;
+
+  const handleClose = () => {
+    if (onClose) return onClose();
+    if (onCancel) return onCancel();
+  };
 
   return (
     <div className="alertOverlay">
       <div className="alertCard" dir="rtl">
+        {showClose && (
+          <button type="button" className="alertCloseBtn" onClick={handleClose}>
+            ×
+          </button>
+        )}
+
         <div className="alertHeader">
           {title && <h2 className="alertTitle">{title}</h2>}
           {alertIcon && <div className="alertIcon">{alertIcon}</div>}
