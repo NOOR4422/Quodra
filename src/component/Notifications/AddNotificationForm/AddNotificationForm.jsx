@@ -5,10 +5,7 @@ import Select from "react-select";
 import { useNavigate } from "react-router-dom";
 import AlertModal from "../../Modals/AlertModal/AlertModal";
 import "./addNotificationForm.css";
-import {
-  createNotificationAndRefresh,
-  getErrorMessage,
-} from "../../../api/notifications";
+import { createNotificationAndRefresh, getErrorMessage } from "../../../api/notifications";
 
 const selectStyles = {
   container: (base) => ({ ...base, outline: "none" }),
@@ -134,18 +131,11 @@ const AddNotificationForm = () => {
 
       {!!apiError && <p className="errorMessage">{apiError}</p>}
 
-      <form
-        className="mainForm row"
-        onSubmit={handleSubmit(onSubmit)}
-        dir="rtl"
-      >
+      <form className="mainForm row" onSubmit={handleSubmit(onSubmit)} dir="rtl">
         <div className="formCol col-12 col-md-6">
           <div className="inputGroup">
             <label>
-              الرتبة المستهدفة{" "}
-              <span className="req">
-                <FaStar />
-              </span>
+              الرتبة المستهدفة <span className="req"><FaStar /></span>
             </label>
 
             <Controller
@@ -153,51 +143,14 @@ const AddNotificationForm = () => {
               control={control}
               rules={{ required: "اختر الرتبة" }}
               render={({ field }) => (
-                <Select
-                  {...field}
-                  options={rankOptions}
-                  isSearchable={false}
-                  styles={selectStyles}
-                  placeholder="اختر الرتبة"
-                />
+                <Select {...field} options={rankOptions} isSearchable={false} styles={selectStyles} placeholder="اختر الرتبة" />
               )}
             />
             <p className="errorMessage">{errors.rank?.message}</p>
           </div>
-        </div>
-
-        <div className="formCol col-12 col-md-6">
-          <div className="inputGroup">
+       <div className="inputGroup">
             <label>
-              نوع الإشعار{" "}
-              <span className="req">
-                <FaStar />
-              </span>
-            </label>
-
-            <Controller
-              name="type"
-              control={control}
-              rules={{ required: "اختر نوع الإشعار" }}
-              render={({ field }) => (
-                <Select
-                  {...field}
-                  options={typeOptions}
-                  isSearchable={false}
-                  styles={selectStyles}
-                  placeholder="اختر النوع"
-                />
-              )}
-            />
-            <p className="errorMessage">{errors.type?.message}</p>
-          </div>
-
-          <div className="inputGroup">
-            <label>
-              نص الإشعار{" "}
-              <span className="req">
-                <FaStar />
-              </span>
+              نص الإشعار <span className="req"><FaStar /></span>
             </label>
 
             <input
@@ -206,15 +159,29 @@ const AddNotificationForm = () => {
               className={errors.message ? "inputError" : ""}
             />
             <p className="errorMessage">{errors.message?.message}</p>
+          </div>   </div>
+
+        <div className="formCol col-12 col-md-6">
+          <div className="inputGroup">
+            <label>
+              نوع الإشعار <span className="req"><FaStar /></span>
+            </label>
+
+            <Controller
+              name="type"
+              control={control}
+              rules={{ required: "اختر نوع الإشعار" }}
+              render={({ field }) => (
+                <Select {...field} options={typeOptions} isSearchable={false} styles={selectStyles} placeholder="اختر النوع" />
+              )}
+            />
+            <p className="errorMessage">{errors.type?.message}</p>
           </div>
+
+        
         </div>
 
-        <button
-          type="submit"
-          className="submitBtn"
-          disabled={isSubmitting}
-          style={{ opacity: isSubmitting ? 0.7 : 1 }}
-        >
+        <button type="submit" className="submitBtn" disabled={isSubmitting} style={{ opacity: isSubmitting ? 0.7 : 1 }}>
           {isSubmitting ? "جاري الإرسال..." : "إرسال"}
         </button>
       </form>

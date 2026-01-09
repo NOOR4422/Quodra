@@ -12,7 +12,7 @@ const Layout = () => {
 
   return (
     <div className="layout">
-      <Sidebar isOpen={isSidebarOpen} />
+      <Sidebar isOpen={isSidebarOpen} onClose={closeSidebar} />
 
       <div className="right-side">
         <Navbar onToggleSidebar={toggleSidebar} />

@@ -12,16 +12,23 @@ import { IoLogOutOutline } from "react-icons/io5";
 import tyre from "../../assets/tyre.png";
 import AlertModal from "../Modals/AlertModal/AlertModal";
 
-const Sidebar = ({ isOpen }) => {
+const Sidebar = ({ isOpen, onClose }) => {
   const navigate = useNavigate();
   const [showLogout, setShowLogout] = useState(false);
+
+  // close only on mobile
+  const autoClose = () => {
+    if (window.innerWidth <= 768 && onClose) {
+      onClose();
+    }
+  };
 
   const doLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("workshopId");
 
-
     setShowLogout(false);
+    autoClose();
     navigate("/auth/login", { replace: true });
   };
 
@@ -45,34 +52,34 @@ const Sidebar = ({ isOpen }) => {
         <p className="logoText">قُدْرَة</p>
       </div>
 
-      <NavLink to="/" className="sideBtn">
+      <NavLink to="/" className="sideBtn" onClick={autoClose}>
         <HiMiniHome className="btnIcon" />
         <span className="btnText">الرئيسية</span>
       </NavLink>
 
-      <NavLink to="/clients" className="sideBtn">
+      <NavLink to="/clients" className="sideBtn" onClick={autoClose}>
         <FaUsers className="btnIcon" />
         <span className="btnText">العملاء</span>
       </NavLink>
 
-      <NavLink to="/visits" className="sideBtn">
+      <NavLink to="/visits" className="sideBtn" onClick={autoClose}>
         <TbActivity className="btnIcon" />
         <span className="btnText">الزيارات</span>
       </NavLink>
 
-      <NavLink to="/notifications" className="sideBtn">
+      <NavLink to="/notifications" className="sideBtn" onClick={autoClose}>
         <LuBell className="btnIcon" />
         <span className="btnText">الإشعارات</span>
       </NavLink>
 
-      <NavLink to="/ranks" className="sideBtn">
+      <NavLink to="/ranks" className="sideBtn" onClick={autoClose}>
         <PiLightningBold className="btnIcon" />
         <span className="btnText">المستويات</span>
       </NavLink>
 
       <button
         type="button"
-        className="sideBtn "
+        className="sideBtn"
         onClick={() => setShowLogout(true)}
       >
         <IoLogOutOutline className="btnIcon" />
