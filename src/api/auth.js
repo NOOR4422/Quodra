@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "http://qudrasaas.runasp.net";
+const BASE_URL = "https://qudrasaas.runasp.net";
 
 const decodeJwtPayload = (token) => {
   try {

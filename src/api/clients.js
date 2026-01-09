@@ -96,14 +96,43 @@ export const clientsApi = {
   getErrorMessage,
 };
 
-export const transferRequestsApi = {
-  async getAll({ lang = "ar" } = {}) {
-    const res = await api.get("/api/TransferRequest/GetAllRequest", {
-      params: { lang },
-    });
 
-    if (res?.data?.success) return normalizeTransferRequests(res.data);
-    return normalizeTransferRequests(res?.data);
+export const transferRequestsApi = {
+  getErrorMessage: (err) => {
+    return (
+      err?.response?.data?.message ||
+      err?.response?.data?.error ||
+      err?.message ||
+      "حدث خطأ غير متوقع"
+    );
+  },
+
+  async getAll({ lang = "ar" } = {}) {
+ 
+    try {
+      const res = await api.get("/api/TransferRequest/GetAllRequuest", {
+        params: { lang, _t: Date.now() },
+        headers: { "Cache-Control": "no-cache", Pragma: "no-cache" },
+      });
+
+      const list = Array.isArray(res?.data?.data) ? res.data.data : [];
+      return list;
+    } catch (e) {
+      const res = await api.get("/api/TransferRequest/GetAllRequest", {
+        params: { lang, _t: Date.now() },
+        headers: { "Cache-Control": "no-cache", Pragma: "no-cache" },
+      });
+
+      const list = Array.isArray(res?.data?.data)
+        ? res.data.data
+        : Array.isArray(res?.data?.message)
+        ? res.data.message
+        : Array.isArray(res?.data)
+        ? res.data
+        : [];
+
+      return list;
+    }
   },
 
   async setState({ RequestId, state, lang = "ar" }) {
@@ -113,9 +142,15 @@ export const transferRequestsApi = {
 
     const res = await api.post(
       "/api/TransferRequest/TransferRequestState",
-      null,
+      {},
       {
-        params: { lang, RequestId, state },
+        params: {
+          lang,
+          RequestId: Number(RequestId),
+          state: state === true,
+          _t: Date.now(),
+        },
+        headers: { "Cache-Control": "no-cache", Pragma: "no-cache" },
       }
     );
 
@@ -129,8 +164,7 @@ export const transferRequestsApi = {
   async reject({ RequestId, lang = "ar" }) {
     return this.setState({ RequestId, state: false, lang });
   },
-
-  getErrorMessage,
 };
+
 
 export default clientsApi;

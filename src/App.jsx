@@ -1,16 +1,12 @@
+// App.jsx
 import { BrowserRouter } from "react-router-dom";
 import Routers from "./Routers/Routers";
-import ProtectedRoute from "./ProtectedRoute/ProtectedRoute";
 
 function App() {
   return (
-    <ProtectedRoute>
-  <BrowserRouter>
+    <BrowserRouter>
       <Routers />
     </BrowserRouter>
-
-    </ProtectedRoute>
-  
   );
 }
 

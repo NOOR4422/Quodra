@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "http://qudrasaas.runasp.net",
+  baseURL: "https://qudrasaas.runasp.net",
   timeout: 20000,
   headers: {
     "Content-Type": "application/json",

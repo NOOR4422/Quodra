@@ -1,38 +1,34 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import "../ClientsList/clientsList.css";
 import "./transferRequestsList.css";
 import ClientsTopBar from "../ClientsTopBar/ClientsTopBar";
 import AlertModal from "../../Modals/AlertModal/AlertModal";
-
 import { transferRequestsApi } from "../../../api/clients";
 
 const onlyDate = (iso) => (iso ? String(iso).slice(0, 10) : "");
 
 const TransferRequests = () => {
   const [loading, setLoading] = useState(true);
+  const [actionLoading, setActionLoading] = useState(false);
   const [error, setError] = useState("");
 
   const [requests, setRequests] = useState([]);
 
   const REASON_LIMIT = 40;
 
-  const [modal, setModal] = useState({
-    type: null,
-    request: null,
-  });
+  const [modal, setModal] = useState({ type: null, request: null });
 
-  const [reasonModal, setReasonModal] = useState({
-    show: false,
-    text: "",
-  });
+  const [reasonModal, setReasonModal] = useState({ show: false, text: "" });
 
   const [rejectNote, setRejectNote] = useState("");
 
   const mapStatusFromState = (state) => {
+    // server returns: 1 pending, 2 accepted, 3 rejected
     if (state === 1) return "قيد المراجعة";
     if (state === 2) return "مقبول";
     if (state === 3) return "مرفوض";
 
+    // sometimes it returns boolean
     if (state === true) return "مقبول";
     if (state === false) return "مرفوض";
 
@@ -45,6 +41,7 @@ const TransferRequests = () => {
       customerName: x?.userName ?? x?.customerName ?? "-",
       phone: x?.phoneNumber ?? x?.phone ?? "-",
       date: x?.date ?? "",
+      // ✅ في Postman عندك اسمها resion
       reason: x?.resion ?? x?.reason ?? "",
       status: mapStatusFromState(x?.state),
       raw: x,
@@ -64,17 +61,11 @@ const TransferRequests = () => {
   };
 
   const openViewReason = (reasonText) => {
-    setReasonModal({
-      show: true,
-      text: reasonText || "-",
-    });
+    setReasonModal({ show: true, text: reasonText || "-" });
   };
 
   const closeViewReason = () => {
-    setReasonModal({
-      show: false,
-      text: "",
-    });
+    setReasonModal({ show: false, text: "" });
   };
 
   const openAcceptConfirm = (req) => {
@@ -87,83 +78,87 @@ const TransferRequests = () => {
   };
 
   const closeModal = () => {
+    if (actionLoading) return;
     setModal({ type: null, request: null });
   };
+
+  const load = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError("");
+
+      const list = await transferRequestsApi.getAll({ lang: "ar" });
+      const normalized = (list || []).map(normalizeRequest);
+
+      setRequests(normalized);
+    } catch (err) {
+      setError(transferRequestsApi.getErrorMessage(err));
+      setRequests([]);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
     let alive = true;
 
-    const load = async () => {
-      try {
-        setLoading(true);
-        setError("");
-
-
-        const res = await transferRequestsApi.getAll({ lang: "ar" });
-        if (!alive) return;
-
-        const list = Array.isArray(res) ? res : res?.data || res?.message || [];
-        setRequests((list || []).map(normalizeRequest));
-      } catch (err) {
-        if (!alive) return;
-        setError(transferRequestsApi.getErrorMessage(err));
-        setRequests([]);
-      } finally {
-        if (alive) setLoading(false);
-      }
-    };
-
-    load();
+    (async () => {
+      if (!alive) return;
+      await load();
+    })();
 
     return () => {
       alive = false;
     };
-  }, []);
+  }, [load]);
 
   const handleConfirmModal = async () => {
     if (!modal.request?.id) return;
 
     try {
+      setActionLoading(true);
       setError("");
 
       const RequestId = modal.request.id;
 
       if (modal.type === "acceptConfirm") {
-        const res = await transferRequestsApi.accept({
-          RequestId,
-          lang: "ar",
-        });
-        if (!res?.success) throw new Error(res?.message || "فشل قبول الطلب");
+        const res = await transferRequestsApi.accept({ RequestId, lang: "ar" });
 
-        setRequests((prev) =>
-          prev.map((r) =>
-            String(r.id) === String(RequestId) ? { ...r, status: "مقبول" } : r
-          )
-        );
+        const ok = res?.success ?? res?.data?.success;
+        if (!ok) {
+          throw new Error(
+            res?.message || res?.data?.message || "فشل قبول الطلب"
+          );
+        }
+
+        // ✅ refetch from server so refresh shows the updated state
+        await load();
 
         setModal({ type: "acceptSuccess", request: modal.request });
         return;
       }
 
       if (modal.type === "rejectConfirm") {
-        const res = await transferRequestsApi.reject({
-          RequestId,
-          lang: "ar",
-        });
-        if (!res?.success) throw new Error(res?.message || "فشل رفض الطلب");
+        const res = await transferRequestsApi.reject({ RequestId, lang: "ar" });
 
-        setRequests((prev) =>
-          prev.map((r) =>
-            String(r.id) === String(RequestId) ? { ...r, status: "مرفوض" } : r
-          )
-        );
+        const ok = res?.success ?? res?.data?.success;
+        if (!ok) {
+          throw new Error(
+            res?.message || res?.data?.message || "فشل رفض الطلب"
+          );
+        }
+
+        // ✅ refetch
+        await load();
 
         setModal({ type: "rejectSuccess", request: modal.request });
         return;
       }
     } catch (err) {
       setError(transferRequestsApi.getErrorMessage(err));
-      closeModal();
+      setModal({ type: null, request: null });
+    } finally {
+      setActionLoading(false);
     }
   };
 
@@ -172,22 +167,12 @@ const TransferRequests = () => {
   const isSuccessType =
     modal.type === "acceptSuccess" || modal.type === "rejectSuccess";
 
-  return (
-    <div className="mainContainer">
-      <ClientsTopBar />
+  const content = useMemo(() => {
+    if (loading) return null;
+    if (error) return null;
+    if (!requests.length) return null;
 
-      {loading && <p style={{ padding: 12 }}>جاري تحميل الطلبات...</p>}
-
-      {!!error && (
-        <div style={{ padding: 12 }}>
-          <p style={{ color: "crimson" }}>{error}</p>
-        </div>
-      )}
-
-      {!loading && !error && requests.length === 0 && (
-        <p style={{ padding: 12 }}>لا توجد طلبات نقل.</p>
-      )}
-
+    return (
       <div className="transferListWrapper">
         {requests.map((req) => {
           const isLong = (req.reason || "").length > REASON_LIMIT;
@@ -252,13 +237,16 @@ const TransferRequests = () => {
                       <button
                         className="btnTransferAccept"
                         type="button"
+                        disabled={actionLoading}
                         onClick={() => openAcceptConfirm(req)}
                       >
                         قبول
                       </button>
+
                       <button
                         className="btnTransferReject"
                         type="button"
+                        disabled={actionLoading}
                         onClick={() => openRejectConfirm(req)}
                       >
                         رفض
@@ -271,6 +259,29 @@ const TransferRequests = () => {
           );
         })}
       </div>
+    );
+  }, [loading, error, requests, actionLoading]);
+
+  return (
+    <div className="mainContainer">
+      <ClientsTopBar />
+
+      {loading && <p style={{ padding: 12 }}>جاري تحميل الطلبات...</p>}
+
+      {!!error && (
+        <div style={{ padding: 12 }}>
+          <p style={{ color: "crimson" }}>{error}</p>
+          <button className="addBtn" onClick={load} disabled={loading}>
+            إعادة المحاولة
+          </button>
+        </div>
+      )}
+
+      {!loading && !error && requests.length === 0 && (
+        <p style={{ padding: 12 }}>لا توجد طلبات نقل.</p>
+      )}
+
+      {content}
 
       {modal.type && (
         <AlertModal
@@ -280,7 +291,7 @@ const TransferRequests = () => {
           message=""
           showMessage={false}
           cancelText={isConfirmType ? "لا" : ""}
-          confirmText={isConfirmType ? "نعم" : "تم"}
+          confirmText={isConfirmType ? (actionLoading ? "..." : "نعم") : "تم"}
           showCancel={isConfirmType}
           showConfirm={isConfirmType || isSuccessType}
           onCancel={closeModal}
