@@ -1,5 +1,5 @@
 .sidebar {
-    width: 230px;
+    width: 280px;
     /* height: 96.5vh; */
     background:#FFF8F7;
     padding: 8px 20px;
@@ -106,10 +106,9 @@ height: 50px;
 }
 
 
-
+/* 
 .sidebar {
-    width: 230px;
-    height: 96.5vh;
+    width: 250px;
     background: #FFF8F7;
     padding: 12px 22px;
     display: flex;
@@ -120,7 +119,7 @@ height: 50px;
     position: sticky;
     top: 0;
     z-index: 10;
-}
+} */
 
 @media (max-width: 991.98px) {
     .sidebar {
