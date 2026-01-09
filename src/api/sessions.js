@@ -40,12 +40,12 @@ export const updateSession = async ({ lang = "ar", sessionId, payload }) => {
   });
   return res.data;
 };
-
 export const deleteSession = async ({ lang = "ar", sessionId }) => {
   if (!sessionId) throw new Error("sessionId غير موجود");
 
   const res = await api.delete("/api/Session/DeleteSession", {
-    params: { lang, sessiSonId: sessionId },
+    // use the EXACT key that Postman docs / working request use
+    params: { lang, SessionId: sessionId }, // or sessionId: sessionId if API says so
   });
 
   if (res.data?.success === false) {

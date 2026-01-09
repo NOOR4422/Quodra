@@ -8,6 +8,7 @@ import {
   getAllNotifications,
   getErrorMessage,
 } from "../../../api/notifications";
+import { getAllUsers } from "../../../api/clients";
 
 const PAGE_SIZE = 10;
 
@@ -42,12 +43,39 @@ const typeLabel = (t) => {
 
 const rankLabel = (r) => {
   const x = Number(r);
-  if (x === 0) return "عادي";
-  if (x === 1) return "برونزي";
-  if (x === 2) return "فضي";
-  if (x === 3) return "ذهبي";
+  if (x === 0) return "العادي";
+  if (x === 1) return "البرونزي";
+  if (x === 2) return "الفضي";
+  if (x === 3) return "الذهبي";
   if (x === 4) return "البلاتيني";
   return "";
+};
+
+const targetLabel = (raw, usersMap) => {
+  const rank = raw.rank ?? raw.userRank ?? null;
+
+  const customerId =
+    raw.customerId ?? raw.CustomerId ?? raw.clientId ?? raw.ClientId ?? null;
+
+  const isAll = raw.toAll || raw.isAll || rank === -1;
+
+  if (isAll) return "موجه إلى كل العملاء";
+
+  if (customerId != null) {
+    const key = String(customerId);
+    const user = usersMap[key];
+
+    if (user && user.name) {
+      return `موجه إلى العميل: ${user.name}`;
+    }
+    return `موجه إلى العميل رقم ${customerId}`;
+  }
+
+  if (rank !== null && rank !== undefined) {
+    return `موجه إلى عملاء المستوى ${rankLabel(rank)}`;
+  }
+
+  return "المستلم غير محدد";
 };
 
 const NotificationsList = () => {
@@ -72,9 +100,31 @@ const NotificationsList = () => {
         return;
       }
 
-      const list = await getAllNotifications({ workshopId, lang: "ar" });
+      const [notesRes, usersRes] = await Promise.all([
+        getAllNotifications({ workshopId, lang: "ar" }),
+        getAllUsers().catch(() => null),
+      ]);
 
-      const mapped = (list || []).map((raw, idx) => {
+      let usersMap = {};
+      if (usersRes) {
+        const usersList = Array.isArray(usersRes)
+          ? usersRes
+          : usersRes?.message || usersRes?.data || [];
+
+        usersMap = (usersList || []).reduce((acc, u) => {
+          const id = u.id ?? u.userId ?? u._id;
+          if (!id) return acc;
+          acc[String(id)] = {
+            name: u.name ?? "بدون اسم",
+            phone: u.phone ?? u.phoneNumber ?? "-",
+          };
+          return acc;
+        }, {});
+      }
+
+      const list = notesRes || [];
+
+      const mapped = list.map((raw, idx) => {
         const createdAt =
           raw.date ||
           raw.createdAt ||
@@ -87,7 +137,7 @@ const NotificationsList = () => {
           id: raw.id ?? raw.notificationId ?? `${idx}-${createdAt ?? ""}`,
           title: raw.message ?? "",
           type: typeLabel(raw.type),
-          target: `موجه إلى ${rankLabel(raw.rank)}`,
+          target: targetLabel(raw, usersMap),
           date: formatDate(createdAt),
           raw,
         };

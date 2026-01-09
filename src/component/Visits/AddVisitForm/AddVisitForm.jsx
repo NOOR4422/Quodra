@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import "./addVisitForm.css";
 import { FaStar } from "react-icons/fa";
 import AlertModal from "../../Modals/AlertModal/AlertModal";
@@ -279,7 +279,7 @@ const AddVisitForm = () => {
       setSubmitting(false);
     }
   };
-
+const navigate = useNavigate();
   return (
     <div className="formContainer">
       <AlertModal
@@ -290,7 +290,12 @@ const AddVisitForm = () => {
         showCancel={false}
         message="تم إضافة الزيارة بنجاح"
         onCancel={() => setShowAlert(false)}
-        onConfirm={() => setShowAlert(false)}
+        onConfirm={() => {
+          setShowAlert(false);
+          navigate("/visits");
+
+        }
+        }
       />
 
       <p className="formTitle">إضافة زيارة جديدة</p>

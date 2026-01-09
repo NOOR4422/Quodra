@@ -1,11 +1,14 @@
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { FaStar } from "react-icons/fa";
 import Select from "react-select";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import AlertModal from "../../Modals/AlertModal/AlertModal";
 import "./addNotificationForm.css";
-import { createNotificationAndRefresh, getErrorMessage } from "../../../api/notifications";
+import {
+  createNotification,
+  getErrorMessage,
+} from "../../../api/notifications";
 
 const selectStyles = {
   container: (base) => ({ ...base, outline: "none" }),
@@ -33,11 +36,11 @@ const selectStyles = {
 };
 
 const rankOptions = [
-  { value: 0, label: "عادي" },
-  { value: 1, label: "برونزي" },
-  { value: 2, label: "فضي" },
-  { value: 3, label: "ذهبي" },
-  { value: 4, label: "البلاتيني" },
+  { value: 0, code: 0, label: "عادي" },
+  { value: 1, code: 1, label: "برونزي" },
+  { value: 2, code: 2, label: "فضي" },
+  { value: 3, code: 3, label: "ذهبي" },
+  { value: 4, code: 4, label: "البلاتيني" },
 ];
 
 const typeOptions = [
@@ -48,12 +51,13 @@ const typeOptions = [
 
 const AddNotificationForm = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const presetRankCode = location.state?.rank ?? null;
 
   const [showAlert, setShowAlert] = useState(false);
   const [apiError, setApiError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const submittingRef = useRef(false);
 
   const workshopId = localStorage.getItem("workshopId");
 
@@ -65,49 +69,76 @@ const AddNotificationForm = () => {
     formState: { errors },
   } = useForm({
     mode: "onTouched",
-    defaultValues: { rank: null, type: null, message: "" },
+    defaultValues: {
+      rank:
+        presetRankCode !== null
+          ? rankOptions.find((r) => r.code === presetRankCode) ?? null
+          : null,
+      type: null,
+      message: "",
+    },
   });
 
   const onSubmit = async (data) => {
-    if (submittingRef.current) return;
-    submittingRef.current = true;
+    if (isSubmitting) return;
 
-    setIsSubmitting(true);
     setApiError("");
 
+    const rankOption = data.rank;
+    const typeOption = data.type;
+
+    if (!rankOption) {
+      setApiError("اختر الرتبة");
+      return;
+    }
+
+    if (!typeOption) {
+      setApiError("اختر نوع الإشعار");
+      return;
+    }
+
+    if (!workshopId) {
+      setApiError("لا يمكن إرسال إشعار بدون workshopId");
+      return;
+    }
+
+    const rankCode = Number(rankOption.code);
+    const typeValue = Number(typeOption.value);
+
+    console.log("ADD NOTIF SUBMIT DATA:", data);
+    console.log("ABOUT TO CALL API", {
+      message: data.message,
+      type: typeValue,
+      rank: rankCode,
+    });
+
+    setIsSubmitting(true);
     try {
-      const rank = data.rank?.value;
-      const type = data.type?.value;
-
-      if (rank === undefined || rank === null) {
-        setApiError("اختر الرتبة");
-        return;
-      }
-
-      if (type === undefined || type === null) {
-        setApiError("اختر نوع الإشعار");
-        return;
-      }
-
-      if (!workshopId) {
-        setApiError("لا يمكن إرسال إشعار بدون workshopId");
-        return;
-      }
-
-      await createNotificationAndRefresh({
+      await createNotification({
         message: data.message,
-        type: Number(type),
-        rank: Number(rank),
-        workshopId,
+        type: typeValue,
+        rank: rankCode,
         lang: "ar",
       });
 
+      console.log("API DONE OK (ADD FORM)");
+
       setShowAlert(true);
-      reset({ rank: null, type: null, message: "" });
+      reset({
+        rank:
+          presetRankCode !== null
+            ? rankOptions.find((r) => r.code === presetRankCode) ?? null
+            : null,
+        type: null,
+        message: "",
+      });
     } catch (err) {
+      console.error(
+        "CREATE NOTIFICATION ERROR (ADD FORM):",
+        err?.response?.data || err
+      );
       setApiError(getErrorMessage(err));
     } finally {
-      submittingRef.current = false;
       setIsSubmitting(false);
     }
   };
@@ -131,11 +162,18 @@ const AddNotificationForm = () => {
 
       {!!apiError && <p className="errorMessage">{apiError}</p>}
 
-      <form className="mainForm row" onSubmit={handleSubmit(onSubmit)} dir="rtl">
+      <form
+        className="mainForm row"
+        onSubmit={handleSubmit(onSubmit)}
+        dir="rtl"
+      >
         <div className="formCol col-12 col-md-6">
           <div className="inputGroup">
             <label>
-              الرتبة المستهدفة <span className="req"><FaStar /></span>
+              الرتبة المستهدفة{" "}
+              <span className="req">
+                <FaStar />
+              </span>
             </label>
 
             <Controller
@@ -143,28 +181,44 @@ const AddNotificationForm = () => {
               control={control}
               rules={{ required: "اختر الرتبة" }}
               render={({ field }) => (
-                <Select {...field} options={rankOptions} isSearchable={false} styles={selectStyles} placeholder="اختر الرتبة" />
+                <Select
+                  {...field}
+                  options={rankOptions}
+                  isSearchable={false}
+                  styles={selectStyles}
+                  placeholder="اختر الرتبة"
+                />
               )}
             />
             <p className="errorMessage">{errors.rank?.message}</p>
           </div>
-       <div className="inputGroup">
+
+          <div className="inputGroup">
             <label>
-              نص الإشعار <span className="req"><FaStar /></span>
+              نص الإشعار{" "}
+              <span className="req">
+                <FaStar />
+              </span>
             </label>
 
             <input
               placeholder="اكتب نص الإشعار هنا..."
-              {...register("message", { required: "يجب إدخال نص الإشعار" })}
+              {...register("message", {
+                required: "يجب إدخال نص الإشعار",
+              })}
               className={errors.message ? "inputError" : ""}
             />
             <p className="errorMessage">{errors.message?.message}</p>
-          </div>   </div>
+          </div>
+        </div>
 
         <div className="formCol col-12 col-md-6">
           <div className="inputGroup">
             <label>
-              نوع الإشعار <span className="req"><FaStar /></span>
+              نوع الإشعار{" "}
+              <span className="req">
+                <FaStar />
+              </span>
             </label>
 
             <Controller
@@ -172,17 +226,26 @@ const AddNotificationForm = () => {
               control={control}
               rules={{ required: "اختر نوع الإشعار" }}
               render={({ field }) => (
-                <Select {...field} options={typeOptions} isSearchable={false} styles={selectStyles} placeholder="اختر النوع" />
+                <Select
+                  {...field}
+                  options={typeOptions}
+                  isSearchable={false}
+                  styles={selectStyles}
+                  placeholder="اختر النوع"
+                />
               )}
             />
             <p className="errorMessage">{errors.type?.message}</p>
           </div>
-
-        
         </div>
 
-        <button type="submit" className="submitBtn" disabled={isSubmitting} style={{ opacity: isSubmitting ? 0.7 : 1 }}>
-          {isSubmitting ? "جاري الإرسال..." : "إرسال"}
+        <button
+          type="submit"
+          className="submitBtn"
+          disabled={isSubmitting}
+          style={{ opacity: isSubmitting ? 0.7 : 1 }}
+        >
+          {isSubmitting ? "جارٍ الإرسال..." : "إرسال"}
         </button>
       </form>
     </div>

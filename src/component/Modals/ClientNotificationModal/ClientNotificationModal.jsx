@@ -70,6 +70,7 @@ const ClientNotificationModal = ({ show, client, onClose }) => {
     if (!client) return;
 
     setApiError("");
+
     if (!workshopId) {
       setApiError("لا يمكن إرسال إشعار بدون workshopId");
       return;
@@ -87,7 +88,7 @@ const ClientNotificationModal = ({ show, client, onClose }) => {
       await createNotificationAndRefresh({
         message: data.message,
         type: Number(type),
-        userId: client.id, // specific client
+        userId: client.id,
         date: data.date || null,
         workshopId,
         lang: "ar",
@@ -106,14 +107,15 @@ const ClientNotificationModal = ({ show, client, onClose }) => {
   return (
     <AlertModal
       show={show}
-      title={`إرسال إشعار جديد للعميل: ${client.name}`}
-      alertIcon="🔔"
+    //   title={`إرسال إشعار جديد للعميل: ${client.name}`}
+      alertIcon=""
       showCancel={false}
-      showConfirm={false}
-      showClose={true}
-      onClose={onClose}
+          showConfirm={false}
+        showClose={true}
     >
       <div className="">
+   
+
         {!!apiError && <p className="errorMessage">{apiError}</p>}
 
         <form
@@ -121,8 +123,8 @@ const ClientNotificationModal = ({ show, client, onClose }) => {
           onSubmit={handleSubmit(onSubmit)}
           dir="rtl"
         >
-
           <div className="formCol col-12 col-md-6">
+            {/* نص الإشعار */}
             <div className="inputGroup">
               <label>
                 نص الإشعار{" "}
@@ -170,11 +172,15 @@ const ClientNotificationModal = ({ show, client, onClose }) => {
             </div>
           </div>
 
-          {/* التاريخ بعرض الصف كامل */}
+          {/* التاريخ في صف مستقل بعرض الفورم كله */}
           <div className="formCol col-12">
             <div className="inputGroup">
               <label>التاريخ</label>
-              <input type="date" {...register("date")} />
+              <input
+                type="date"
+                {...register("date")}
+                className="inputDate" // اختياري، أو نفس input العادي
+              />
             </div>
           </div>
 

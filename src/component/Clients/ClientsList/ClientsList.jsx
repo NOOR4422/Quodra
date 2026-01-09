@@ -56,7 +56,6 @@ const ClientsList = () => {
   const [page, setPage] = useState(1);
   const [deleting, setDeleting] = useState(false);
 
-  // new state for notification modal
   const [showNotifyModal, setShowNotifyModal] = useState(false);
   const [notifyClient, setNotifyClient] = useState(null);
 

@@ -11,7 +11,12 @@ import box from "../../assets/box.png";
 import { useNavigate } from "react-router-dom";
 import OfferMessage from "../Modals/OfferMessage/OfferMessage";
 
-import { createOffer, getOffersForWorkshop, offersApi } from "../../api/offers";
+import {
+  createOffer,
+  getOffersForWorkshop,
+  getRanksAdmin,
+  offersApi,
+} from "../../api/offers";
 
 const OFFERS_PAGE_SIZE = 10;
 
@@ -29,82 +34,129 @@ function getPages(current, total) {
   return out;
 }
 
+const RANK_NAME_TO_ID = {
+  عادي: 0,
+  "المستوى العادي": 0,
+
+  برونزي: 1,
+  "المستوى البرونزي": 1,
+
+  فضي: 2,
+  "المستوى الفضي": 2,
+
+  ذهبي: 3,
+  "المستوى الذهبي": 3,
+
+  بلاتيني: 4,
+  البالاتيني: 4,
+  البلاتيني: 4,
+  "المستوى البلاتيني": 4,
+};
+
+const RANK_META = {
+  0: { title: "المستوى العادي", visits: 1, img: normal },
+  1: { title: "المستوى البرونزي", visits: 2, img: bronze },
+  2: { title: "المستوى الفضي", visits: 3, img: silver },
+  3: { title: "المستوى الذهبي", visits: 4, img: gold },
+  4: { title: "المستوى البلاتيني", visits: 5, img: winner, highlight: true },
+};
+
+const rankLabelFromId = (rankId) => {
+  if (rankId === 0) return "عادي";
+  if (rankId === 1) return "برونزي";
+  if (rankId === 2) return "فضي";
+  if (rankId === 3) return "ذهبي";
+  return "بلاتيني";
+};
+
+const imgFromRankId = (rankId) => {
+  if (rankId === 0) return normal;
+  if (rankId === 1) return bronze;
+  if (rankId === 2) return silver;
+  if (rankId === 3) return gold;
+  return winner;
+};
+
 const RanksList = () => {
   const navigate = useNavigate();
 
-  const [ranks] = useState([
-    { title: "المستوى العادي", clients: 10, visits: 1, img: normal },
-    { title: "المستوى البرونزي", clients: 20, visits: 2, img: bronze },
-    { title: "المستوى الفضي", clients: 20, visits: 3, img: silver },
-    { title: "المستوى الذهبي", clients: 20, visits: 4, img: gold },
-    {
-      title: "المستوى البلاتيني",
-      clients: 20,
-      visits: 5,
-      img: winner,
-      highlight: true,
-    },
-  ]);
+  const [ranks, setRanks] = useState([]);
+  const [ranksLoading, setRanksLoading] = useState(true);
+  const [ranksError, setRanksError] = useState("");
 
   const [offers, setOffers] = useState([]);
   const [loadingOffers, setLoadingOffers] = useState(true);
   const [offersError, setOffersError] = useState("");
 
   const [showOfferAlert, setShowOfferAlert] = useState(false);
-  const [selectedRank, setSelectedRank] = useState(null);
+  const [selectedRank, setSelectedRank] = useState(null); 
   const [isSending, setIsSending] = useState(false);
 
   const [offersPage, setOffersPage] = useState(1);
 
   const workshopId = localStorage.getItem("workshopId");
 
-  const rankIdMap = {
-    "المستوى العادي": 0,
-    "المستوى البرونزي": 1,
-    "المستوى الفضي": 2,
-    "المستوى الذهبي": 3,
-    "المستوى البلاتيني": 4,
-  };
+  const loadRanks = useCallback(async () => {
+    try {
+      setRanksLoading(true);
+      setRanksError("");
 
-  const toRankId = (rank) => rankIdMap[rank?.title] ?? 0;
+      const list = await getRanksAdmin({ lang: "ar" });
 
-  const rankLabelFromId = (rankId) => {
-    if (rankId === 0) return "عادي";
-    if (rankId === 1) return "برونزي";
-    if (rankId === 2) return "فضي";
-    if (rankId === 3) return "ذهبي";
-    return "بلاتيني";
-  };
+      const mapped = (list || []).map((r, idx) => {
+        const name = r.name ?? "";
+        const rankId = RANK_NAME_TO_ID[name] ?? idx; 
 
-  const imgFromRankId = (rankId) => {
-    if (rankId === 0) return normal;
-    if (rankId === 1) return bronze;
-    if (rankId === 2) return silver;
-    if (rankId === 3) return gold;
-    return winner;
-  };
+        const meta = RANK_META[rankId] || {};
+        return {
+          id: rankId,
+          rankId,
+          backendName: name,
+          title: meta.title || name || `الرتبة ${idx + 1}`,
+          visits: meta.visits ?? 0,
+          clients: r.numberOfUsers ?? 0,
+          img: meta.img || imgFromRankId(rankId),
+          highlight: Boolean(meta.highlight),
+        };
+      });
 
-  const rankLabelFromTitle = (title) =>
-    (title || "").replace("المستوى", "").trim();
+      mapped.sort((a, b) => a.rankId - b.rankId);
+
+      setRanks(mapped);
+    } catch (err) {
+      setRanksError(offersApi.getErrorMessage(err));
+      setRanks([]);
+    } finally {
+      setRanksLoading(false);
+    }
+  }, []);
 
   const loadOffers = useCallback(async () => {
     try {
       setLoadingOffers(true);
       setOffersError("");
 
+      if (!workshopId) {
+        setOffers([]);
+        setOffersError("لا يمكن تحميل العروض بدون workshopId");
+        return;
+      }
+
       const list = await getOffersForWorkshop({ workshopId });
 
-      const mapped = (list || []).map((o, idx) => ({
-        id: `${o.message}-${o.rank}-${idx}`,
-        title: o.message ?? "",
-        rankId: o.rank ?? 0,
-        rank: rankLabelFromId(o.rank ?? 0),
-        img: imgFromRankId(o.rank ?? 0),
-        raw: o,
-      }));
+      const mapped = (list || []).map((o, idx) => {
+        const rankId = o.rank ?? 0;
+        return {
+          id: `${o.message}-${rankId}-${idx}`,
+          title: o.message ?? "",
+          rankId,
+          rank: rankLabelFromId(rankId),
+          img: imgFromRankId(rankId),
+          raw: o,
+        };
+      });
 
       mapped.reverse();
-
       setOffers(mapped);
       setOffersPage(1);
     } catch (err) {
@@ -115,6 +167,10 @@ const RanksList = () => {
       setLoadingOffers(false);
     }
   }, [workshopId]);
+
+  useEffect(() => {
+    loadRanks();
+  }, [loadRanks]);
 
   useEffect(() => {
     loadOffers();
@@ -137,7 +193,12 @@ const RanksList = () => {
   };
 
   const isEmpty =
-    ranks.length === 0 && offers.length === 0 && !loadingOffers && !offersError;
+    ranks.length === 0 &&
+    offers.length === 0 &&
+    !ranksLoading &&
+    !loadingOffers &&
+    !ranksError &&
+    !offersError;
 
   return (
     <div className="mainContainer">
@@ -153,7 +214,7 @@ const RanksList = () => {
 
             const payload = {
               message: offerMessage,
-              rank: toRankId(selectedRank),
+              rank: selectedRank.rankId,
             };
 
             const res = await createOffer(payload);
@@ -164,8 +225,8 @@ const RanksList = () => {
                 id: `local-${Date.now()}`,
                 title: offerMessage,
                 rankId: payload.rank,
-                rank: rankLabelFromTitle(selectedRank.title),
-                img: selectedRank.img,
+                rank: rankLabelFromId(payload.rank),
+                img: imgFromRankId(payload.rank),
               },
               ...prev,
             ]);
@@ -198,7 +259,7 @@ const RanksList = () => {
             <button
               className="addBtn"
               style={{ backgroundColor: "#DD2912", color: "white" }}
-              onClick={() => navigate("/addVisitForm")}
+              onClick={() => navigate("/visits/add")}
             >
               إضافة زيارة
             </button>
@@ -207,36 +268,52 @@ const RanksList = () => {
       ) : (
         <>
           <div className="ranksGrid">
-            {ranks.map((rank, index) => (
-              <div
-                key={index}
-                className={`rankCard ${rank.highlight ? "activeCard" : ""}`}
-              >
-                <div className="rankHeader">
-                  <span className="cardTitle">{rank.title}</span>
-                  <div className="rankIcon">
-                    <img src={rank.img} alt="" className="rankImg" />
+            {ranksLoading && (
+              <p style={{ padding: 12 }}>جاري تحميل المستويات...</p>
+            )}
+
+            {!!ranksError && (
+              <div style={{ padding: 12 }}>
+                <p style={{ color: "red" }}>{ranksError}</p>
+                <button className="addBtn" onClick={loadRanks}>
+                  إعادة المحاولة
+                </button>
+              </div>
+            )}
+
+            {!ranksLoading &&
+              !ranksError &&
+              ranks.map((rank) => (
+                <div
+                  key={rank.id}
+                  className={`rankCard ${rank.highlight ? "activeCard" : ""}`}
+                >
+                  <div className="rankHeader">
+                    <span className="cardTitle">{rank.title}</span>
+                    <div className="rankIcon">
+                      <img src={rank.img} alt="" className="rankImg" />
+                    </div>
+                  </div>
+
+                  <div className="rankInfo">
+                    <span className="subText">{rank.visits} زيارات</span>
+                    <span className="subTextb">{rank.clients} عميل</span>
+                  </div>
+
+                  <div className="rankHeader">
+                    <span className="subTextb" />
+                    <button
+                      className="sendOfferBtn"
+                      onClick={() => {
+                        setSelectedRank(rank);
+                        setShowOfferAlert(true);
+                      }}
+                    >
+                      إرسال عرض
+                    </button>
                   </div>
                 </div>
-
-                <div className="rankInfo">
-                  <span className="subText">{rank.visits} زيارات</span>
-                </div>
-
-                <div className="rankHeader">
-                  <span className="subTextb">{rank.clients} عميل</span>
-                  <button
-                    className="sendOfferBtn"
-                    onClick={() => {
-                      setSelectedRank(rank);
-                      setShowOfferAlert(true);
-                    }}
-                  >
-                    إرسال عرض
-                  </button>
-                </div>
-              </div>
-            ))}
+              ))}
           </div>
 
           <div className="mainContainer roundedSection">
