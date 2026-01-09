@@ -107,15 +107,14 @@ const ClientNotificationModal = ({ show, client, onClose }) => {
   return (
     <AlertModal
       show={show}
-    //   title={`إرسال إشعار جديد للعميل: ${client.name}`}
+      //   title={`إرسال إشعار جديد للعميل: ${client.name}`}
       alertIcon=""
       showCancel={false}
-          showConfirm={false}
-        showClose={true}
+      showConfirm={false}
+          showClose={true}
+        onClose={onClose}
     >
       <div className="">
-   
-
         {!!apiError && <p className="errorMessage">{apiError}</p>}
 
         <form
@@ -188,7 +187,11 @@ const ClientNotificationModal = ({ show, client, onClose }) => {
             type="submit"
             className="submitBtn"
             disabled={submitting}
-            style={{ opacity: submitting ? 0.7 : 1 }}
+            style={{
+              opacity: submitting ? 0.7 : 1,
+              width: "50%",
+              marginTop: "20px",
+            }}
           >
             {submitting ? "جاري الإرسال..." : "إرسال"}
           </button>

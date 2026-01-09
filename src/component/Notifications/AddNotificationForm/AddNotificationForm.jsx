@@ -243,7 +243,9 @@ const AddNotificationForm = () => {
           type="submit"
           className="submitBtn"
           disabled={isSubmitting}
-          style={{ opacity: isSubmitting ? 0.7 : 1 }}
+          style={{
+            opacity: isSubmitting ? 0.7 : 1, width: '50%', marginTop: '20px'
+          }}
         >
           {isSubmitting ? "جارٍ الإرسال..." : "إرسال"}
         </button>
