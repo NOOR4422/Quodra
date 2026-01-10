@@ -123,7 +123,6 @@ const ClientNotificationModal = ({ show, client, onClose }) => {
           dir="rtl"
         >
           <div className="formCol col-12 col-md-6">
-            {/* نص الإشعار */}
             <div className="inputGroup">
               <label>
                 نص الإشعار{" "}
@@ -144,7 +143,6 @@ const ClientNotificationModal = ({ show, client, onClose }) => {
           </div>
 
           <div className="formCol col-12 col-md-6">
-            {/* نوع الإشعار */}
             <div className="inputGroup">
               <label>
                 نوع الإشعار{" "}
@@ -171,14 +169,13 @@ const ClientNotificationModal = ({ show, client, onClose }) => {
             </div>
           </div>
 
-          {/* التاريخ في صف مستقل بعرض الفورم كله */}
           <div className="formCol col-12">
             <div className="inputGroup">
               <label>التاريخ</label>
               <input
                 type="date"
                 {...register("date")}
-                className="inputDate" // اختياري، أو نفس input العادي
+                className="inputDate" 
               />
             </div>
           </div>
