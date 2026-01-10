@@ -574,79 +574,6 @@ const EditVisitForm = () => {
               />
               <p className="errorMessage">{errors.servicesSelect?.message}</p>
             </div>
-
-            <div className="inputGroup">
-              <label>السعر</label>
-              <input
-                type="text"
-                {...register("price", {
-                  validate: (v) =>
-                    !v || /^\d+$/.test(v) ? true : "يسمح فقط بالأرقام",
-                })}
-                className={errors.price ? "inputError" : ""}
-              />
-              <p className="errorMessage">{errors.price?.message}</p>
-            </div>
-
-            {oilChanged === "yes" && (
-              <>
-                <div className="inputGroup">
-                  <label>
-                    نوع الزيت{" "}
-                    <span className="req">
-                      <FaStar />
-                    </span>
-                  </label>
-
-                  {!!oilError && (
-                    <p style={{ color: "crimson", padding: "6px 0" }}>
-                      {oilError}
-                    </p>
-                  )}
-
-                  <Controller
-                    name="oilType"
-                    control={control}
-                    rules={{
-                      validate: (v) =>
-                        watch("oilChanged") !== "yes" ||
-                        !!v ||
-                        "اختر نوع الزيت",
-                    }}
-                    render={({ field }) => (
-                      <Select
-                        {...field}
-                        options={oilOptions}
-                        isSearchable={false}
-                        isDisabled={oilLoading || !!oilError}
-                        placeholder={
-                          oilLoading
-                            ? "جارِ التحميل..."
-                            : oilOptions.length === 0
-                            ? "لا توجد زيوت"
-                            : "اختر نوع الزيت"
-                        }
-                        styles={selectStyles}
-                      />
-                    )}
-                  />
-                  <p className="errorMessage">{errors.oilType?.message}</p>
-                </div>
-
-                <div className="inputGroup">
-                  <label>عدد الكيلومترات عند التغيير</label>
-                  <input
-                    type="text"
-                    {...register("kmAtChange", {
-                      validate: (v) =>
-                        !v || /^\d+$/.test(v) || "يسمح فقط بالأرقام",
-                    })}
-                    className={errors.kmAtChange ? "inputError" : ""}
-                  />
-                  <p className="errorMessage">{errors.kmAtChange?.message}</p>
-                </div>
-              </>
-            )}
           </div>
 
           <div className="formCol col-12 col-md-6">
@@ -700,41 +627,136 @@ const EditVisitForm = () => {
               <label>تاريخ الزيارة</label>
               <input type="date" {...register("visitDate")} />
             </div>
+          </div>
 
-            <div className="inputGroup">
-              <label>هل تم تغيير الزيت؟</label>
-              <div className="radioOptions">
-                <div className="radioItem">
-                  <input type="radio" value="yes" {...register("oilChanged")} />
-                  <p>نعم</p>
+          <div className="col-12">
+            <div className="row">
+              <div className="col-12 col-md-6 order-md-2">
+                <div className="inputGroup">
+                  <label>هل تم تغيير الزيت؟</label>
+                  <div className="radioOptions">
+                    <div className="radioItem">
+                      <input
+                        type="radio"
+                        value="yes"
+                        {...register("oilChanged")}
+                      />
+                      <p>نعم</p>
+                    </div>
+                    <div className="radioItem">
+                      <input
+                        type="radio"
+                        value="no"
+                        {...register("oilChanged")}
+                      />
+                      <p>لا</p>
+                    </div>
+                  </div>
                 </div>
-                <div className="radioItem">
-                  <input type="radio" value="no" {...register("oilChanged")} />
-                  <p>لا</p>
+
+                {oilChanged === "yes" && (
+                  <>
+                    <div className="inputGroup">
+                      <label>عدد الكيلومترات عند التغيير</label>
+                      <input
+                        type="text"
+                        {...register("kmAtChange", {
+                          validate: (v) =>
+                            !v || /^\d+$/.test(v) || "يسمح فقط بالأرقام",
+                        })}
+                        className={errors.kmAtChange ? "inputError" : ""}
+                      />
+                      <p className="errorMessage">
+                        {errors.kmAtChange?.message}
+                      </p>
+                    </div>
+
+                    <div className="inputGroup">
+                      <label>الكيلومترات الموصى بها للتغيير القادم</label>
+                      <input
+                        type="text"
+                        {...register("nextRecommendedKm", {
+                          validate: (v) =>
+                            !v || /^\d+$/.test(v) || "يسمح فقط بالأرقام",
+                        })}
+                        className={errors.nextRecommendedKm ? "inputError" : ""}
+                      />
+                      <p className="errorMessage">
+                        {errors.nextRecommendedKm?.message}
+                      </p>
+                    </div>
+                  </>
+                )}
+              </div>
+
+              <div className="col-12 col-md-6 order-md-1">
+                <div className="inputGroup">
+                  <label>السعر</label>
+                  <input
+                    type="text"
+                    {...register("price", {
+                      validate: (v) =>
+                        !v || /^\d+$/.test(v) ? true : "يسمح فقط بالأرقام",
+                    })}
+                    className={errors.price ? "inputError" : ""}
+                  />
+                  <p className="errorMessage">{errors.price?.message}</p>
+                </div>
+
+                {oilChanged === "yes" && (
+                  <div className="inputGroup">
+                    <label>
+                      نوع الزيت{" "}
+                      <span className="req">
+                        <FaStar />
+                      </span>
+                    </label>
+
+                    {!!oilError && (
+                      <p style={{ color: "crimson", padding: "6px 0" }}>
+                        {oilError}
+                      </p>
+                    )}
+
+                    <Controller
+                      name="oilType"
+                      control={control}
+                      rules={{
+                        validate: (v) =>
+                          watch("oilChanged") !== "yes" ||
+                          !!v ||
+                          "اختر نوع الزيت",
+                      }}
+                      render={({ field }) => (
+                        <Select
+                          {...field}
+                          options={oilOptions}
+                          isSearchable={false}
+                          isDisabled={oilLoading || !!oilError}
+                          placeholder={
+                            oilLoading
+                              ? "جارِ التحميل..."
+                              : oilOptions.length === 0
+                              ? "لا توجد زيوت"
+                              : "اختر نوع الزيت"
+                          }
+                          styles={selectStyles}
+                        />
+                      )}
+                    />
+                    <p className="errorMessage">{errors.oilType?.message}</p>
+                  </div>
+                )}
+
+                <div className="inputGroup">
+                  <label>ملاحظات</label>
+                  <input
+                    type="text"
+                    placeholder="ملاحظات"
+                    {...register("notes")}
+                  />
                 </div>
               </div>
-            </div>
-
-            {oilChanged === "yes" && (
-              <div className="inputGroup">
-                <label>الكيلومترات الموصى بها للتغيير القادم</label>
-                <input
-                  type="text"
-                  {...register("nextRecommendedKm", {
-                    validate: (v) =>
-                      !v || /^\d+$/.test(v) || "يسمح فقط بالأرقام",
-                  })}
-                  className={errors.nextRecommendedKm ? "inputError" : ""}
-                />
-                <p className="errorMessage">
-                  {errors.nextRecommendedKm?.message}
-                </p>
-              </div>
-            )}
-
-            <div className="inputGroup">
-              <label>ملاحظات</label>
-              <input type="text" placeholder="ملاحظات" {...register("notes")} />
             </div>
           </div>
         </form>

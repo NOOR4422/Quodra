@@ -139,6 +139,12 @@ const Login = () => {
                   </span>
                 </div>
 
+                <p
+                  className="forgetPassword"
+                  onClick={() => navigate("/auth/reset")}
+                >
+                  هل نسيت كلمة السر؟
+                </p>
                 {errors.password && (
                   <p className="errorMessage">{errors.password.message}</p>
                 )}

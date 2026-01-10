@@ -50,7 +50,6 @@ const ResetPassword = () => {
                     className="inputField"
                     {...register("phoneNumber", {
                       required: true,
-                      pattern: /^[0-9]{10}$/,
                     })}
                   />
 
@@ -61,11 +60,7 @@ const ResetPassword = () => {
                 {errors.phoneNumber?.type === "required" && (
                   <p className="errorMessage"> رقم الهاتف مطلوب</p>
                 )}
-                {errors.phoneNumber?.type === "pattern" && (
-                  <p className="errorMessage">
-                    رقم الهاتف يجب أن يكون 10 أرقام
-                  </p>
-                )}
+              
               </div>
 
               <div className="inputGroup">
@@ -81,7 +76,6 @@ const ResetPassword = () => {
                     className="inputField"
                     {...register("workshopCode", {
                       required: true,
-                      pattern: /^[A-Za-z0-9]{6}$/,
                     })}
                   />
 
@@ -92,11 +86,7 @@ const ResetPassword = () => {
                 {errors.workshopCode?.type === "required" && (
                   <p className="errorMessage">كود الورشة مطلوب</p>
                 )}
-                {errors.workshopCode?.type === "pattern" && (
-                  <p className="errorMessage">
-                    كود الورشة يجب أن يكون من 6 حروف أو أرقام
-                  </p>
-                )}
+              
               </div>
 
               <button type="submit" className="loginButton">

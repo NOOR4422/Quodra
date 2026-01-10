@@ -49,7 +49,7 @@ const VisitsList = () => {
   const workshopId = localStorage.getItem("workshopId");
   const lang = "ar";
 
-  const [visits, setVisits] = useState([]);
+  const [rawVisits, setRawVisits] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -121,14 +121,23 @@ const VisitsList = () => {
       setError("");
 
       if (!workshopId) {
-        setVisits([]);
+        setRawVisits([]);
         setError("لا يمكن تحميل الزيارات بدون workshopId");
         return;
       }
 
       const list = await getSessionsForWorkshop({ workshopId, lang });
+      setRawVisits(list || []);
+      setPage(1);
+    } catch (err) {
+      setError(sessionApi.getErrorMessage(err));
+    } finally {
+      setLoading(false);
+    }
+  }, [workshopId, lang]);
 
-    const mapped = (list || []).map((x) => {
+  const visits = useMemo(() => {
+    const mapped = (rawVisits || []).map((x) => {
       const sessionId = x.id ?? x.sessionId ?? x._id;
 
       const customerId =
@@ -150,11 +159,8 @@ const VisitsList = () => {
           Array.isArray(x.additionalServices) && x.additionalServices.length > 0
             ? x.additionalServices.join("، ")
             : "زيارة",
-
         customer: client?.name ?? x.userName ?? x.customerName ?? "—",
-
         car: car?.carModel ?? x.carModel ?? x.model ?? "—",
-
         date: formatDate(x.date),
         _dateIso: x.date,
         price:
@@ -163,22 +169,16 @@ const VisitsList = () => {
       };
     });
 
-      mapped.sort((a, b) => {
-        const ta = new Date(a._dateIso).getTime();
-        const tb = new Date(b._dateIso).getTime();
-        const va = Number.isNaN(ta) ? 0 : ta;
-        const vb = Number.isNaN(tb) ? 0 : tb;
-        return vb - va;
-      });
+    mapped.sort((a, b) => {
+      const ta = new Date(a._dateIso).getTime();
+      const tb = new Date(b._dateIso).getTime();
+      const va = Number.isNaN(ta) ? 0 : ta;
+      const vb = Number.isNaN(tb) ? 0 : tb;
+      return vb - va;
+    });
 
-      setVisits(mapped);
-      setPage(1);
-    } catch (err) {
-      setError(sessionApi.getErrorMessage(err));
-    } finally {
-      setLoading(false);
-    }
-  }, [workshopId, lang, clientsById, carsById]);
+    return mapped;
+  }, [rawVisits, clientsById, carsById]);
 
   useEffect(() => {
     loadClients();
@@ -224,22 +224,22 @@ const VisitsList = () => {
     try {
       await deleteSession({ lang, sessionId: selectedVisitId });
 
-      setVisits((prev) =>
-        prev.filter((v) => safeId(v.id) !== safeId(selectedVisitId))
-      );
+      setRawVisits((prev) => {
+        const filtered = prev.filter((v) => {
+          const vid = v.id ?? v.sessionId ?? v._id;
+          return safeId(vid) !== safeId(selectedVisitId);
+        });
+
+        setPage((prevPage) => {
+          const newTotal = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+          return prevPage > newTotal ? newTotal : prevPage;
+        });
+
+        return filtered;
+      });
 
       setShowAlert(false);
       setSelectedVisitId(null);
-
-      setTimeout(() => {
-        setPage((prevPage) => {
-          const newTotal = Math.max(
-            1,
-            Math.ceil((visits.length - 1) / PAGE_SIZE)
-          );
-          return prevPage > newTotal ? newTotal : prevPage;
-        });
-      }, 0);
     } catch (err) {
       setError(sessionApi.getErrorMessage(err));
     } finally {
@@ -349,13 +349,6 @@ const VisitsList = () => {
                       </div>
 
                       <div className="cardBlick subText">{visit.date}</div>
-{/* 
-                      <div
-                        className="cardBlock moreDetails"
-                        style={{ cursor: "pointer" }}
-                      >
-                        تفاصيل أكثر
-                      </div> */}
                     </div>
 
                     <div className="btnRow">

@@ -10,8 +10,6 @@ input[type="radio"] {
         gap: 8px;
         flex-direction: column;
 } 
-
-
 .checkboxGroup{
     display: flex;
     flex-wrap: wrap;
@@ -44,13 +42,6 @@ height: 30px;
             font-size: 16px;
             transition: 0.2s;
 }
-
-
-
-
-
-
-
 .checkboxItem{
     display: flex;
     align-items: center;

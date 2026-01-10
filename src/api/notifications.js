@@ -1,4 +1,3 @@
-// src/api/notifications.js
 import api from "./api";
 
 export const getErrorMessage = (err) =>
@@ -26,17 +25,6 @@ const normalizeList = (payload) => {
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
-/**
- * Create notification.
- *
- * Supports:
- *  - rank broadcast  -> pass { message, type, rank }
- *  - single customer -> pass { message, type, customerId }
- *
- * Backend docs show:
- *   { message, type, rank }
- * but some builds also use rankId, so we send both for safety.
- */
 export const createNotification = async ({
   message,
   type,
@@ -49,13 +37,11 @@ export const createNotification = async ({
     type,
   };
 
-  // for rank-based broadcasts
   if (rank !== undefined && rank !== null) {
-    body.rank = rank; // enum 0..4
-    body.rankId = rank; // in case backend expects rankId
+    body.rank = rank;
+    body.rankId = rank;
   }
 
-  // for single-customer notifications (if backend supports it)
   if (customerId) {
     body.customerId = customerId;
   }
@@ -71,10 +57,7 @@ export const createNotification = async ({
   return res.data;
 };
 
-/**
- * Get all notifications for the current workshop.
- * Backend param is named customerId but it is actually workshopId.
- */
+
 export const getAllNotifications = async ({ workshopId, lang = "ar" }) => {
   if (!workshopId) return [];
 
@@ -82,7 +65,7 @@ export const getAllNotifications = async ({ workshopId, lang = "ar" }) => {
     params: {
       customerId: workshopId,
       lang,
-      _t: Date.now(), // avoid caching
+      _t: Date.now(), 
     },
     headers: {
       "Cache-Control": "no-cache",
@@ -96,14 +79,7 @@ export const getAllNotifications = async ({ workshopId, lang = "ar" }) => {
   return normalizeList(res.data);
 };
 
-/**
- * Create notification, then poll workshop list
- * until it appears (handles async commit / lag).
- *
- * Use this for both:
- *  - rank broadcasts (pass rank, workshopId)
- *  - single customer (pass customerId, workshopId)
- */
+
 export const createNotificationAndRefresh = async ({
   message,
   type,
