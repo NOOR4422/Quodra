@@ -25,6 +25,7 @@ const normalizeList = (payload) => {
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
+
 export const createNotification = async ({
   message,
   type,
@@ -57,6 +58,30 @@ export const createNotification = async ({
   return res.data;
 };
 
+export const sendNotificationToUser = async ({
+  message,
+  customerId,
+  lang = "ar",
+}) => {
+  if (!customerId) {
+    throw new Error("يجب توفير معرف العميل لإرسال الإشعار");
+  }
+
+  const body = {
+    message,
+    customerId,
+  };
+
+  const res = await api.post("/api/Notification/SendNotificationToUser", body, {
+    params: { lang },
+  });
+
+  if (res?.data?.success === false) {
+    throw new Error(res?.data?.message || "فشل إرسال الإشعار");
+  }
+
+  return res.data;
+};
 
 export const getAllNotifications = async ({ workshopId, lang = "ar" }) => {
   if (!workshopId) return [];
@@ -65,7 +90,7 @@ export const getAllNotifications = async ({ workshopId, lang = "ar" }) => {
     params: {
       customerId: workshopId,
       lang,
-      _t: Date.now(), 
+      _t: Date.now(),
     },
     headers: {
       "Cache-Control": "no-cache",
@@ -79,16 +104,13 @@ export const getAllNotifications = async ({ workshopId, lang = "ar" }) => {
   return normalizeList(res.data);
 };
 
-
-export const createNotificationAndRefresh = async ({
+export const sendNotificationToUserAndRefresh = async ({
   message,
-  type,
-  rank,
   customerId,
   workshopId,
   lang = "ar",
 }) => {
-  await createNotification({ message, type, rank, customerId, lang });
+  await sendNotificationToUser({ message, customerId, lang });
 
   if (!workshopId) return [];
 

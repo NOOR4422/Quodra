@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { FaStar } from "react-icons/fa";
 import Select from "react-select";
@@ -9,6 +9,7 @@ import {
   createNotification,
   getErrorMessage,
 } from "../../../api/notifications";
+import { getRanksAdmin } from "../../../api/offers";
 
 const selectStyles = {
   container: (base) => ({ ...base, outline: "none" }),
@@ -59,6 +60,8 @@ const AddNotificationForm = () => {
   const [apiError, setApiError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const [rankCounts, setRankCounts] = useState({});
+
   const workshopId = localStorage.getItem("workshopId");
 
   const {
@@ -66,6 +69,8 @@ const AddNotificationForm = () => {
     handleSubmit,
     control,
     reset,
+    setError,
+    clearErrors,
     formState: { errors },
   } = useForm({
     mode: "onTouched",
@@ -79,21 +84,47 @@ const AddNotificationForm = () => {
     },
   });
 
+  useEffect(() => {
+    async function loadRanks() {
+      try {
+        const list = await getRanksAdmin();
+        const map = {};
+        list.forEach((r) => {
+          const name = (r.name || "").trim();
+          const count = Number(r.numberOfUsers ?? 0);
+          if (name) map[name] = count;
+        });
+        setRankCounts(map);
+      } catch (err) {
+        console.error("Error loading ranks admin", err);
+      }
+    }
+
+    loadRanks();
+  }, []);
+
   const onSubmit = async (data) => {
     if (isSubmitting) return;
 
     setApiError("");
+    clearErrors("rank");
 
     const rankOption = data.rank;
     const typeOption = data.type;
 
     if (!rankOption) {
-      setApiError("اختر الرتبة");
+      setError("rank", {
+        type: "manual",
+        message: "اختر الرتبة",
+      });
       return;
     }
 
     if (!typeOption) {
-      setApiError("اختر نوع الإشعار");
+      setError("type", {
+        type: "manual",
+        message: "اختر نوع الإشعار",
+      });
       return;
     }
 
@@ -102,15 +133,19 @@ const AddNotificationForm = () => {
       return;
     }
 
+    const selectedRankName = (rankOption.label || "").trim();
+    const usersInRank = rankCounts[selectedRankName];
+
+    if (usersInRank === 0) {
+      setError("rank", {
+        type: "manual",
+        message: `لا يوجد عملاء في رتبة "${selectedRankName}"`,
+      });
+      return;
+    }
+
     const rankCode = Number(rankOption.code);
     const typeValue = Number(typeOption.value);
-
-    console.log("ADD NOTIF SUBMIT DATA:", data);
-    console.log("ABOUT TO CALL API", {
-      message: data.message,
-      type: typeValue,
-      rank: rankCode,
-    });
 
     setIsSubmitting(true);
     try {
@@ -120,8 +155,6 @@ const AddNotificationForm = () => {
         rank: rankCode,
         lang: "ar",
       });
-
-      console.log("API DONE OK (ADD FORM)");
 
       setShowAlert(true);
       reset({
@@ -244,7 +277,9 @@ const AddNotificationForm = () => {
           className="submitBtn"
           disabled={isSubmitting}
           style={{
-            opacity: isSubmitting ? 0.7 : 1, width: '50%', marginTop: '20px'
+            opacity: isSubmitting ? 0.7 : 1,
+            width: "50%",
+            marginTop: "20px",
           }}
         >
           {isSubmitting ? "جارٍ الإرسال..." : "إرسال"}

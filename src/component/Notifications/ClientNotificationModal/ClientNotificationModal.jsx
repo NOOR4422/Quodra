@@ -4,7 +4,7 @@ import { FaStar } from "react-icons/fa";
 import Select from "react-select";
 import AlertModal from "../../Modals/AlertModal/AlertModal";
 import {
-  createNotificationAndRefresh,
+  sendNotificationToUserAndRefresh,
   getErrorMessage,
 } from "../../../api/notifications";
 
@@ -85,11 +85,11 @@ const ClientNotificationModal = ({ show, client, onClose }) => {
     try {
       setSubmitting(true);
 
-      await createNotificationAndRefresh({
-        message: data.message,
-        type: Number(type),
-        userId: client.id,
-        date: data.date || null,
+      const finalMessage = data.message;
+
+      await sendNotificationToUserAndRefresh({
+        message: finalMessage,
+        customerId: client.id, 
         workshopId,
         lang: "ar",
       });
@@ -107,14 +107,13 @@ const ClientNotificationModal = ({ show, client, onClose }) => {
   return (
     <AlertModal
       show={show}
-      //   title={`إرسال إشعار جديد للعميل: ${client.name}`}
       alertIcon=""
       showCancel={false}
       showConfirm={false}
-          showClose={true}
-        onClose={onClose}
+      showClose={true}
+      onClose={onClose}
     >
-      <div className="">
+      <div>
         {!!apiError && <p className="errorMessage">{apiError}</p>}
 
         <form
@@ -172,11 +171,7 @@ const ClientNotificationModal = ({ show, client, onClose }) => {
           <div className="formCol col-12">
             <div className="inputGroup">
               <label>التاريخ</label>
-              <input
-                type="date"
-                {...register("date")}
-                className="inputDate" 
-              />
+              <input type="date" {...register("date")} className="inputDate" />
             </div>
           </div>
 

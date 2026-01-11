@@ -13,7 +13,7 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import { getAllUsers, deleteUser } from "../../../api/clients";
 import { getCarsCached } from "../../../store/carsStore";
-import ClientNotificationModal from "../../Modals/ClientNotificationModal/ClientNotificationModal";
+import ClientNotificationModal from "../../Notifications/ClientNotificationModal/ClientNotificationModal";
 
 const formatKm = (km) => {
   if (km === null || km === undefined || km === "") return "—";
@@ -147,7 +147,9 @@ const ClientDetails = () => {
           title="تحذير"
           alertIcon="⚠️"
           message={
-            deleting ? "جاري حذف العميل..." : "هل أنت متأكد من حذف هذا العميل؟ سيتم حذف جميع بياناته المرتبطة وجميع الزيارات الخاصة به."
+            deleting
+              ? "جاري حذف العميل..."
+              : "هل أنت متأكد من حذف هذا العميل؟ سيتم حذف جميع بياناته المرتبطة وجميع الزيارات الخاصة به."
           }
           cancelText="إلغاء"
           confirmText={deleting ? "جاري الحذف..." : "حذف"}

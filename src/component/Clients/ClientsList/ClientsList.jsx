@@ -8,7 +8,7 @@ import box from "../../../assets/box.png";
 import user from "../../../assets/user.png";
 import { getAllUsers, deleteUser } from "../../../api/clients";
 import { getSessionsForWorkshop, sessionApi } from "../../../api/sessions";
-import ClientNotificationModal from "../../Modals/ClientNotificationModal/ClientNotificationModal";
+import ClientNotificationModal from "../../Notifications/ClientNotificationModal/ClientNotificationModal";
 
 const PAGE_SIZE = 10;
 
