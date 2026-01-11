@@ -87,15 +87,7 @@ const AddClientForm = () => {
 
         setOilTypes(list || []);
 
-        const current = watch("oilType");
-        if (!current && list && list.length > 0) {
-          const first = {
-            value: list[0].id ?? list[0].oliTypeId ?? list[0].oilId,
-            label: `${list[0].oiltybe} - ${list[0].km} KM`,
-            raw: list[0],
-          };
-          setValue("oilType", first, { shouldDirty: false });
-        }
+      
       } catch (err) {
         if (!alive) return;
         setOilTypes([]);
@@ -261,7 +253,13 @@ const AddClientForm = () => {
             <input
               type="number"
               placeholder="سنة الصنع"
-              {...register("year", { required: "هذا الحقل مطلوب" })}
+              {...register("year", {
+                required: "هذا الحقل مطلوب"
+              ,   pattern: {
+                      value: /^[0-9]{4}$/,
+                      message: "يرجى إدخال سنة صحيحة (4 أرقام)",
+                    },
+               })}
               className={errors.year ? "inputError" : ""}
             />
             <p className="errorMessage">{errors.year?.message}</p>
@@ -318,14 +316,14 @@ const AddClientForm = () => {
 
           <div className="inputGroup">
             <label>
-              العداد الحالي{" "}
+              قراءة العداد الحالية{" "}
               <span className="req">
                 <FaStar />
               </span>
             </label>
             <input
               type="number"
-              placeholder="العداد الحالي"
+              placeholder=" قراءة العداد الحالية"
               {...register("currentKm", { required: "هذا الحقل مطلوب" })}
               className={errors.currentKm ? "inputError" : ""}
             />
@@ -334,7 +332,7 @@ const AddClientForm = () => {
 
           <div className="inputGroup">
             <label>
-              نوع الزيت{" "}
+            نوع الزيت{" "}
               <span className="req">
                 <FaStar />
               </span>
@@ -360,7 +358,7 @@ const AddClientForm = () => {
                   isSearchable={false}
                   styles={selectStyles}
                   placeholder={
-                    oilLoading ? "جارِ التحميل..." : "تم اختيار الزيت تلقائيا"
+                    oilLoading ? "جارِ التحميل..." : "اختر نوع الزيت"
                   }
                   isDisabled={false}
                 />

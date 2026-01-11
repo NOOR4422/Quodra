@@ -30,7 +30,6 @@ const normalizeCars = (payload) => {
     raw: c,
   }));
 };
-
 export const carsApi = {
   getErrorMessage,
 
@@ -41,5 +40,13 @@ export const carsApi = {
       headers: { "Cache-Control": "no-cache", Pragma: "no-cache" },
     });
     return normalizeCars(res.data);
+  },
+
+  // here
+  async createCar(payload, { lang = "ar" } = {}) {
+    const res = await api.post("/api/Car/CrateCar", payload, {
+      params: { lang },
+    });
+    return res.data;
   },
 };

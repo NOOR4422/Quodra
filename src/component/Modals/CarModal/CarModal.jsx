@@ -1,12 +1,18 @@
-import React from "react";
-import { useForm } from "react-hook-form";
+import React, { useState, useEffect } from "react";
+import { useForm, Controller } from "react-hook-form";
 import "./carModal.css";
 import { FaStar } from "react-icons/fa";
 import Select from "react-select";
-import {  Controller } from "react-hook-form";
+import { carsApi } from "../../../api/cars";
+import oilTypeApi from "../../../api/oilType"; 
 
-const CarModal = ({ isOpen, onClose, onSave }) => {
+const CarModal = ({ isOpen, onClose, onSave, customerId, workshopId }) => {
   if (!isOpen) return null;
+
+  const [apiError, setApiError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [oilOptions, setOilOptions] = useState([]);
+  const [oilLoading, setOilLoading] = useState(false);
 
   const {
     register,
@@ -14,25 +20,90 @@ const CarModal = ({ isOpen, onClose, onSave }) => {
     control,
     formState: { errors },
     reset,
-  } = useForm({ mode: "onTouched" });
-const oilOptions = [
-  { value: "5W-30 Synthetic", label: "5W-30 Synthetic" },
-  { value: "10W-40", label: "10W-40" },
-];
+  } = useForm({
+    mode: "onTouched",
+    defaultValues: {
+      carModel: "",
+      make: "",
+      year: "",
+      plateNumber: "",
+      currentKm: "",
+      oilType: null,
+    },
+  });
 
-  const saveToLocalStorage = (carData) => {
-    const existingCars = JSON.parse(localStorage.getItem("cars")) || [];
-    const updatedCars = [...existingCars, carData];
+  useEffect(() => {
+    if (!isOpen || !workshopId) return;
 
-    localStorage.setItem("cars", JSON.stringify(updatedCars));
+    let mounted = true;
 
-    if (onSave) onSave(updatedCars);
-  };
+    (async () => {
+      try {
+        setOilLoading(true);
+        setApiError("");
 
-  const onSubmit = (data) => {
-    saveToLocalStorage(data);
-    reset();
-    onClose();
+        const list = await oilTypeApi.getAllByWorkshop({ workshopId });
+
+        if (!mounted) return;
+
+        const options =
+          (list || []).map((o) => ({
+            value: o.oiltybe ?? o.name ?? o.id,
+            label: o.oiltybe ?? o.name ?? "",
+            raw: o,
+          })) || [];
+
+        setOilOptions(options);
+      } catch (err) {
+        if (mounted) {
+          setApiError(oilTypeApi.getErrorMessage(err));
+        }
+      } finally {
+        if (mounted) setOilLoading(false);
+      }
+    })();
+
+    return () => {
+      mounted = false;
+    };
+  }, [isOpen, workshopId]);
+
+  const onSubmit = async (data) => {
+    if (!customerId) {
+      setApiError("لا يمكن إضافة سيارة بدون عميل");
+      return;
+    }
+
+    setApiError("");
+    setIsSubmitting(true);
+
+    try {
+      const payload = {
+        carModel: data.carModel.trim(),
+        make: data.make.trim(),
+        year: data.year ? Number(data.year) : null,
+        plateNumber: data.plateNumber.trim(),
+        currentKm: data.currentKm ? Number(data.currentKm) : 0,
+        oilType: data.oilType?.value || "",
+        customerId,
+      };
+
+      const res = await carsApi.createCar(payload);
+
+      if (!res?.success) {
+        setApiError(res?.message || "فشل حفظ بيانات السيارة");
+        return;
+      }
+
+      if (onSave) onSave(res);
+
+      reset();
+      onClose();
+    } catch (err) {
+      setApiError(carsApi.getErrorMessage(err));
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -41,7 +112,8 @@ const oilOptions = [
         <form className="mainForm row" onSubmit={handleSubmit(onSubmit)}>
           <div className="closeIcon" onClick={onClose}>
             &times;
-          </div>{" "}
+          </div>
+
           <div className="formRow">
             <div className="formCol">
               <div className="inputGroup">
@@ -54,26 +126,47 @@ const oilOptions = [
                 <input
                   type="text"
                   placeholder="نوع السيارة"
-                  {...register("carType", { required: "هذا الحقل مطلوب" })}
-                  className={errors.carType ? "inputError" : ""}
+                  {...register("carModel", { required: "هذا الحقل مطلوب" })}
+                  className={errors.carModel ? "inputError" : ""}
                 />
-                <p className="errorMessage">{errors.carType?.message}</p>
+                <p className="errorMessage">{errors.carModel?.message}</p>
               </div>
 
               <div className="inputGroup">
-                <label>قراءة العداد الحالية</label>
+                <label>
+                الماركة{" "}
+                  <span className="req">
+                    <FaStar />
+                  </span>
+                </label>
+                <input
+                  type="text"
+                  placeholder=" الماركة"
+                  {...register("make", { required: "هذا الحقل مطلوب" })}
+                  className={errors.make ? "inputError" : ""}
+                />
+                <p className="errorMessage">{errors.make?.message}</p>
+              </div>
+
+              <div className="inputGroup">
+                <label>قراءة العداد الحالية
+                  <span className="req">
+                    <FaStar />
+                  </span>
+                </label>
                 <input
                   type="text"
                   placeholder="قراءة العداد الحالية"
-                  {...register("mileage", {
+                  {...register("currentKm", {
+                    required: "هذا الحقل مطلوب",
                     pattern: {
                       value: /^[0-9]+$/,
                       message: "يسمح فقط بالأرقام",
                     },
                   })}
-                  className={errors.mileage ? "inputError" : ""}
+                  className={errors.currentKm ? "inputError" : ""}
                 />
-                <p className="errorMessage">{errors.mileage?.message}</p>
+                <p className="errorMessage">{errors.currentKm?.message}</p>
               </div>
             </div>
 
@@ -98,7 +191,29 @@ const oilOptions = [
 
               <div className="inputGroup">
                 <label>
-                  نوع الزيت الحالي{" "}
+                  سنة الصنع{" "}
+                  <span className="req">
+                    <FaStar />
+                  </span>
+                </label>
+                <input
+                  type="text"
+                  placeholder="سنة الصنع"
+                  {...register("year", {
+                    required: "هذا الحقل مطلوب",
+                    pattern: {
+                      value: /^[0-9]{4}$/,
+                      message: "يرجى إدخال سنة صحيحة (4 أرقام)",
+                    },
+                  })}
+                  className={errors.year ? "inputError" : ""}
+                />
+                <p className="errorMessage">{errors.year?.message}</p>
+              </div>
+
+              <div className="inputGroup">
+                <label>
+                  نوع الزيت {" "}
                   <span className="req">
                     <FaStar />
                   </span>
@@ -106,12 +221,20 @@ const oilOptions = [
                 <Controller
                   name="oilType"
                   control={control}
+                  rules={{ required: "هذا الحقل مطلوب" }}
                   render={({ field }) => (
                     <Select
                       {...field}
                       options={oilOptions}
                       classNamePrefix="oilSelect"
                       isSearchable={false}
+                      isLoading={oilLoading}
+                      isDisabled={oilLoading || oilOptions.length === 0}
+                      placeholder={
+                        oilLoading
+                          ? "جارٍ تحميل أنواع الزيوت..."
+                          : "اختر نوع الزيت"
+                      }
                       styles={{
                         container: (base) => ({
                           ...base,
@@ -141,7 +264,6 @@ const oilOptions = [
                         option: (base, state) => ({
                           ...base,
                           borderRadius: 12,
-
                           textAlign: "right",
                           fontFamily: "Cairo, sans-serif",
                           backgroundColor: state.isSelected
@@ -160,9 +282,21 @@ const oilOptions = [
               </div>
             </div>
           </div>
+
+          {!!apiError && (
+            <p className="errorMessage" style={{ textAlign: "center" }}>
+              {apiError}
+            </p>
+          )}
+
           <div>
-            <button type="submit" className="submitBtn">
-              حفظ
+            <button
+              type="submit"
+              className="submitBtn"
+              disabled={isSubmitting}
+              style={{ opacity: isSubmitting ? 0.7 : 1 }}
+            >
+              {isSubmitting ? "جاري الحفظ..." : "حفظ"}
             </button>
           </div>
         </form>

@@ -2,17 +2,21 @@ import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import "./editClientForm.css";
 import AlertModal from "../../Modals/AlertModal/AlertModal";
+import CarModal from "../../Modals/CarModal/CarModal"; 
 import { useNavigate, useParams } from "react-router-dom";
 import { getUserById, updateUser } from "../../../api/clients";
 
 const EditClientForm = () => {
-  const { id } = useParams(); 
+  const { id } = useParams();
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState(true);
   const [apiError, setApiError] = useState("");
   const [showSuccess, setShowSuccess] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const [showCarModal, setShowCarModal] = useState(false); 
+  const workshopId = localStorage.getItem("workshopId");
 
   const {
     register,
@@ -86,7 +90,7 @@ const EditClientForm = () => {
       const payload = {
         name: form.name.trim(),
         phone: form.phone.trim(),
-        whats: form.whatsapp.trim(), 
+        whats: form.whatsapp.trim(),
         email: (form.email || "").trim(),
       };
 
@@ -119,6 +123,16 @@ const EditClientForm = () => {
         onConfirm={() => {
           setShowSuccess(false);
           navigate("/clients", { state: { refresh: Date.now() } });
+        }}
+      />
+
+      <CarModal
+        isOpen={showCarModal}
+        onClose={() => setShowCarModal(false)}
+        customerId={id}
+        workshopId={workshopId} 
+        onSave={() => {
+          setShowCarModal(false);
         }}
       />
 
@@ -173,24 +187,30 @@ const EditClientForm = () => {
 
               <div className="inputGroup">
                 <label>البريد الإلكتروني </label>
-                <input type="email" {...register("email",
-                  {
+                <input
+                  type="email"
+                  {...register("email", {
                     validate: (v) => {
-                      if (v?.trim() === "") return true; 
+                      if (v?.trim() === "") return true;
                       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                       return (
                         emailRegex.test(v) || "يرجى إدخال بريد إلكتروني صالح"
                       );
-                    }
-                  }
-                )
-                  
-
-
-                } />
+                    },
+                  })}
+                />
                 <p className="errorMessage">{errors.email?.message}</p>
               </div>
             </div>
+
+            <button
+              type="button"
+              className="addCarBtn"
+              style={{ marginBottom: 16, maxWidth: 200 }}
+              onClick={() => setShowCarModal(true)}
+            >
+              + إضافة سيارة للعميل
+            </button>
           </form>
 
           <button
