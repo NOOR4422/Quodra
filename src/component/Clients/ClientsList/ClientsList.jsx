@@ -399,7 +399,6 @@ const ClientsList = () => {
         )
       )}
 
-      {/* per-client notification modal */}
       <ClientNotificationModal
         show={showNotifyModal}
         client={notifyClient}

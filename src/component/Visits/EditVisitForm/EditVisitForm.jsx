@@ -106,6 +106,7 @@ const EditVisitForm = () => {
       servicesSelect: [],
       price: "",
       oilChanged: "no",
+      filterChanged: "no",
       oilType: null,
       kmAtChange: "",
       nextRecommendedKm: "",
@@ -237,6 +238,9 @@ const EditVisitForm = () => {
         ? found.additionalServices.map((name) => ({ value: name, label: name }))
         : [];
 
+      const filterChangedRaw =
+        found.filterChanged ?? found.FilterChanged ?? false;
+
       reset({
         client: null,
         car: null,
@@ -244,6 +248,7 @@ const EditVisitForm = () => {
         servicesSelect: selectedServicesOptions,
         price: found.cost != null ? String(Math.round(Number(found.cost))) : "",
         oilChanged: found.oilChanged ? "yes" : "no",
+        filterChanged: filterChangedRaw ? "yes" : "no",
         oilType: null,
         kmAtChange: found.kmReading != null ? String(found.kmReading) : "",
         nextRecommendedKm:
@@ -402,33 +407,71 @@ const EditVisitForm = () => {
 
       const isOilChanged = data.oilChanged === "yes";
 
-      const additionalServices = Array.isArray(data.servicesSelect)
-        ? data.servicesSelect.map((x) => x.value).filter(Boolean)
-        : [];
+      const additionalServices =
+        Array.isArray(data.servicesSelect) && data.servicesSelect.length
+          ? data.servicesSelect.map((x) => x.value).filter(Boolean)
+          : rawSession?.additionalServices ?? [];
 
-      if (additionalServices.length === 0)
-        return setVisitError("اختر خدمة واحدة على الأقل");
-      if (!data.client?.value) return setVisitError("اختر العميل");
-      if (!data.car?.value) return setVisitError("اختر السيارة");
+      const userId =
+        data.client?.value ??
+        rawSession?.userId ??
+        rawSession?.UserId ??
+        rawSession?.customerId ??
+        rawSession?.CustomerId ??
+        rawSession?.customerID ??
+        null;
 
-      const carIdNum = Number(data.car.value);
-      if (Number.isNaN(carIdNum)) return setVisitError("carId غير صالح");
+      const carIdFromForm = data.car?.value;
+      const carIdFromSession =
+        rawSession?.carId ??
+        rawSession?.CarId ??
+        rawSession?.carID ??
+        rawSession?.CarID ??
+        rawSession?.carid ??
+        null;
+      const carIdNum = Number(carIdFromForm ?? carIdFromSession ?? 0);
+
+      const kmReading = isOilChanged
+        ? Number(data.kmAtChange || 0)
+        : rawSession?.kmReading ?? 0;
+
+      const numberOfKilometers = isOilChanged
+        ? Number(data.kmAtChange || 0)
+        : rawSession?.numberOfKilometers ?? rawSession?.kmReading ?? 0;
+
+      const filterChanged = isOilChanged
+        ? data.filterChanged === "yes"
+        : rawSession?.filterChanged ?? false;
+
+      const oilId = isOilChanged
+        ? Number(data.oilType?.value || 0)
+        : rawSession?.oilId ?? 0;
+
+      const nextChange = isOilChanged
+        ? Number(data.nextRecommendedKm || 0)
+        : rawSession?.nextChange ?? 0;
+
+      const description =
+        data.notes !== undefined && data.notes !== ""
+          ? data.notes
+          : rawSession?.description ?? "";
+
+      const cost =
+        data.price !== undefined && data.price !== ""
+          ? Number(data.price)
+          : Number(rawSession?.cost ?? 0);
 
       const payload = {
-        kmReading: isOilChanged ? Number(data.kmAtChange || 0) : 0,
-        numberOfKilometers: isOilChanged ? Number(data.kmAtChange || 0) : 0,
-        filterChanged: false,
-
+        kmReading,
+        numberOfKilometers,
+        filterChanged,
         oilChanged: isOilChanged,
-        oilId: isOilChanged ? Number(data.oilType?.value || 0) : 0,
-
+        oilId,
         additionalServices,
-        nextChange: isOilChanged ? Number(data.nextRecommendedKm || 0) : 0,
-
-        description: data.notes || "",
-        cost: Number(data.price || 0),
-
-        userId: data.client.value,
+        nextChange,
+        description,
+        cost,
+        userId,
         carId: carIdNum,
       };
 
@@ -492,9 +535,7 @@ const EditVisitForm = () => {
             <div className="inputGroup">
               <label>
                 اسم العميل{" "}
-                <span className="req">
-                  <FaStar />
-                </span>
+                
               </label>
 
               {!!clientsError && (
@@ -506,7 +547,6 @@ const EditVisitForm = () => {
               <Controller
                 name="client"
                 control={control}
-                rules={{ required: "اختر العميل" }}
                 render={({ field }) => (
                   <Select
                     value={field.value}
@@ -529,15 +569,12 @@ const EditVisitForm = () => {
                   />
                 )}
               />
-              <p className="errorMessage">{errors.client?.message}</p>
             </div>
 
             <div className="inputGroup">
               <label>
                 نوع الخدمة{" "}
-                <span className="req">
-                  <FaStar />
-                </span>
+               
               </label>
 
               {!!servicesError && (
@@ -549,11 +586,6 @@ const EditVisitForm = () => {
               <Controller
                 name="servicesSelect"
                 control={control}
-                rules={{
-                  validate: (v) =>
-                    (Array.isArray(v) && v.length > 0) ||
-                    "اختر خدمة واحدة على الأقل",
-                }}
                 render={({ field }) => (
                   <Select
                     {...field}
@@ -572,7 +604,6 @@ const EditVisitForm = () => {
                   />
                 )}
               />
-              <p className="errorMessage">{errors.servicesSelect?.message}</p>
             </div>
           </div>
 
@@ -580,9 +611,7 @@ const EditVisitForm = () => {
             <div className="inputGroup">
               <label>
                 نوع السيارة{" "}
-                <span className="req">
-                  <FaStar />
-                </span>
+                
               </label>
 
               {!!carsError && (
@@ -594,7 +623,6 @@ const EditVisitForm = () => {
               <Controller
                 name="car"
                 control={control}
-                rules={{ required: "اختر السيارة" }}
                 render={({ field }) => (
                   <Select
                     value={field.value}
@@ -620,7 +648,6 @@ const EditVisitForm = () => {
                   />
                 )}
               />
-              <p className="errorMessage">{errors.car?.message}</p>
             </div>
 
             <div className="inputGroup">
@@ -657,19 +684,28 @@ const EditVisitForm = () => {
                 {oilChanged === "yes" && (
                   <>
                     <div className="inputGroup">
-                      <label>عدد الكيلومترات عند التغيير</label>
-                      <input
-                        type="text"
-                        {...register("kmAtChange", {
-                          validate: (v) =>
-                            !v || /^\d+$/.test(v) || "يسمح فقط بالأرقام",
-                        })}
-                        className={errors.kmAtChange ? "inputError" : ""}
-                      />
-                      <p className="errorMessage">
-                        {errors.kmAtChange?.message}
-                      </p>
+                      <label>هل تم تغيير الفلتر؟</label>
+                      <div className="radioOptions">
+                        <div className="radioItem">
+                          <input
+                            type="radio"
+                            value="yes"
+                            {...register("filterChanged")}
+                          />
+                          <p>نعم</p>
+                        </div>
+                        <div className="radioItem">
+                          <input
+                            type="radio"
+                            value="no"
+                            {...register("filterChanged")}
+                          />
+                          <p>لا</p>
+                        </div>
+                      </div>
                     </div>
+
+                 
 
                     <div className="inputGroup">
                       <label>الكيلومترات الموصى بها للتغيير القادم</label>
@@ -704,12 +740,11 @@ const EditVisitForm = () => {
                 </div>
 
                 {oilChanged === "yes" && (
-                  <div className="inputGroup">
+                <>
+                <div className="inputGroup">
                     <label>
                       نوع الزيت{" "}
-                      <span className="req">
-                        <FaStar />
-                      </span>
+                    
                     </label>
 
                     {!!oilError && (
@@ -721,12 +756,6 @@ const EditVisitForm = () => {
                     <Controller
                       name="oilType"
                       control={control}
-                      rules={{
-                        validate: (v) =>
-                          watch("oilChanged") !== "yes" ||
-                          !!v ||
-                          "اختر نوع الزيت",
-                      }}
                       render={({ field }) => (
                         <Select
                           {...field}
@@ -746,6 +775,23 @@ const EditVisitForm = () => {
                     />
                     <p className="errorMessage">{errors.oilType?.message}</p>
                   </div>
+            
+                   <div className="inputGroup">
+                      <label>عدد الكيلومترات عند التغيير</label>
+                      <input
+                        type="text"
+                        {...register("kmAtChange", {
+                          validate: (v) =>
+                            !v || /^\d+$/.test(v) || "يسمح فقط بالأرقام",
+                        })}
+                        className={errors.kmAtChange ? "inputError" : ""}
+                      />
+                      <p className="errorMessage">
+                        {errors.kmAtChange?.message}
+                      </p>
+                    </div>
+                  
+                  </>
                 )}
 
                 <div className="inputGroup">

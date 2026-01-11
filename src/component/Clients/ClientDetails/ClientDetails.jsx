@@ -291,7 +291,6 @@ const ClientDetails = () => {
         )}
       </div>
 
-      {/* per-client notification modal */}
       <ClientNotificationModal
         show={showNotifyModal}
         client={client}

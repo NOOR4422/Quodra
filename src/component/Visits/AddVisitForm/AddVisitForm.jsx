@@ -279,20 +279,19 @@ const AddVisitForm = () => {
       setSubmitError("اختر نوع الزيت");
       return;
     }
-
-    const payload = {
-      kmReading: isOil ? Number(data.kmAtChange || 0) : 0,
-      numberOfKilometers: isOil ? Number(data.kmAtChange || 0) : 0,
-      filterChanged: false,
-      oilChanged: isOil,
-      oilId: isOil ? oilId : 0,
-      additionalServices: services,
-      nextChange: isOil ? Number(data.nextRecommendedKm || 0) : 0,
-      description: data.description || "",
-      cost: Number(data.price || 0),
-      carId,
-      customerId,
-    };
+const payload = {
+  kmReading: isOil ? Number(data.kmAtChange || 0) : 0,
+  numberOfKilometers: isOil ? Number(data.kmAtChange || 0) : 0,
+  filterChanged: !!data.filterChanged,
+  oilChanged: isOil,
+  oilId: isOil ? oilId : 0,
+  additionalServices: services,
+  nextChange: isOil ? Number(data.nextRecommendedKm || 0) : 0,
+  description: data.description || "",
+  cost: Number(data.price || 0),
+  carId,
+  customerId,
+};
 
     try {
       setSubmitting(true);
@@ -476,7 +475,12 @@ const AddVisitForm = () => {
           <div className="row">
             <div className="col-12 col-md-6 order-md-2">
               <div className="inputGroup">
-                <label>هل تم تغيير الزيت؟</label>
+                <label>
+                  هل تم تغيير الزيت؟
+                  <span className="req">
+                    <FaStar />
+                  </span>
+                </label>
                 <div className="radioOptions">
                   <div className="radioItem">
                     <input
@@ -504,25 +508,38 @@ const AddVisitForm = () => {
                 <>
                   <div className="inputGroup">
                     <label>
-                      عدد الكيلومترات عند التغيير{" "}
+                      هل تم تغيير الفلتر؟
                       <span className="req">
                         <FaStar />
                       </span>
                     </label>
-                    <input
-                      type="number"
-                      {...register("kmAtChange", {
-                        required: "هذا الحقل مطلوب",
-                        pattern: {
-                          value: /^[0-9]+$/,
-                          message: "يسمح فقط بالأرقام",
-                        },
-                      })}
-                      className={errors.kmAtChange ? "inputError" : ""}
-                    />
-                    <p className="errorMessage">{errors.kmAtChange?.message}</p>
-                  </div>
-
+                    <div className="radioOptions">
+                      <div className="radioItem">
+                        <input
+                          type="radio"
+                          value="yes"
+                          {...register("filterChanged", {
+                            required: "اختر إجابة",
+                          })}
+                        />
+                        <p>نعم</p>
+                      </div>
+                      <div className="radioItem">
+                        <input
+                          type="radio"
+                          value="no"
+                          {...register("filterChanged", {
+                            required: "اختر إجابة",
+                          })}
+                        />
+                        <p>لا</p>
+                      </div>
+                    </div>
+                    <p className="errorMessage">
+                      {errors.filterChanged?.message}
+                    </p>
+                  </div>{" "}
+            
                   <div className="inputGroup">
                     <label>
                       الكيلومترات الموصى بها للتغيير القادم{" "}
@@ -571,7 +588,7 @@ const AddVisitForm = () => {
                 />
                 <p className="errorMessage">{errors.price?.message || " "}</p>
               </div>
-               {oilChanged === "yes" && (
+              {oilChanged === "yes" && (
                 <>
                   <div className="inputGroup">
                     <label>
@@ -616,8 +633,29 @@ const AddVisitForm = () => {
                     />
                     <p className="errorMessage">{errors.oilType?.message}</p>
                   </div>
+                  <div className="inputGroup">
+                    <label>
+                      عدد الكيلومترات عند التغيير{" "}
+                      <span className="req">
+                        <FaStar />
+                      </span>
+                    </label>
+                    <input
+                      type="number"
+                      {...register("kmAtChange", {
+                        required: "هذا الحقل مطلوب",
+                        pattern: {
+                          value: /^[0-9]+$/,
+                          message: "يسمح فقط بالأرقام",
+                        },
+                      })}
+                      className={errors.kmAtChange ? "inputError" : ""}
+                    />
+                    <p className="errorMessage">{errors.kmAtChange?.message}</p>
+                  </div>
                 </>
-              )} <div className="inputGroup">
+              )}{" "}
+              <div className="inputGroup">
                 <label>ملاحظات</label>
                 <input
                   type="text"
@@ -625,7 +663,6 @@ const AddVisitForm = () => {
                   {...register("description")}
                 />
               </div>
-            
             </div>
           </div>
         </div>
