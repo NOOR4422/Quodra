@@ -1,6 +1,6 @@
 import { BrowserRouter } from "react-router-dom";
 import Routers from "./Routers/Routers";
-import { SearchProvider } from "./context/SearchContext";
+import { SearchProvider } from "./Context/SearchContext";
 
 function App() {
   return (
