@@ -70,7 +70,13 @@ const ClientsList = () => {
   const lang = "ar";
   const workshopId = localStorage.getItem("workshopId");
 
-  const { searchTerm, searchResults, searchLoading, searchError } = useSearch();
+  const {
+    searchTerm,
+    searchResults,
+    searchLoading,
+    searchError,
+    setSkipNavigateOnce,
+  } = useSearch();
 
   const loadClients = useCallback(async () => {
     try {
@@ -127,7 +133,7 @@ const ClientsList = () => {
 
       if (workshopId && sessionsList.length && !sessionsHaveUserId) {
         setSessionsError(
-          "الـ Sessions لا تحتوي على customerId/userId، لذلك لا يمكن حساب عدد الزيارات. لازم الـ backend يرجّع customerId داخل GetSessionsForWorkshop."
+          "الـ Sessions لا تحتوي على customerId/userId، لذلك لا يمكن حساب عدد الزيارات. لازم الـ backend يرجع customerId داخل GetSessionsForWorkshop."
         );
       }
 
@@ -147,14 +153,6 @@ const ClientsList = () => {
 
       setClients(mapped);
       setPage(1);
-
-      if (sessionsList.length) {
-        console.log("Sample session keys:", sessionsList[0]);
-        console.log(
-          "Sample session userId extracted:",
-          getSessionUserId(sessionsList[0])
-        );
-      }
     } catch (err) {
       setUsersError(
         err?.response?.data?.message || err?.message || "Network Error"
@@ -171,9 +169,7 @@ const ClientsList = () => {
   }, [loadClients, location.state?.refresh]);
 
   const effectiveClients = useMemo(() => {
-    if (searchTerm.trim()) {
-      return searchResults;
-    }
+    if (searchTerm.trim()) return searchResults;
     return clients;
   }, [clients, searchResults, searchTerm]);
 
@@ -242,7 +238,7 @@ const ClientsList = () => {
         message={
           deleting
             ? "جاري حذف العميل..."
-            : "هل أنت متأكد من حذف هذا العميل؟ سيتم حذف جميع بياناته المرتبطة وجميع الزيارات الخاصة به."
+            : "هل انت متأكد من حذف هذا العميل؟ سيتم حذف جميع بياناته المرتبطة وجميع الزيارات الخاصة به."
         }
         cancelText="إلغاء"
         confirmText={deleting ? "جاري الحذف..." : "حذف"}
@@ -254,7 +250,6 @@ const ClientsList = () => {
         onConfirm={handleDeleteConfirm}
       />
 
-      {/* add button only when not searching and list is not empty */}
       {!isEmpty && !loading && !searchTerm && (
         <div className="addLeft">
           <span
@@ -273,7 +268,6 @@ const ClientsList = () => {
         <p style={{ padding: 12 }}>جاري تحميل العملاء...</p>
       )}
 
-      {/* errors from full list */}
       {!!usersError && (
         <div style={{ padding: 12 }}>
           <p style={{ color: "red" }}>{usersError}</p>
@@ -289,7 +283,6 @@ const ClientsList = () => {
         </div>
       )}
 
-      {/* search status */}
       {searchTerm && (
         <div style={{ padding: 12 }}>
           <p>
@@ -304,7 +297,7 @@ const ClientsList = () => {
       {isEmpty ? (
         <div className="emptyState">
           <img src={box} alt="no data" className="emptyIcon" />
-          <p className="emptyText">لا يوجد عملاء مسجلين حالياً.</p>
+          <p className="emptyText">لا يوجد عملاء مسجلين حاليا.</p>
           <button
             className="addBtn"
             style={{ backgroundColor: "#DD2912", color: "white" }}
@@ -317,7 +310,14 @@ const ClientsList = () => {
         !usersError && (
           <>
             {pagedClients.map((client) => (
-              <div className="mainCard" key={client.id}>
+              <div
+                className="mainCard"
+                key={client.id}
+                onClick={() => {
+                  setSkipNavigateOnce(true);
+                  navigate(`/clients/${client.id}`);
+                }}
+              >
                 <div>
                   <img src={user} className="cardImg" alt={client.name} />
                 </div>
@@ -331,7 +331,8 @@ const ClientsList = () => {
                     <div className="btnRow">
                       <button
                         className="btnNotify"
-                        onClick={() => {
+                        onClick={(e) => {
+                          e.stopPropagation();
                           setNotifyClient(client);
                           setShowNotifyModal(true);
                         }}
@@ -340,11 +341,13 @@ const ClientsList = () => {
                       </button>
                       <button
                         className="btnVisit"
-                        onClick={() =>
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSkipNavigateOnce(true);
                           navigate("/visits/add", {
                             state: { clientId: client.id },
-                          })
-                        }
+                          });
+                        }}
                       >
                         زيارة جديدة
                       </button>
@@ -370,23 +373,34 @@ const ClientsList = () => {
 
                       <div
                         className="cardBlock moreDetails"
-                        onClick={() => navigate(`/clients/${client.id}`)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSkipNavigateOnce(true);
+                          navigate(`/clients/${client.id}`);
+                        }}
                       >
-                        تفاصيل أكثر
+                        تفاصيل اكثر
                       </div>
                     </div>
 
                     <div className="btnRow">
                       <span
                         className="editRow"
-                        onClick={() => navigate(`/clients/${client.id}/edit`)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSkipNavigateOnce(true);
+                          navigate(`/clients/${client.id}/edit`);
+                        }}
                       >
                         <LuPencil className="actionIcon" /> تعديل البيانات
                       </span>
 
                       <span
                         className="deleteRow"
-                        onClick={() => openDeleteModal(client.id)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          openDeleteModal(client.id);
+                        }}
                       >
                         <LuTrash2 className="actionIcon" /> حذف العميل
                       </span>

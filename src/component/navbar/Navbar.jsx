@@ -6,7 +6,7 @@ import gas from "../../assets/gas.png";
 import "./navbar.css";
 import { useNavigate, useLocation } from "react-router-dom";
 import userApi from "../../api/user";
-import { useSearch } from "../../context/SearchContext";
+import { useSearch } from "../../Context/SearchContext"; 
 
 const Navbar = ({ onToggleSidebar }) => {
   const navigate = useNavigate();
@@ -16,7 +16,8 @@ const Navbar = ({ onToggleSidebar }) => {
   const [workshopName, setWorkshopName] = useState("ورشة");
   const [loading, setLoading] = useState(true);
 
-  const { searchTerm, setSearchTerm } = useSearch();
+  const { searchTerm, setSearchTerm, skipNavigateOnce, setSkipNavigateOnce } =
+    useSearch();
 
   useEffect(() => {
     let alive = true;
@@ -49,15 +50,31 @@ const Navbar = ({ onToggleSidebar }) => {
     };
   }, []);
 
-  // 🚩 IMPORTANT PART:
-  // whenever the user types something (from first letter) in ANY tab,
-  // go to /clients so they can see the results there
   useEffect(() => {
     const q = searchTerm.trim();
-    if (q && location.pathname !== "/clients") {
+    if (!q) return;
+
+    const path = location.pathname;
+    const onClientsPage = path.startsWith("/clients");
+    const onNewVisitPage = path.startsWith("/visits/add");
+
+    if (onNewVisitPage) return;
+
+    if (skipNavigateOnce) {
+      setSkipNavigateOnce(false);
+      return;
+    }
+
+    if (!onClientsPage) {
       navigate("/clients");
     }
-  }, [searchTerm, navigate, location.pathname]);
+  }, [
+    searchTerm,
+    skipNavigateOnce,
+    setSkipNavigateOnce,
+    navigate,
+    location.pathname,
+  ]);
 
   return (
     <nav className="navbar" dir="rtl">
