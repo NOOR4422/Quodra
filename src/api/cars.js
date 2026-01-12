@@ -42,7 +42,6 @@ export const carsApi = {
     return normalizeCars(res.data);
   },
 
-  // here
   async createCar(payload, { lang = "ar" } = {}) {
     const res = await api.post("/api/Car/CrateCar", payload, {
       params: { lang },

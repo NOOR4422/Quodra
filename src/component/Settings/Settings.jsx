@@ -381,7 +381,7 @@ const Settings = () => {
           <button
             className="changePasswordBtn"
             type="button"
-            onClick={() => navigate("/auth/reset/change")}
+            onClick={() => navigate("/settings/change-password")}
           >
             تغيير كلمة السر
           </button>

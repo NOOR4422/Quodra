@@ -126,19 +126,6 @@ box-shadow: 0px 0px 4px 0px rgba(67, 65, 65, 0.25);
 }
 
 
-/* search results overlay under navbar */
-.searchResultsOverlay {
-    position: fixed;
-    top: 64px;
-    /* adjust to your navbar height */
-    right: 0;
-    left: 0;
-    max-height: calc(100vh - 64px);
-    overflow-y: auto;
-    background-color: #f7f7f7;
-    padding: 16px;
-    z-index: 1000;
-}
 
 .searchResultsHeader {
     display: flex;
@@ -156,14 +143,6 @@ box-shadow: 0px 0px 4px 0px rgba(67, 65, 65, 0.25);
     color: #dd2912;
 }
 
-.searchResultsClose {
-    border: none;
-    background: transparent;
-    cursor: pointer;
-    font-size: 14px;
-    padding: 4px 8px;
-}
-
 .searchResultsInfo {
     font-size: 14px;
     padding: 8px 0;
@@ -175,7 +154,6 @@ box-shadow: 0px 0px 4px 0px rgba(67, 65, 65, 0.25);
     color: crimson;
 }
 
-/* make cards inside search overlay spaced nicely */
 .searchResultsOverlay .mainCard {
     margin-bottom: 12px;
     cursor: pointer;

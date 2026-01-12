@@ -61,6 +61,8 @@ const Routers = () => {
 
           <Route path="ranks" element={<RanksList />} />
           <Route path="settings" element={<Settings />} />
+
+          <Route path="settings/change-password" element={<ChangePassword />} />
         </Route>
       </Route>
     </Routes>

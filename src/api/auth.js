@@ -17,15 +17,20 @@ const decodeJwtPayload = (token) => {
   }
 };
 
+const api = axios.create({
+  baseURL: BASE_URL,
+  headers: { "Content-Type": "application/json" },
+});
+
 export const loginWorkshop = async ({ phone, code, password }) => {
   localStorage.removeItem("token");
   localStorage.removeItem("workshopId");
 
-  const res = await axios.post(
-    `${BASE_URL}/api/User/LoginWorkshop`,
-    { phone, code, password },
-    { headers: { "Content-Type": "application/json" } }
-  );
+  const res = await api.post("/api/User/LoginWorkshop", {
+    phone,
+    code,
+    password,
+  });
 
   const token = res?.data?.token;
   if (!token) throw new Error("Token missing from login response");
@@ -45,6 +50,43 @@ export const loginWorkshop = async ({ phone, code, password }) => {
   if (!workshopId) throw new Error("workshopId not found in token payload");
 
   localStorage.setItem("workshopId", String(workshopId));
+
+  return res.data;
+};
+
+export const changePassword = async ({
+  currentPassword,
+  newPassword,
+  confirmNewPassword,
+}) => {
+  const token = localStorage.getItem("token");
+  if (!token) throw new Error("No token found");
+
+  const res = await api.patch(
+    "/api/Auth/change-password",
+    { currentPassword, newPassword, confirmNewPassword },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  return res.data;
+};
+
+export const resetPassword = async ({
+  phone,
+  code,
+  newPassword,
+  confirmNewPassword,
+}) => {
+  const res = await api.post("/api/Auth/ResetPassword", {
+    phone,
+    code,
+    newPassword,
+    confirmNewPassword,
+  });
 
   return res.data;
 };

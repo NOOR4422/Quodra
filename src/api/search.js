@@ -1,7 +1,5 @@
-// src/api/search.js
 import api from "./api";
 
-// Call /api/User/SearchBar and normalize result
 export async function searchClientsByName(name, lang = "ar") {
   const res = await api.get("/api/User/SearchBar", {
     params: { name },

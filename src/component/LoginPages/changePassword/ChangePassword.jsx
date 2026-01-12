@@ -2,19 +2,27 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { AiOutlineEyeInvisible, AiOutlineEye } from "react-icons/ai";
 import { LuLockKeyhole } from "react-icons/lu";
+import { useNavigate, useLocation } from "react-router-dom";
+
 import tyre from "../../../assets/tyre.png";
 import "./changePassword.css";
-import { useNavigate } from "react-router-dom";
 import AlertModal from "../../Modals/AlertModal/AlertModal";
 
-const ChangePassword = () => {
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+import { changePassword, resetPassword } from "../../../api/auth";
 
-  const togglePasswordVisibility = () => setShowPassword((prev) => !prev);
-  const toggleConfirmPasswordVisibility = () =>
-    setShowConfirmPassword((prev) => !prev);
+const ChangePassword = () => {
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
+  const [apiError, setApiError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const isResetFlow = location.pathname.includes("/auth/reset/change");
+  const mode = isResetFlow ? "reset" : "change";
 
   const {
     register,
@@ -25,11 +33,50 @@ const ChangePassword = () => {
 
   const passwordValue = watch("password", "");
 
-  const navigate = useNavigate();
+  const handleApiError = (err) => {
+    console.error(err);
 
-  const onSubmit = (data) => {
-    console.log("Form Data:", data);
-       setShowAlert(true);
+    const msgFromArray = Array.isArray(err?.response?.data)
+      ? err.response.data[0]
+      : null;
+
+    const msg =
+      msgFromArray ||
+      err?.response?.data?.message ||
+      err?.response?.data?.error ||
+      "حدث خطأ ما";
+
+    setApiError(msg);
+  };
+
+  const onSubmit = async (data) => {
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+    setApiError("");
+
+    try {
+      if (mode === "change") {
+        await changePassword({
+          currentPassword: data.currentPassword,
+          newPassword: data.password,
+          confirmNewPassword: data.confirmPassword,
+        });
+      } else {
+        const { phone, code } = location.state || {};
+        await resetPassword({
+          phone,
+          code,
+          newPassword: data.password,
+          confirmNewPassword: data.confirmPassword,
+        });
+      }
+
+      setShowAlert(true);
+    } catch (err) {
+      handleApiError(err);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -44,9 +91,11 @@ const ChangePassword = () => {
         onCancel={() => setShowAlert(false)}
         onConfirm={() => {
           setShowAlert(false);
-          navigate("/"); 
-
-          
+          if (mode === "reset") {
+            navigate("/auth/login");
+          } else {
+            navigate("/");
+          }
         }}
       />
 
@@ -56,7 +105,15 @@ const ChangePassword = () => {
             <img src={tyre} alt="tyre" className="tyre" />
           </div>
 
-          <p className="headerText">استعادة كلمة السر</p>
+          <p className="headerText">
+            {mode === "change" ? "تغيير كلمة السر" : "استعادة كلمة السر"}
+          </p>
+
+          {!!apiError && (
+            <p className="errorMessage" style={{ padding: "0 18px" }}>
+              {apiError}
+            </p>
+          )}
 
           <div className="changePasswordContainer">
             <form
@@ -64,6 +121,45 @@ const ChangePassword = () => {
               onSubmit={handleSubmit(onSubmit)}
             >
               <div className="formSectionContainer mx-auto">
+                {mode === "change" && (
+                  <div className="inputGroup">
+                    <label className="inputLabel">
+                      كلمة السر الحالية{" "}
+                      <span style={{ color: "#E53C3C" }}>*</span>
+                    </label>
+                    <div className="inputWrapper">
+                      <input
+                        id="currentPassword"
+                        placeholder="كلمة السر الحالية"
+                        className="inputField"
+                        type={showCurrentPassword ? "text" : "password"}
+                        {...register("currentPassword", {
+                          required: "كلمة السر الحالية مطلوبة",
+                        })}
+                      />
+                      <span className="inputIcon">
+                        <LuLockKeyhole />
+                      </span>
+
+                      <span
+                        className="passwordToggleIcon"
+                        onClick={() => setShowCurrentPassword((prev) => !prev)}
+                      >
+                        {showCurrentPassword ? (
+                          <AiOutlineEye />
+                        ) : (
+                          <AiOutlineEyeInvisible />
+                        )}
+                      </span>
+                    </div>
+                    {errors.currentPassword && (
+                      <p className="errorMessage">
+                        {errors.currentPassword.message}
+                      </p>
+                    )}
+                  </div>
+                )}
+
                 <div className="inputGroup">
                   <label className="inputLabel">
                     كلمة السر الجديدة{" "}
@@ -74,7 +170,7 @@ const ChangePassword = () => {
                       id="password"
                       placeholder="كلمة السر الجديدة"
                       className="inputField"
-                      type={showPassword ? "text" : "password"}
+                      type={showNewPassword ? "text" : "password"}
                       {...register("password", {
                         required: "كلمة السر مطلوبة",
                         minLength: {
@@ -100,15 +196,15 @@ const ChangePassword = () => {
 
                     <span
                       className="passwordToggleIcon"
-                      onClick={togglePasswordVisibility}
+                      onClick={() => setShowNewPassword((prev) => !prev)}
                     >
-                      {showPassword ? (
+                      {showNewPassword ? (
                         <AiOutlineEye />
                       ) : (
                         <AiOutlineEyeInvisible />
                       )}
                     </span>
-                  </div>{" "}
+                  </div>
                   {errors.password && (
                     <p className="errorMessage">{errors.password.message}</p>
                   )}
@@ -138,7 +234,7 @@ const ChangePassword = () => {
 
                     <span
                       className="passwordToggleIcon"
-                      onClick={toggleConfirmPasswordVisibility}
+                      onClick={() => setShowConfirmPassword((prev) => !prev)}
                     >
                       {showConfirmPassword ? (
                         <AiOutlineEye />
@@ -146,7 +242,7 @@ const ChangePassword = () => {
                         <AiOutlineEyeInvisible />
                       )}
                     </span>
-                  </div>{" "}
+                  </div>
                   {errors.confirmPassword && (
                     <p className="errorMessage">
                       {errors.confirmPassword.message}
@@ -157,9 +253,9 @@ const ChangePassword = () => {
                 <button
                   type="submit"
                   className="loginButton"
-                  onClick={() => setShowAlert(true)}
+                  disabled={isSubmitting}
                 >
-                  تغيير كلمة السر
+                  {isSubmitting ? "جارِ الحفظ..." : "تغيير كلمة السر"}
                 </button>
               </div>
             </form>
