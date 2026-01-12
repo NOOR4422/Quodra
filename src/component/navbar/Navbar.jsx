@@ -4,15 +4,19 @@ import { IoSettingsOutline } from "react-icons/io5";
 import { RxHamburgerMenu } from "react-icons/rx";
 import gas from "../../assets/gas.png";
 import "./navbar.css";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import userApi from "../../api/user";
+import { useSearch } from "../../context/SearchContext";
 
 const Navbar = ({ onToggleSidebar }) => {
   const navigate = useNavigate();
+  const location = useLocation();
   const lang = "ar";
 
   const [workshopName, setWorkshopName] = useState("ورشة");
   const [loading, setLoading] = useState(true);
+
+  const { searchTerm, setSearchTerm } = useSearch();
 
   useEffect(() => {
     let alive = true;
@@ -45,6 +49,16 @@ const Navbar = ({ onToggleSidebar }) => {
     };
   }, []);
 
+  // 🚩 IMPORTANT PART:
+  // whenever the user types something (from first letter) in ANY tab,
+  // go to /clients so they can see the results there
+  useEffect(() => {
+    const q = searchTerm.trim();
+    if (q && location.pathname !== "/clients") {
+      navigate("/clients");
+    }
+  }, [searchTerm, navigate, location.pathname]);
+
   return (
     <nav className="navbar" dir="rtl">
       <div className="navbar-container">
@@ -59,7 +73,13 @@ const Navbar = ({ onToggleSidebar }) => {
           />
 
           <div className="searchBar">
-            <input type="text" className="searchInput" placeholder="بحث..." />
+            <input
+              type="text"
+              className="searchInput"
+              placeholder="بحث عن عميل..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
             <CiSearch className="searchIcon" />
           </div>
         </div>

@@ -9,6 +9,7 @@ import user from "../../../assets/user.png";
 import { getAllUsers, deleteUser } from "../../../api/clients";
 import { getSessionsForWorkshop, sessionApi } from "../../../api/sessions";
 import ClientNotificationModal from "../../Notifications/ClientNotificationModal/ClientNotificationModal";
+import { useSearch } from "../../../Context/SearchContext";
 
 const PAGE_SIZE = 10;
 
@@ -40,6 +41,13 @@ function getSessionUserId(x) {
   );
 }
 
+const rankLabels = ["عادي", "برونزي", "فضي", "ذهبي", "البلاتيني"];
+
+function getRankLabel(rank) {
+  const r = Number(rank);
+  return rankLabels[r] || "عادي";
+}
+
 const ClientsList = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -61,6 +69,8 @@ const ClientsList = () => {
 
   const lang = "ar";
   const workshopId = localStorage.getItem("workshopId");
+
+  const { searchTerm, searchResults, searchLoading, searchError } = useSearch();
 
   const loadClients = useCallback(async () => {
     try {
@@ -131,6 +141,7 @@ const ClientsList = () => {
           phone: u.phone ?? u.phoneNumber ?? "-",
           whatsapp: u.whats ?? u.whatsapp ?? "-",
           visits: visitsCountMap.get(key) || 0,
+          rank: u.rank ?? 0,
         };
       });
 
@@ -159,17 +170,25 @@ const ClientsList = () => {
     loadClients();
   }, [loadClients, location.state?.refresh]);
 
+  const effectiveClients = useMemo(() => {
+    if (searchTerm.trim()) {
+      return searchResults;
+    }
+    return clients;
+  }, [clients, searchResults, searchTerm]);
+
   const totalPages = useMemo(
-    () => Math.max(1, Math.ceil(clients.length / PAGE_SIZE)),
-    [clients.length]
+    () => Math.max(1, Math.ceil(effectiveClients.length / PAGE_SIZE)),
+    [effectiveClients.length]
   );
 
   const pagedClients = useMemo(() => {
     const start = (page - 1) * PAGE_SIZE;
-    return clients.slice(start, start + PAGE_SIZE);
-  }, [clients, page]);
+    return effectiveClients.slice(start, start + PAGE_SIZE);
+  }, [effectiveClients, page]);
 
-  const isEmpty = !loading && !usersError && clients.length === 0;
+  const isEmpty =
+    !loading && !usersError && effectiveClients.length === 0 && !searchTerm;
 
   const goToPage = (p) => {
     const next = Math.min(Math.max(1, p), totalPages);
@@ -235,7 +254,8 @@ const ClientsList = () => {
         onConfirm={handleDeleteConfirm}
       />
 
-      {!isEmpty && !loading && (
+      {/* add button only when not searching and list is not empty */}
+      {!isEmpty && !loading && !searchTerm && (
         <div className="addLeft">
           <span
             className="topPlusIcon"
@@ -249,8 +269,11 @@ const ClientsList = () => {
         </div>
       )}
 
-      {loading && <p style={{ padding: 12 }}>جاري تحميل العملاء...</p>}
+      {loading && !searchTerm && (
+        <p style={{ padding: 12 }}>جاري تحميل العملاء...</p>
+      )}
 
+      {/* errors from full list */}
       {!!usersError && (
         <div style={{ padding: 12 }}>
           <p style={{ color: "red" }}>{usersError}</p>
@@ -260,9 +283,21 @@ const ClientsList = () => {
         </div>
       )}
 
-      {!usersError && !!sessionsError && (
+      {!usersError && !!sessionsError && !searchTerm && (
         <div style={{ padding: 12 }}>
           <p style={{ color: "crimson" }}>{sessionsError}</p>
+        </div>
+      )}
+
+      {/* search status */}
+      {searchTerm && (
+        <div style={{ padding: 12 }}>
+          <p>
+            نتائج البحث عن:{" "}
+            <span style={{ color: "#DD2912" }}>{searchTerm}</span>
+          </p>
+          {searchLoading && <p>جارٍ البحث...</p>}
+          {searchError && <p style={{ color: "crimson" }}>{searchError}</p>}
         </div>
       )}
 
@@ -279,7 +314,6 @@ const ClientsList = () => {
           </button>
         </div>
       ) : (
-        !loading &&
         !usersError && (
           <>
             {pagedClients.map((client) => (
@@ -330,6 +364,10 @@ const ClientsList = () => {
                         {client.visits} زيارات
                       </div>
 
+                      <div className="cardBlock subText">
+                        {getRankLabel(client.rank)}
+                      </div>
+
                       <div
                         className="cardBlock moreDetails"
                         onClick={() => navigate(`/clients/${client.id}`)}
@@ -358,7 +396,7 @@ const ClientsList = () => {
               </div>
             ))}
 
-            {totalPages > 1 && (
+            {totalPages > 1 && !searchTerm && (
               <div className="pager">
                 <button
                   className="pagerArrow"
