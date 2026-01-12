@@ -11,7 +11,7 @@ import { IoLogOutOutline } from "react-icons/io5";
 
 import tyre from "../../assets/tyre.png";
 import AlertModal from "../Modals/AlertModal/AlertModal";
-import { useSearch } from "../../context/SearchContext";
+import { useSearch } from "../../Context/SearchContext";
 
 const Sidebar = ({ isOpen, onClose }) => {
   const navigate = useNavigate();
