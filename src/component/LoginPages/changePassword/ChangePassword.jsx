@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { AiOutlineEyeInvisible, AiOutlineEye } from "react-icons/ai";
 import { LuLockKeyhole } from "react-icons/lu";
@@ -33,6 +33,15 @@ const ChangePassword = () => {
 
   const passwordValue = watch("password", "");
 
+  useEffect(() => {
+    if (mode === "reset") {
+      const { phone } = location.state || {};
+      if (!phone) {
+        navigate("/auth/reset");
+      }
+    }
+  }, [mode, location.state, navigate]);
+
   const handleApiError = (err) => {
     console.error(err);
 
@@ -62,12 +71,10 @@ const ChangePassword = () => {
           confirmNewPassword: data.confirmPassword,
         });
       } else {
-        const { phone, code } = location.state || {};
+        const { phone } = location.state || {};
         await resetPassword({
           phone,
-          code,
           newPassword: data.password,
-          confirmNewPassword: data.confirmPassword,
         });
       }
 

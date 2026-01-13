@@ -104,7 +104,8 @@ const VisitsList = () => {
             map.set(safeId(car.id), car);
           });
         } catch {
-          // ignore per-user errors, keep going
+          console.log(`Failed to load cars for user ${userId}`);
+          
         }
       }
 

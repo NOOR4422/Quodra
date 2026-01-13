@@ -54,6 +54,21 @@ export const loginWorkshop = async ({ phone, code, password }) => {
   return res.data;
 };
 
+export const sendOtp = async ({ phone }) => {
+  const res = await api.post("/api/Auth/SendOTP", null, {
+    params: { phoneNumber: phone },
+  });
+  return res.data;
+};
+
+export const verifyOtp = async ({ phone, otp }) => {
+  const res = await api.post("/api/Auth/VerifyOTP", {
+    phone,
+    otp,
+  });
+  return res.data;
+};
+
 export const changePassword = async ({
   currentPassword,
   newPassword,
@@ -75,17 +90,10 @@ export const changePassword = async ({
   return res.data;
 };
 
-export const resetPassword = async ({
-  phone,
-  code,
-  newPassword,
-  confirmNewPassword,
-}) => {
+export const resetPassword = async ({ phone, newPassword }) => {
   const res = await api.post("/api/Auth/ResetPassword", {
     phone,
-    code,
     newPassword,
-    confirmNewPassword,
   });
 
   return res.data;
