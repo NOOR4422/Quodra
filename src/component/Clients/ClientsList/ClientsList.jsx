@@ -137,7 +137,7 @@ const ClientsList = () => {
         );
       }
 
-      const mapped = (users || []).map((u) => {
+      const mapped = [...(users || [])].reverse().map((u) => {
         const userId = u.id ?? u.userId ?? u._id;
         const key = String(userId);
 
