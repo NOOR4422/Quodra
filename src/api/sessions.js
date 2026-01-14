@@ -36,15 +36,16 @@ export const createSession = async ({ lang = "ar", payload }) => {
 
 export const updateSession = async ({ lang = "ar", sessionId, payload }) => {
   const res = await api.patch("/api/Session/updateSession", payload, {
-    params: { SessionId: sessionId, sessionId, lang }, 
+    params: { SessionId: sessionId, sessionId, lang },
   });
   return res.data;
 };
+
 export const deleteSession = async ({ lang = "ar", sessionId }) => {
   if (!sessionId) throw new Error("sessionId غير موجود");
 
   const res = await api.delete("/api/Session/DeleteSession", {
-    params: { lang, SessionId: sessionId }, 
+    params: { lang, SessionId: sessionId },
   });
 
   if (res.data?.success === false) {

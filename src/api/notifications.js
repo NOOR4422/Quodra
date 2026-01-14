@@ -25,7 +25,6 @@ const normalizeList = (payload) => {
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
-
 export const createNotification = async ({
   message,
   type,
@@ -61,6 +60,7 @@ export const createNotification = async ({
 export const sendNotificationToUser = async ({
   message,
   customerId,
+  type,
   lang = "ar",
 }) => {
   if (!customerId) {
@@ -70,6 +70,7 @@ export const sendNotificationToUser = async ({
   const body = {
     message,
     customerId,
+    Type: type,
   };
 
   const res = await api.post("/api/Notification/SendNotificationToUser", body, {
@@ -108,9 +109,10 @@ export const sendNotificationToUserAndRefresh = async ({
   message,
   customerId,
   workshopId,
+  type,
   lang = "ar",
 }) => {
-  await sendNotificationToUser({ message, customerId, lang });
+  await sendNotificationToUser({ message, customerId, type, lang });
 
   if (!workshopId) return [];
 

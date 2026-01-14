@@ -22,7 +22,7 @@ const selectStyles = {
     ...base,
     borderRadius: 12,
     minHeight: 55,
-    height: "auto", 
+    height: "auto",
     borderColor: state.isFocused ? "#dd2912" : "#eacccc",
     boxShadow: "none",
     outline: "none",
@@ -51,7 +51,6 @@ const selectStyles = {
   }),
   indicatorSeparator: () => ({ display: "none" }),
 };
-
 
 const AddVisitForm = () => {
   const [showAlert, setShowAlert] = useState(false);
@@ -279,19 +278,31 @@ const AddVisitForm = () => {
       setSubmitError("اختر نوع الزيت");
       return;
     }
-const payload = {
-  kmReading: isOil ? Number(data.kmAtChange || 0) : 0,
-  numberOfKilometers: isOil ? Number(data.kmAtChange || 0) : 0,
-  filterChanged: !!data.filterChanged,
-  oilChanged: isOil,
-  oilId: isOil ? oilId : 0,
-  additionalServices: services,
-  nextChange: isOil ? Number(data.nextRecommendedKm || 0) : 0,
-  description: data.description || "",
-  cost: Number(data.price || 0),
-  carId,
-  customerId,
-};
+
+    const visitDate = data.visitDate;
+    if (!visitDate) {
+      setSubmitError("تاريخ الزيارة مطلوب");
+      return;
+    }
+
+    const sessionDate = new Date(visitDate + "T00:00:00").toISOString();
+
+    const filterChanged = data.filterChanged === "yes";
+
+    const payload = {
+      kmReading: isOil ? Number(data.kmAtChange || 0) : 0,
+      numberOfKilometers: isOil ? Number(data.kmAtChange || 0) : 0,
+      filterChanged,
+      oilChanged: isOil,
+      oilId: isOil ? oilId : 0,
+      additionalServices: services,
+      nextChange: isOil ? Number(data.nextRecommendedKm || 0) : 0,
+      description: data.description || "",
+      cost: Number(data.price || 0),
+      carId,
+      customerId,
+      sessionDate,
+    };
 
     try {
       setSubmitting(true);
@@ -538,8 +549,8 @@ const payload = {
                     <p className="errorMessage">
                       {errors.filterChanged?.message}
                     </p>
-                  </div>{" "}
-            
+                  </div>
+
                   <div className="inputGroup">
                     <label>
                       الكيلومترات الموصى بها للتغيير القادم{" "}
@@ -588,6 +599,7 @@ const payload = {
                 />
                 <p className="errorMessage">{errors.price?.message || " "}</p>
               </div>
+
               {oilChanged === "yes" && (
                 <>
                   <div className="inputGroup">
@@ -633,6 +645,7 @@ const payload = {
                     />
                     <p className="errorMessage">{errors.oilType?.message}</p>
                   </div>
+
                   <div className="inputGroup">
                     <label>
                       عدد الكيلومترات عند التغيير{" "}
@@ -654,7 +667,8 @@ const payload = {
                     <p className="errorMessage">{errors.kmAtChange?.message}</p>
                   </div>
                 </>
-              )}{" "}
+              )}
+
               <div className="inputGroup">
                 <label>ملاحظات</label>
                 <input

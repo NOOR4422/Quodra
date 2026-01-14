@@ -89,8 +89,9 @@ const ClientNotificationModal = ({ show, client, onClose }) => {
 
       await sendNotificationToUserAndRefresh({
         message: finalMessage,
-        customerId: client.id, 
+        customerId: client.id,
         workshopId,
+        type,
         lang: "ar",
       });
 
@@ -165,13 +166,6 @@ const ClientNotificationModal = ({ show, client, onClose }) => {
                 )}
               />
               <p className="errorMessage">{errors.type?.message}</p>
-            </div>
-          </div>
-
-          <div className="formCol col-12">
-            <div className="inputGroup">
-              <label>التاريخ</label>
-              <input type="date" {...register("date")} className="inputDate" />
             </div>
           </div>
 
