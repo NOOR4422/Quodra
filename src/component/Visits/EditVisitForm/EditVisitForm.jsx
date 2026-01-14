@@ -16,11 +16,11 @@ import {
 import { clientsApi } from "../../../api/clients";
 import { carsApi } from "../../../api/cars";
 
-const toISODateInput = (iso) => {
-  if (!iso) return "";
-  const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return "";
-  return d.toISOString().slice(0, 10);
+const toDateInputValue = (value) => {
+  if (!value) return "";
+  const str = String(value).trim();
+  if (!str) return "";
+  return str.length >= 10 ? str.slice(0, 10) : str;
 };
 
 const selectStyles = {
@@ -241,10 +241,13 @@ const EditVisitForm = () => {
       const filterChangedRaw =
         found.filterChanged ?? found.FilterChanged ?? false;
 
+      const baseDate =
+        found.sessionDate ?? found.date ?? found.Date ?? found.sessiondate;
+
       reset({
         client: null,
         car: null,
-        visitDate: toISODateInput(found.date),
+        visitDate: toDateInputValue(baseDate),
         servicesSelect: selectedServicesOptions,
         price: found.cost != null ? String(Math.round(Number(found.cost))) : "",
         oilChanged: found.oilChanged ? "yes" : "no",
@@ -461,6 +464,18 @@ const EditVisitForm = () => {
           ? Number(data.price)
           : Number(rawSession?.cost ?? 0);
 
+      const visitDateInput = data.visitDate;
+      const baseSessionDate =
+        rawSession?.sessionDate ??
+        rawSession?.date ??
+        rawSession?.Date ??
+        rawSession?.sessiondate ??
+        null;
+
+      const sessionDate = visitDateInput
+        ? toDateInputValue(visitDateInput)
+        : toDateInputValue(baseSessionDate);
+
       const payload = {
         kmReading,
         numberOfKilometers,
@@ -473,6 +488,7 @@ const EditVisitForm = () => {
         cost,
         userId,
         carId: carIdNum,
+        sessionDate, 
       };
 
       const res = await updateSession({ lang, sessionId: visitId, payload });
@@ -533,10 +549,7 @@ const EditVisitForm = () => {
         >
           <div className="formCol col-12 col-md-6">
             <div className="inputGroup">
-              <label>
-                اسم العميل{" "}
-                
-              </label>
+              <label>اسم العميل</label>
 
               {!!clientsError && (
                 <p style={{ color: "crimson", padding: "6px 0" }}>
@@ -572,10 +585,7 @@ const EditVisitForm = () => {
             </div>
 
             <div className="inputGroup">
-              <label>
-                نوع الخدمة{" "}
-               
-              </label>
+              <label>نوع الخدمة</label>
 
               {!!servicesError && (
                 <p style={{ color: "crimson", padding: "6px 0" }}>
@@ -609,10 +619,7 @@ const EditVisitForm = () => {
 
           <div className="formCol col-12 col-md-6">
             <div className="inputGroup">
-              <label>
-                نوع السيارة{" "}
-                
-              </label>
+              <label>نوع السيارة</label>
 
               {!!carsError && (
                 <p style={{ color: "crimson", padding: "6px 0" }}>
@@ -705,8 +712,6 @@ const EditVisitForm = () => {
                       </div>
                     </div>
 
-                 
-
                     <div className="inputGroup">
                       <label>الكيلومترات الموصى بها للتغيير القادم</label>
                       <input
@@ -736,47 +741,43 @@ const EditVisitForm = () => {
                     })}
                     className={errors.price ? "inputError" : ""}
                   />
-                  <p className="errorMessage">{errors.price?.message}</p>
                 </div>
 
                 {oilChanged === "yes" && (
-                <>
-                <div className="inputGroup">
-                    <label>
-                      نوع الزيت{" "}
-                    
-                    </label>
+                  <>
+                    <div className="inputGroup">
+                      <label>نوع الزيت</label>
 
-                    {!!oilError && (
-                      <p style={{ color: "crimson", padding: "6px 0" }}>
-                        {oilError}
-                      </p>
-                    )}
-
-                    <Controller
-                      name="oilType"
-                      control={control}
-                      render={({ field }) => (
-                        <Select
-                          {...field}
-                          options={oilOptions}
-                          isSearchable={false}
-                          isDisabled={oilLoading || !!oilError}
-                          placeholder={
-                            oilLoading
-                              ? "جارِ التحميل..."
-                              : oilOptions.length === 0
-                              ? "لا توجد زيوت"
-                              : "اختر نوع الزيت"
-                          }
-                          styles={selectStyles}
-                        />
+                      {!!oilError && (
+                        <p style={{ color: "crimson", padding: "6px 0" }}>
+                          {oilError}
+                        </p>
                       )}
-                    />
-                    <p className="errorMessage">{errors.oilType?.message}</p>
-                  </div>
-            
-                   <div className="inputGroup">
+
+                      <Controller
+                        name="oilType"
+                        control={control}
+                        render={({ field }) => (
+                          <Select
+                            {...field}
+                            options={oilOptions}
+                            isSearchable={false}
+                            isDisabled={oilLoading || !!oilError}
+                            placeholder={
+                              oilLoading
+                                ? "جارِ التحميل..."
+                                : oilOptions.length === 0
+                                ? "لا توجد زيوت"
+                                : "اختر نوع الزيت"
+                            }
+                            styles={selectStyles}
+                          />
+                        )}
+                      />
+                      <p className="errorMessage">{errors.oilType?.message}</p>
+                    </div>
+
+                    <div className="inputGroup">
                       <label>عدد الكيلومترات عند التغيير</label>
                       <input
                         type="text"
@@ -790,7 +791,6 @@ const EditVisitForm = () => {
                         {errors.kmAtChange?.message}
                       </p>
                     </div>
-                  
                   </>
                 )}
 

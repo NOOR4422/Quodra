@@ -33,11 +33,18 @@ function getPages(current, total) {
   return out;
 }
 
-const formatDate = (iso) => {
-  if (!iso) return "";
-  const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return String(iso);
-  return d.toLocaleDateString("ar-EG");
+const formatDate = (value) => {
+  if (!value) return "";
+
+  const str = String(value).trim();
+  if (!str) return "";
+
+  const datePart = str.length >= 10 ? str.slice(0, 10) : str;
+
+  const [y, m, d] = datePart.split("-");
+  if (!y || !m || !d) return str;
+
+  return `${d}/${m}/${y}`;
 };
 
 const safeId = (x) => (x == null ? "" : String(x));
@@ -105,7 +112,6 @@ const VisitsList = () => {
           });
         } catch {
           console.log(`Failed to load cars for user ${userId}`);
-          
         }
       }
 
@@ -154,16 +160,18 @@ const VisitsList = () => {
       const client = customerId ? clientsById.get(safeId(customerId)) : null;
       const car = carId ? carsById.get(safeId(carId)) : null;
 
+      const rawDate = x.sessionDate ?? x.date ?? x.Date ?? null;
+
       return {
         id: sessionId,
         service:
           Array.isArray(x.additionalServices) && x.additionalServices.length > 0
             ? x.additionalServices.join("، ")
             : "زيارة",
-        customer: client?.name ?? x.userName ?? x.customerName ?? "—",
-        car: car?.carModel ?? x.carModel ?? x.model ?? "—",
-        date: formatDate(x.date),
-        _dateIso: x.date,
+        customer: client?.name ?? x.userName ?? x.customerName ?? "-",
+        car: car?.carModel ?? x.carModel ?? x.model ?? "-",
+        date: formatDate(rawDate),
+        _dateKey: rawDate,
         price:
           typeof x.cost === "number" ? Math.round(x.cost) : Number(x.cost) || 0,
         raw: x,
@@ -171,11 +179,11 @@ const VisitsList = () => {
     });
 
     mapped.sort((a, b) => {
-      const ta = new Date(a._dateIso).getTime();
-      const tb = new Date(b._dateIso).getTime();
-      const va = Number.isNaN(ta) ? 0 : ta;
-      const vb = Number.isNaN(tb) ? 0 : tb;
-      return vb - va;
+      const da = a._dateKey ? new Date(String(a._dateKey).slice(0, 10)) : null;
+      const db = b._dateKey ? new Date(String(b._dateKey).slice(0, 10)) : null;
+      const ta = da ? da.getTime() : 0;
+      const tb = db ? db.getTime() : 0;
+      return tb - ta;
     });
 
     return mapped;

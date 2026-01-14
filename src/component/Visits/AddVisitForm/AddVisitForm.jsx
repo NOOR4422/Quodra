@@ -285,7 +285,7 @@ const AddVisitForm = () => {
       return;
     }
 
-    const sessionDate = new Date(visitDate + "T00:00:00").toISOString();
+    const sessionDate = visitDate;
 
     const filterChanged = data.filterChanged === "yes";
 
