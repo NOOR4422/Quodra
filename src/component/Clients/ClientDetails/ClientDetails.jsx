@@ -14,6 +14,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { getAllUsers, deleteUser } from "../../../api/clients";
 import { getCarsCached } from "../../../store/carsStore";
 import ClientNotificationModal from "../../Notifications/ClientNotificationModal/ClientNotificationModal";
+import CarModal from "../../Modals/CarModal/CarModal";
 
 const formatKm = (km) => {
   if (km === null || km === undefined || km === "") return "—";
@@ -41,6 +42,9 @@ const ClientDetails = () => {
   const [error, setError] = useState("");
 
   const [showNotifyModal, setShowNotifyModal] = useState(false);
+  const [showCarModal, setShowCarModal] = useState(false);
+
+  const workshopId = localStorage.getItem("workshopId");
 
   const toggleCar = (index) => {
     setCars((prev) =>
@@ -69,7 +73,7 @@ const ClientDetails = () => {
           name: found?.name ?? "بدون اسم",
           phone: found?.phone ?? found?.phoneNumber ?? "-",
           whatsapp: found?.whats ?? found?.whatsapp ?? "-",
-          email: found?.raw.email ?? found?.mail ?? "-",
+          email: found?.email ?? found?.raw?.email ?? found?.mail ?? "-",
         };
         console.log("FOUND CLIENT:", normalizedClient);
 
@@ -158,6 +162,17 @@ const ClientDetails = () => {
             setShowAlert(false);
           }}
           onConfirm={handleDeleteConfirm}
+        />
+
+        <CarModal
+          isOpen={showCarModal}
+          onClose={() => setShowCarModal(false)}
+          customerId={id}
+          workshopId={workshopId}
+          onSave={() => {
+            setShowCarModal(false);
+            window.location.reload();
+          }}
         />
 
         {loading && <p style={{ padding: 12 }}>جاري تحميل بيانات العميل...</p>}
@@ -286,6 +301,15 @@ const ClientDetails = () => {
                   </div>
                 ))
               )}
+
+              <button
+                type="button"
+                className="addCarBtn"
+                style={{ marginBottom: 16, maxWidth: 200 }}
+                onClick={() => setShowCarModal(true)}
+              >
+                + إضافة سيارة للعميل
+              </button>
             </div>
           </>
         )}

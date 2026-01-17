@@ -4,7 +4,7 @@ import "./carModal.css";
 import { FaStar } from "react-icons/fa";
 import Select from "react-select";
 import { carsApi } from "../../../api/cars";
-import oilTypeApi from "../../../api/oilType"; 
+import oilTypeApi from "../../../api/oilType";
 
 const CarModal = ({ isOpen, onClose, onSave, customerId, workshopId }) => {
   if (!isOpen) return null;
@@ -134,7 +134,7 @@ const CarModal = ({ isOpen, onClose, onSave, customerId, workshopId }) => {
 
               <div className="inputGroup">
                 <label>
-                الماركة{" "}
+                  الماركة{" "}
                   <span className="req">
                     <FaStar />
                   </span>
@@ -149,7 +149,8 @@ const CarModal = ({ isOpen, onClose, onSave, customerId, workshopId }) => {
               </div>
 
               <div className="inputGroup">
-                <label>قراءة العداد الحالية
+                <label>
+                  قراءة العداد الحالية
                   <span className="req">
                     <FaStar />
                   </span>
@@ -213,7 +214,7 @@ const CarModal = ({ isOpen, onClose, onSave, customerId, workshopId }) => {
 
               <div className="inputGroup">
                 <label>
-                  نوع الزيت {" "}
+                  نوع الزيت{" "}
                   <span className="req">
                     <FaStar />
                   </span>
